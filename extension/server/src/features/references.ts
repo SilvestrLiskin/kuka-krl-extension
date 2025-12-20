@@ -83,24 +83,20 @@ export class ReferencesProvider {
             // Bildirim satırı mı kontrol et
             const isDeclaration = /^\s*(?:GLOBAL\s+)?(?:DECL|DEF|DEFFCT|SIGNAL|STRUC|ENUM)\b/i.test(line);
 
-            // Eğer includeDeclaration false ise ve bu bir bildirimse, atla
-            if (!includeDeclaration && isDeclaration) {
-                // Bildirim adını kontrol et - eğer aranan sembol bildirimin kendisiyse atla
-                const declMatch = line.match(new RegExp(`\\b${escapeRegex(symbolName)}\\b`, 'i'));
-                if (declMatch) {
-                    // Bildirimin ilk eşleşmesini atla (tanım)
-                    const firstMatchIndex = codePart.search(regex);
-                    if (firstMatchIndex !== -1) {
-                        // Devam et, bu bir tanım
-                    }
-                }
-            }
-
             let match;
             regex.lastIndex = 0;
+            let isFirstMatch = true;
+
             while ((match = regex.exec(codePart)) !== null) {
                 // String içinde mi kontrol et
                 if (isInsideString(codePart, match.index)) continue;
+
+                // Eğer includeDeclaration false ise ve bu bildirim satırının ilk eşleşmesiyse, atla
+                if (!includeDeclaration && isDeclaration && isFirstMatch) {
+                    isFirstMatch = false;
+                    continue;
+                }
+                isFirstMatch = false;
 
                 locations.push(Location.create(
                     uri,

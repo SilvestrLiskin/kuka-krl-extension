@@ -24,7 +24,6 @@ function stripInvisibleChars(text: string): string {
 
 // Önbellek - fonksiyon isimleri için hızlı arama
 let functionNamesCache: Set<string> = new Set();
-let cacheInitialized = false;
 
 export class DiagnosticsProvider {
   private connection: Connection;
@@ -37,7 +36,6 @@ export class DiagnosticsProvider {
   public setWorkspaceRoot(root: string | null) {
     this.workspaceRoot = root;
     // Kök değiştiğinde önbelleği sıfırla
-    cacheInitialized = false;
     functionNamesCache.clear();
   }
 
@@ -46,7 +44,6 @@ export class DiagnosticsProvider {
    */
   public updateFunctionCache(functionNames: string[]) {
     functionNamesCache = new Set(functionNames.map((n) => n.toUpperCase()));
-    cacheInitialized = true;
   }
 
   /**
@@ -213,7 +210,7 @@ export class DiagnosticsProvider {
    * Değişken kullanımlarını doğrular - tanımsız değişkenleri tespit eder.
    * Optimize edildi: async çağrılar önbellekle değiştirildi.
    */
-  public async validateVariablesUsage(document: TextDocument, declaredVariables: VariableInfo[]) {
+  public validateVariablesUsage(document: TextDocument, declaredVariables: VariableInfo[]): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
     const lines = text.split(/\r?\n/);
@@ -228,7 +225,7 @@ export class DiagnosticsProvider {
       lowerUri.includes('machine.dat') ||
       lowerUri.includes('config.dat')
     ) {
-      return;
+      return [];
     }
 
     // Dizi'den Set'e dönüştür - O(1) arama için (büyük/küçük harf duyarsız)
@@ -312,7 +309,7 @@ export class DiagnosticsProvider {
         }
       }
     }
-    this.connection.sendDiagnostics({ uri: document.uri, diagnostics });
+    return diagnostics;
   }
 
   private isDuplicateDiagnostic(newDiag: Diagnostic, existingDiagnostics: Diagnostic[]): boolean {
@@ -603,16 +600,17 @@ export class DiagnosticsProvider {
 
   /**
    * Проверяет недостижимый код после RETURN, EXIT, GOTO.
+   * Также учитывает метки (label:) как точки входа.
    */
   public validateDeadCode(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    const exitKeywords = ['RETURN', 'EXIT', 'GOTO', 'HALT'];
+    // Не включаем GOTO в exit keywords, т.к. код после GOTO может быть достижим через метки
+    const exitKeywords = ['RETURN', 'EXIT', 'HALT'];
     let skipUntilBlockEnd = false;
     let lastExitKeyword = '';
-    let lastExitLine = -1;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -623,6 +621,12 @@ export class DiagnosticsProvider {
 
       // Пропускаем пустые строки и комментарии
       if (trimmed === '') continue;
+
+      // Проверка метки (label:) - метка делает код достижимым через GOTO
+      if (/^\w+\s*:\s*$/i.test(trimmed)) {
+        skipUntilBlockEnd = false;
+        continue;
+      }
 
       // Проверка конца блока - снимаем флаг
       if (/^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i.test(upperTrimmed)) {
@@ -649,7 +653,6 @@ export class DiagnosticsProvider {
         if (new RegExp(`^${kw}\\b`, 'i').test(upperTrimmed)) {
           skipUntilBlockEnd = true;
           lastExitKeyword = kw;
-          lastExitLine = i;
           break;
         }
       }

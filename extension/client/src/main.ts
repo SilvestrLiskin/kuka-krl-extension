@@ -335,6 +335,9 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   lsClient.start().then(() => {
+    // Отправляем локаль на сервер
+    lsClient.sendNotification('custom/setLocale', vscode.env.language);
+
     // Отправляем настройки на сервер после запуска
     sendSettingsToServer();
 

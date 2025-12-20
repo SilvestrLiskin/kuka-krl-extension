@@ -141,12 +141,4 @@ export class RenameProvider {
 
         return edits;
     }
-
-    /**
-     * Satır başındaki boşlukları alır.
-     */
-    private getIndent(line: string): string {
-        const match = line.match(/^(\s*)/);
-        return match ? match[1] : '';
-    }
 }

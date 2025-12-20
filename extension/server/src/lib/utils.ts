@@ -5,6 +5,7 @@
 
 /**
  * Check if a position in a line is inside a string literal.
+ * KRL does not support escape sequences inside strings.
  * @param line The line of text
  * @param position The character position to check
  * @returns true if the position is inside a string
@@ -12,7 +13,7 @@
 export function isInsideString(line: string, position: number): boolean {
     let inString = false;
     for (let i = 0; i < position && i < line.length; i++) {
-        if (line[i] === '"' && (i === 0 || line[i - 1] !== '\\')) {
+        if (line[i] === '"') {
             inString = !inString;
         }
     }

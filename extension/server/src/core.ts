@@ -36,6 +36,7 @@ import { CodeActionsProvider } from './features/codeActions';
 import { CodeLensProvider } from './features/codeLens';
 import { SymbolExtractor, extractStrucVariables } from './lib/collector';
 import { getAllDatFiles, getAllSourceFiles } from './lib/fileSystem';
+import { setLocale } from './lib/i18n';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -153,6 +154,12 @@ connection.onNotification('custom/updateSettings', (settings: typeof serverConfi
     separateAfterBlocks: serverConfig.separateAfterBlocks,
   });
   log(`[Настройки] Обновлены: ${JSON.stringify(serverConfig)}`);
+});
+
+// Получение локали от клиента
+connection.onNotification('custom/setLocale', (locale: string) => {
+  setLocale(locale);
+  log(`[Локаль] Установлена: ${locale}`);
 });
 
 connection.onInitialized(async () => {
@@ -303,12 +310,16 @@ documents.onDidChangeContent(async (change) => {
   // Fonksiyon önbelleğini güncelle
   diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
 
+  // Tüm teşhisleri topla ve tek seferde gönder
+  let allDiagnostics: import('vscode-languageserver/node').Diagnostic[] = [];
+
   // Kullanım doğrulaması
-  diagnostics.validateVariablesUsage(document, state.mergedVariables);
+  const varDiags = diagnostics.validateVariablesUsage(document, state.mergedVariables);
+  allDiagnostics.push(...varDiags);
 
   // Safety diagnostics для SRC файлов
   if (document.uri.toLowerCase().endsWith('.src')) {
-    const safetyDiags = [
+    allDiagnostics.push(
       ...diagnostics.validateSafetySpeeds(document),
       ...diagnostics.validateToolBaseInit(document),
       ...diagnostics.validateBlockBalance(document),
@@ -317,14 +328,14 @@ documents.onDidChangeContent(async (change) => {
       ...diagnostics.validateEmptyBlocks(document),
       ...diagnostics.validateDangerousStatements(document),
       ...diagnostics.validateTypeUsage(document, state.mergedVariables),
-    ];
-    if (safetyDiags.length > 0) {
-      connection.sendDiagnostics({
-        uri: document.uri,
-        diagnostics: safetyDiags
-      });
-    }
+    );
   }
+
+  // Tüm teşhisleri tek seferde gönder
+  connection.sendDiagnostics({
+    uri: document.uri,
+    diagnostics: allDiagnostics
+  });
 });
 
 /**
