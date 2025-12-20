@@ -1,0 +1,40 @@
+# Geliştirme dosyaları - VS Code'un pakete dahil etmemesi gereken dosyalar
+.vscode/**
+.gitignore
+tsconfig.json
+**/tsconfig.json
+**/tsconfig.tsbuildinfo
+
+# Kaynak dosyalar (derlenmış JS dosyaları kullanılacak)
+**/src/**
+**/*.ts
+!**/*.d.ts
+
+# Haritalar ve günlükler
+**/*.map
+**/*.log
+
+# Belgeler
+*.pdf
+*.md
+!readme.md
+
+# Eski VSIX dosyaları
+*.vsix
+
+# Gereksiz dosyalar
+check_tmp.js
+eslint.config.js
+**/package-lock.json
+
+# node_modules içinde gereksiz dosyalar (ama modüllerin kendisi lazım!)
+**/node_modules/**/test/**
+**/node_modules/**/tests/**
+**/node_modules/**/*.md
+**/node_modules/**/LICENSE*
+**/node_modules/**/license*
+**/node_modules/**/CHANGELOG*
+**/node_modules/**/changelog*
+**/node_modules/**/.github/**
+**/node_modules/**/example*/**
+**/node_modules/**/docs/**

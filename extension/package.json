@@ -1,0 +1,274 @@
+{
+  "name": "kuka-krl-extension",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
+  "version": "1.0.1",
+  "icon": "logo.png",
+  "publisher": "LiskinLabs",
+  "author": {
+    "name": "Liskin Labs",
+    "email": "silvlis@outlook.com",
+    "url": "https://github.com/SilvestrLiskin"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SilvestrLiskin/kuka-krl-extension.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./client/out/main.js",
+  "activationEvents": [],
+  "contributes": {
+    "languages": [
+      {
+        "id": "krl",
+        "aliases": [
+          "KUKA KRL",
+          "krl"
+        ],
+        "extensions": [
+          ".src",
+          ".dat",
+          ".sub"
+        ],
+        "configuration": "./client/krl-language-configuration.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "krl",
+        "path": "./client/snippets/krl.code-snippets"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "krl",
+        "scopeName": "source.krl",
+        "path": "./client/syntaxes/krl.tmLanguage.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "KUKA WorkVisual",
+        "uiTheme": "vs",
+        "path": "./client/themes/WorkVisual-theme.json"
+      },
+      {
+        "label": "KUKA WorkVisual Dark",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/WorkVisual-dark-theme.json"
+      },
+      {
+        "label": "KRL Modern Dark",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/krl-modern-dark-theme.json"
+      },
+      {
+        "label": "KRL High Contrast",
+        "uiTheme": "hc-light",
+        "path": "./client/themes/krl-high-contrast-theme.json"
+      },
+      {
+        "label": "KRL Monokai",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/krl-monokai-theme.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "krl.validateWorkspace",
+        "title": "%command.validateWorkspace%",
+        "category": "KRL",
+        "icon": "$(check-all)"
+      },
+      {
+        "command": "krl.foldAll",
+        "title": "%command.foldAll%",
+        "category": "KRL",
+        "icon": "$(fold)"
+      },
+      {
+        "command": "krl.unfoldAll",
+        "title": "%command.unfoldAll%",
+        "category": "KRL",
+        "icon": "$(unfold)"
+      },
+      {
+        "command": "krl.formatDocument",
+        "title": "%command.formatDocument%",
+        "category": "KRL",
+        "icon": "$(code)"
+      },
+      {
+        "command": "krl.removeTrailingWhitespace",
+        "title": "%command.removeTrailingWhitespace%",
+        "category": "KRL",
+        "icon": "$(whitespace)"
+      },
+      {
+        "command": "krl.sortDeclarations",
+        "title": "%command.sortDeclarations%",
+        "category": "KRL",
+        "icon": "$(list-ordered)"
+      },
+      {
+        "command": "krl.insertFold",
+        "title": "%command.insertFold%",
+        "category": "KRL",
+        "icon": "$(symbol-namespace)"
+      },
+      {
+        "command": "krl.generateDocumentation",
+        "title": "%command.generateDocumentation%",
+        "category": "KRL",
+        "icon": "$(book)"
+      },
+      {
+        "command": "krl.findSystemVariables",
+        "title": "%command.findSystemVariables%",
+        "category": "KRL",
+        "icon": "$(search)"
+      },
+      {
+        "command": "krl.refreshIOView",
+        "title": "%command.refreshIOView%",
+        "category": "KRL",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "krl.refreshKRCView",
+        "title": "%command.refreshKRCView%",
+        "category": "KRL",
+        "icon": "$(refresh)"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "krlIO",
+          "name": "KRL I/O Signals",
+          "when": "workbenchState != empty"
+        },
+        {
+          "id": "krlKRC",
+          "name": "KRC Project",
+          "when": "workbenchState != empty"
+        }
+      ]
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "krl.foldAll",
+          "group": "navigation@1",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.unfoldAll",
+          "group": "navigation@2",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.formatDocument",
+          "group": "navigation@3",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.validateWorkspace",
+          "group": "navigation@4",
+          "when": "resourceLangId == krl"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "krl.validateWorkspace",
+          "group": "1_modification@1",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.formatDocument",
+          "group": "1_modification@2",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.removeTrailingWhitespace",
+          "group": "1_modification@3",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.sortDeclarations",
+          "group": "1_modification@4",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.insertFold",
+          "group": "1_modification@5",
+          "when": "resourceLangId == krl"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "%config.title%",
+      "properties": {
+        "krl.autoFold": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.autoFold.description%"
+        },
+        "krl.formatOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.formatOnSave.description%"
+        },
+        "krl.removeTrailingWhitespaceOnFormat": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.removeTrailingWhitespaceOnFormat.description%"
+        },
+        "krl.indentWidth": {
+          "type": "integer",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 8,
+          "description": "%config.indentWidth.description%"
+        },
+        "krl.separateBeforeBlocks": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.separateBeforeBlocks.description%"
+        },
+        "krl.separateAfterBlocks": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.separateAfterBlocks.description%"
+        },
+        "krl.validateNonAscii": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.validateNonAscii.description%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -b client server",
+    "watch": "tsc -b client server -w",
+    "lint": "eslint . --ext .ts",
+    "test": "sh ./scripts/e2e.sh"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.50.0",
+    "@typescript-eslint/parser": "^8.50.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.7.4",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12",
+    "vscode-uri": "^3.1.0"
+  }
+}

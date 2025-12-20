@@ -1,0 +1,347 @@
+{
+    "Module": {
+        "prefix": [
+            "DEF",
+            "module"
+        ],
+        "body": [
+            "${1:GLOBAL }DEF ${2:name}(${3:params})",
+            "\t$0",
+            "END"
+        ],
+        "description": "Module definition"
+    },
+    "Function": {
+        "prefix": [
+            "DEFFCT",
+            "function"
+        ],
+        "body": [
+            "${1:GLOBAL }DEFFCT ${2:type} ${3:name}(${4:params})",
+            "\t$0",
+            "ENDFCT"
+        ],
+        "description": "Function definition"
+    },
+    "FOLD Region": {
+        "prefix": [
+            "FOLD",
+            "fold",
+            "region"
+        ],
+        "body": [
+            ";FOLD ${1:RegionName}",
+            "\t$0",
+            ";ENDFOLD"
+        ],
+        "description": "FOLD/ENDFOLD region for code folding"
+    },
+    "FOLD Region with Parameters": {
+        "prefix": [
+            "FOLDP",
+            "foldparams"
+        ],
+        "body": [
+            ";FOLD ${1:RegionName} ;%{h}",
+            ";FOLD Parameters ;%{h}",
+            ";Params ${2:parameters}",
+            ";ENDFOLD",
+            "\t$0",
+            ";ENDFOLD"
+        ],
+        "description": "FOLD region with parameters (hidden)"
+    },
+    "For loop": {
+        "prefix": "FOR",
+        "body": [
+            "FOR ${1:counter}=${2:start} TO ${3:end}${4: STEP step}",
+            "\t$0",
+            "ENDFOR"
+        ],
+        "description": "For loop"
+    },
+    "Loop": {
+        "prefix": "LOOP",
+        "body": [
+            "LOOP",
+            "\t$0",
+            "ENDLOOP"
+        ],
+        "description": "Loop"
+    },
+    "While loop": {
+        "prefix": "WHILE",
+        "body": [
+            "WHILE (${1:condition})",
+            "\t$0",
+            "ENDWHILE"
+        ],
+        "description": "While loop"
+    },
+    "Repeat Until": {
+        "prefix": "REPEAT",
+        "body": [
+            "REPEAT",
+            "\t$0",
+            "UNTIL (${1:condition})"
+        ],
+        "description": "Repeat until loop"
+    },
+    "If statement": {
+        "prefix": "IF",
+        "body": [
+            "IF (${1:condition}) THEN",
+            "\t$0",
+            "ENDIF"
+        ],
+        "description": "If statement"
+    },
+    "If Else statement": {
+        "prefix": "IFELSE",
+        "body": [
+            "IF (${1:condition}) THEN",
+            "\t$2",
+            "ELSE",
+            "\t$0",
+            "ENDIF"
+        ],
+        "description": "If-Else statement"
+    },
+    "Switch statement": {
+        "prefix": "SWITCH",
+        "body": [
+            "SWITCH (${1:variable})",
+            "CASE ${2:switch}",
+            "\t$0",
+            "DEFAULT",
+            "ENDSWITCH"
+        ],
+        "description": "Switch statement"
+    },
+    "Interrupt declaration": {
+        "prefix": "INTERRUPT",
+        "body": [
+            "${1:GLOBAL }INTERRUPT DECL ${2:priority} WHEN ${3:trigger} DO ${4:event}"
+        ],
+        "description": "Interrupt declaration"
+    },
+    "Trigger when distance": {
+        "prefix": "TRIGGER WHEN DISTANCE",
+        "body": [
+            "TRIGGER WHEN DISTANCE=${1:position} DELAY=${2:delay} DO ${3:event}${4: PRIO=-1}"
+        ],
+        "description": "Trigger when distance"
+    },
+    "Trigger when path": {
+        "prefix": "TRIGGER WHEN PATH",
+        "body": [
+            "TRIGGER WHEN PATH=${1:distance} ${2:ONSTART} DELAY=${3:delay} DO ${4:event}${5: PRIO=-1}"
+        ],
+        "description": "Trigger when path"
+    },
+    "Wait": {
+        "prefix": "WAIT",
+        "body": [
+            "WAIT SEC ${1:0.1}"
+        ],
+        "description": "Wait for seconds"
+    },
+    "Wait For": {
+        "prefix": "WAITFOR",
+        "body": [
+            "WAIT FOR (${1:condition})"
+        ],
+        "description": "Wait for condition"
+    },
+    "DECL INT": {
+        "prefix": "DECLINT",
+        "body": [
+            "DECL INT ${1:name}${2: = 0}"
+        ],
+        "description": "Declare INT variable"
+    },
+    "DECL REAL": {
+        "prefix": "DECLREAL",
+        "body": [
+            "DECL REAL ${1:name}${2: = 0.0}"
+        ],
+        "description": "Declare REAL variable"
+    },
+    "DECL BOOL": {
+        "prefix": "DECLBOOL",
+        "body": [
+            "DECL BOOL ${1:name}${2: = FALSE}"
+        ],
+        "description": "Declare BOOL variable"
+    },
+    "DECL E6POS": {
+        "prefix": "DECLE6POS",
+        "body": [
+            "DECL E6POS ${1:name}"
+        ],
+        "description": "Declare E6POS variable"
+    },
+    "DECL E6AXIS": {
+        "prefix": "DECLE6AXIS",
+        "body": [
+            "DECL E6AXIS ${1:name}"
+        ],
+        "description": "Declare E6AXIS variable"
+    },
+    "DECL FRAME": {
+        "prefix": "DECLFRAME",
+        "body": [
+            "DECL FRAME ${1:name}"
+        ],
+        "description": "Declare FRAME variable"
+    },
+    "E6AXIS": {
+        "prefix": "E6AXIS value",
+        "body": [
+            "{A1 ${1:value}, A2 ${2:value}, A3 ${3:value}, A4 ${4:value}, A5 ${5:value}, A6 ${6:value}, E1 ${7:value}, E2 ${8:value}, E3 ${9:value}, E4 ${10:value}, E5 ${11:value}, E6 ${12:value}}"
+        ],
+        "description": "E6AXIS value assignment"
+    },
+    "AXIS": {
+        "prefix": "AXIS value",
+        "body": [
+            "{A1 ${1:value}, A2 ${2:value}, A3 ${3:value}, A4 ${4:value}, A5 ${5:value}, A6 ${6:value}}"
+        ],
+        "description": "AXIS value assignment"
+    },
+    "E6POS": {
+        "prefix": "E6POS value",
+        "body": [
+            "{X ${1:value}, Y ${2:value}, Z ${3:value}, A ${4:value}, B ${5:value}, C ${6:value}, E1 ${7:value}, E2 ${8:value}, E3 ${9:value}, E4 ${10:value}, E5 ${11:value}, E6 ${12:value}, S ${13:value}, T ${14:value}}"
+        ],
+        "description": "E6POS value assignment"
+    },
+    "POS": {
+        "prefix": "POS value",
+        "body": [
+            "{X ${1:value}, Y ${2:value}, Z ${3:value}, A ${4:value}, B ${5:value}, C ${6:value}, S ${7:value}, T ${8:value}}"
+        ],
+        "description": "POS value assignment"
+    },
+    "FRAME": {
+        "prefix": "FRAME value",
+        "body": [
+            "{X ${1:value}, Y ${2:value}, Z ${3:value}, A ${4:value}, B ${5:value}, C ${6:value}}"
+        ],
+        "description": "FRAME value assignment"
+    },
+    "PULSE": {
+        "prefix": "PULSE",
+        "body": [
+            "PULSE(${1:signal}, ${2|TRUE,FALSE|}, ${3:duration})"
+        ],
+        "description": "Pulse statement"
+    },
+    "Message Notification": {
+        "prefix": "MsgNotify",
+        "body": [
+            ";FOLD MsgNotify",
+            "$MSG_T = {MSG_T: VALID FALSE}",
+            "$MSG_T = {MSG_T: MODUL[] \"${1:User}\", NR ${2:1}, MSG_TXT[] \"${3:Message}\"}",
+            "$MSG_T.VALID = TRUE",
+            "WHILE  $MSG_T.VALID",
+            "\tWAIT SEC 0.05",
+            "ENDWHILE",
+            ";ENDFOLD"
+        ],
+        "description": "Display a notification message using MSG_T"
+    },
+    "BAS Initialization": {
+        "prefix": "BASINIT",
+        "body": [
+            ";FOLD INI;%{PE}",
+            ";FOLD BASISTECH INI",
+            "GLOBAL INTERRUPT DECL 3 WHEN \\$STOPMESS==TRUE DO IR_STOPM()",
+            "INTERRUPT ON 3",
+            "BAS(#INITMOV, 0)",
+            ";ENDFOLD (BASISTECH INI)",
+            ";FOLD USER INI",
+            ";Make your modifications here",
+            "$0",
+            ";ENDFOLD (USER INI)",
+            ";ENDFOLD (INI)"
+        ],
+        "description": "BAS initialization block"
+    },
+    "Motion PTP": {
+        "prefix": "PTP",
+        "body": [
+            ";FOLD PTP ${1:POINT} Vel=${2:100} % PDAT${3:1} Tool[${4:1}] Base[${5:0}];%{PE}",
+            ";FOLD Parameters ;%{h}",
+            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.old; Kuka.IsGlobalPoint=False; Kuka.PointName=${1}; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=PDAT${3}; Kuka.VelocityPtp=${2}; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=PTP",
+            ";ENDFOLD",
+            "$$BWDSTART = FALSE",
+            "PDAT_ACT = PPDAT${3}",
+            "FDAT_ACT = F${1}",
+            "BAS(#PTP_PARAMS, ${2})",
+            "PTP X${1}",
+            ";ENDFOLD"
+        ],
+        "description": "Standard PTP Motion with FOLD"
+    },
+    "Motion LIN": {
+        "prefix": "LIN",
+        "body": [
+            ";FOLD LIN ${1:POINT} Vel=${2:2} m/s CPDAT${3:1} Tool[${4:1}] Base[${5:0}];%{PE}",
+            ";FOLD Parameters ;%{h}",
+            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.old; Kuka.IsGlobalPoint=False; Kuka.PointName=${1}; Kuka.BlendingEnabled=False; Kuka.MoveDataName=CPDAT${3}; Kuka.VelocityPath=${2}; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=LIN",
+            ";ENDFOLD",
+            "$$BWDSTART = FALSE",
+            "LDAT_ACT = LCPDAT${3}",
+            "FDAT_ACT = F${1}",
+            "BAS(#CP_PARAMS, ${2})",
+            "LIN X${1}",
+            ";ENDFOLD"
+        ],
+        "description": "Standard LIN Motion with FOLD"
+    },
+    "Motion SPTP": {
+        "prefix": "SPTP",
+        "body": [
+            ";FOLD SPTP ${1:POINT} Vel=${2:100} % ${3:PDAT1} Tool[${4:1}] Base[${5:0}];%{PE}",
+            "SPTP X${1} WITH $VEL=${2}",
+            ";ENDFOLD"
+        ],
+        "description": "Spline PTP Motion"
+    },
+    "Motion SLIN": {
+        "prefix": "SLIN",
+        "body": [
+            ";FOLD SLIN ${1:POINT} Vel=${2:2} m/s ${3:CPDAT1} Tool[${4:1}] Base[${5:0}];%{PE}",
+            "SLIN X${1} WITH $VEL=${2}",
+            ";ENDFOLD"
+        ],
+        "description": "Spline LIN Motion"
+    },
+    "TODO Comment": {
+        "prefix": "TODO",
+        "body": [
+            ";TODO: ${1:description}"
+        ],
+        "description": "TODO comment"
+    },
+    "FIXME Comment": {
+        "prefix": "FIXME",
+        "body": [
+            ";FIXME: ${1:description}"
+        ],
+        "description": "FIXME comment"
+    },
+    "Header Comment": {
+        "prefix": "HEADER",
+        "body": [
+            ";===========================================================",
+            "; ${1:Module Name}",
+            "; Author: ${2:Author}",
+            "; Date: ${3:Date}",
+            "; Description: ${4:Description}",
+            ";==========================================================="
+        ],
+        "description": "File header comment block"
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "extension.displayName": "KUKA KRL Extension",
+  "extension.description": "Professional language support for KUKA Robot Language (KRL) in VS Code",
+  "command.validateWorkspace": "Check All Files",
+  "command.foldAll": "Fold All",
+  "command.unfoldAll": "Unfold All",
+  "command.formatDocument": "Format Document",
+  "command.removeTrailingWhitespace": "Remove Trailing Whitespace",
+  "command.sortDeclarations": "Sort Declarations",
+  "command.insertFold": "Insert FOLD Region",
+  "command.generateDocumentation": "Generate Documentation",
+  "command.findSystemVariables": "Find System Variables",
+  "command.refreshIOView": "Refresh I/O View",
+  "command.refreshKRCView": "Refresh KRC View",
+  "config.title": "KUKA KRL Extension",
+  "config.autoFold.description": "Automatically fold all regions when opening a KRL file",
+  "config.formatOnSave.description": "Automatically format document on save",
+  "config.removeTrailingWhitespaceOnFormat.description": "Remove trailing whitespace when formatting",
+  "config.indentWidth.description": "Number of spaces for indentation (3 = KUKA Teach Pendant standard)",
+  "config.separateBeforeBlocks.description": "Add empty line before control blocks (FOR, IF, WHILE, LOOP, etc.)",
+  "config.separateAfterBlocks.description": "Add empty line after control blocks (ENDFOR, ENDIF, ENDWHILE, etc.)",
+  "config.validateNonAscii.description": "Highlight non-ASCII characters (Cyrillic, special symbols) that may cause errors in KUKA controller"
+}

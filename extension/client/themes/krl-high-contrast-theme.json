@@ -1,0 +1,193 @@
+{
+    "$schema": "vscode://schemas/color-theme",
+    "name": "KRL High Contrast",
+    "type": "hcLight",
+    "colors": {
+        "editor.background": "#FFFFFF",
+        "editor.foreground": "#000000",
+        "editor.selectionBackground": "#FFFF00",
+        "editor.lineHighlightBackground": "#FFFFEE",
+        "editor.lineHighlightBorder": "#000000",
+        "editorCursor.foreground": "#000000",
+        "editorWhitespace.foreground": "#000000",
+        "editorLineNumber.foreground": "#000000",
+        "editorLineNumber.activeForeground": "#000000",
+        "editorIndentGuide.background1": "#000000",
+        "editorBracketMatch.background": "#00FF00",
+        "editorBracketMatch.border": "#000000",
+        "sideBar.background": "#FFFFFF",
+        "sideBar.foreground": "#000000",
+        "activityBar.background": "#000000",
+        "activityBar.foreground": "#FFFFFF",
+        "statusBar.background": "#FF6600",
+        "statusBar.foreground": "#FFFFFF",
+        "titleBar.activeBackground": "#FFFFFF",
+        "titleBar.activeForeground": "#000000",
+        "contrastBorder": "#000000",
+        "contrastActiveBorder": "#FF6600"
+    },
+    "tokenColors": [
+        {
+            "name": "Comments",
+            "scope": [
+                "comment",
+                "comment.line",
+                "comment.block"
+            ],
+            "settings": {
+                "foreground": "#008000",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Keywords",
+            "scope": [
+                "keyword",
+                "keyword.control",
+                "keyword.control.krl",
+                "keyword.other.krl"
+            ],
+            "settings": {
+                "foreground": "#0000CC",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Storage types",
+            "scope": [
+                "storage.type",
+                "storage.type.krl",
+                "storage.modifier"
+            ],
+            "settings": {
+                "foreground": "#0000CC",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Movement commands",
+            "scope": [
+                "keyword.function.movement.krl"
+            ],
+            "settings": {
+                "foreground": "#990099",
+                "fontStyle": "bold underline"
+            }
+        },
+        {
+            "name": "Approximation modes",
+            "scope": [
+                "constant.language.approximation.krl"
+            ],
+            "settings": {
+                "foreground": "#990099",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Strings",
+            "scope": [
+                "string",
+                "string.quoted"
+            ],
+            "settings": {
+                "foreground": "#CC0000"
+            }
+        },
+        {
+            "name": "Numbers",
+            "scope": [
+                "constant.numeric"
+            ],
+            "settings": {
+                "foreground": "#006600",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Boolean constants",
+            "scope": [
+                "constant.language",
+                "constant.language.boolean.krl"
+            ],
+            "settings": {
+                "foreground": "#0000CC",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Enum values",
+            "scope": [
+                "variable.other.enummember.krl",
+                "constant.language.enum.krl"
+            ],
+            "settings": {
+                "foreground": "#006699",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "System variables ($)",
+            "scope": [
+                "variable.language.system.krl",
+                "punctuation.definition.variable.krl"
+            ],
+            "settings": {
+                "foreground": "#FF6600",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Axis components",
+            "scope": [
+                "variable.language.axis.krl"
+            ],
+            "settings": {
+                "foreground": "#000099",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Data arrays",
+            "scope": [
+                "variable.language.data.krl"
+            ],
+            "settings": {
+                "foreground": "#006699",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Functions",
+            "scope": [
+                "entity.name.function",
+                "support.function",
+                "support.function.builtin.krl"
+            ],
+            "settings": {
+                "foreground": "#663300",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Operators",
+            "scope": [
+                "keyword.operator"
+            ],
+            "settings": {
+                "foreground": "#000000",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Invalid identifiers",
+            "scope": [
+                "invalid.illegal"
+            ],
+            "settings": {
+                "foreground": "#FF0000",
+                "fontStyle": "bold underline"
+            }
+        }
+    ]
+}

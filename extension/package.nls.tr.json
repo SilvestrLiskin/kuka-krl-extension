@@ -1,0 +1,20 @@
+{
+    "extension.displayName": "KUKA KRL Uzantısı",
+    "extension.description": "VS Code için profesyonel KUKA Robot Dili (KRL) desteği",
+    "command.validateWorkspace": "Tüm Dosyaları Kontrol Et",
+    "command.foldAll": "Tümünü Katla",
+    "command.unfoldAll": "Tümünü Aç",
+    "command.formatDocument": "Belgeyi Biçimlendir",
+    "command.removeTrailingWhitespace": "Sondaki Boşlukları Kaldır",
+    "command.sortDeclarations": "Bildirimleri Sırala",
+    "command.insertFold": "FOLD Bölgesi Ekle",
+    "command.generateDocumentation": "Belgeleme Oluştur",
+    "config.title": "KUKA KRL Uzantısı",
+    "config.autoFold.description": "KRL dosyası açıldığında tüm bölgeleri otomatik olarak katla",
+    "config.formatOnSave.description": "Kaydetme sırasında belgeyi otomatik olarak biçimlendir",
+    "config.removeTrailingWhitespaceOnFormat.description": "Biçimlendirme sırasında sondaki boşlukları kaldır",
+    "config.indentWidth.description": "Girinti için boşluk sayısı (3 = KUKA Teach Pendant standardı)",
+    "config.separateBeforeBlocks.description": "Kontrol blokları (FOR, IF, WHILE, LOOP vb.) öncesine boş satır ekle",
+    "config.separateAfterBlocks.description": "Kontrol blokları (ENDFOR, ENDIF, ENDWHILE vb.) sonrasına boş satır ekle",
+    "config.validateNonAscii.description": "KUKA kontrolcüsünde hata oluşturabilecek ASCII olmayan karakterleri (Kiril, özel semboller) vurgula"
+}

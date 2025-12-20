@@ -1,0 +1,20 @@
+{
+    "extension.displayName": "KUKA KRL Extension",
+    "extension.description": "Профессиональная поддержка языка KUKA Robot Language (KRL) для VS Code",
+    "command.validateWorkspace": "Проверить все файлы",
+    "command.foldAll": "Свернуть всё",
+    "command.unfoldAll": "Развернуть всё",
+    "command.formatDocument": "Форматировать документ",
+    "command.removeTrailingWhitespace": "Удалить пробелы в конце строк",
+    "command.sortDeclarations": "Сортировать объявления",
+    "command.insertFold": "Вставить FOLD-регион",
+    "command.generateDocumentation": "Создать документацию",
+    "config.title": "KUKA KRL Extension",
+    "config.autoFold.description": "Автоматически сворачивать все регионы при открытии KRL файла",
+    "config.formatOnSave.description": "Автоматически форматировать документ при сохранении",
+    "config.removeTrailingWhitespaceOnFormat.description": "Удалять пробелы в конце строк при форматировании",
+    "config.indentWidth.description": "Количество пробелов для отступа (3 = стандарт KUKA Teach Pendant)",
+    "config.separateBeforeBlocks.description": "Добавлять пустую строку перед блоками управления (FOR, IF, WHILE, LOOP и т.д.)",
+    "config.separateAfterBlocks.description": "Добавлять пустую строку после блоков управления (ENDFOR, ENDIF, ENDWHILE и т.д.)",
+    "config.validateNonAscii.description": "Подсвечивать не-ASCII символы (кириллица, спецсимволы), которые могут вызвать ошибки в контроллере KUKA"
+}

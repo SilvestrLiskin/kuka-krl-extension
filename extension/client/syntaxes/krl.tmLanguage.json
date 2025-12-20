@@ -1,0 +1,262 @@
+{
+    "name": "KRL",
+    "scopeName": "source.krl",
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "patterns": [
+        {
+            "include": "#comment"
+        },
+        {
+            "include": "#string"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#enum-values"
+        },
+        {
+            "include": "#interrupt"
+        },
+        {
+            "include": "#trigger"
+        },
+        {
+            "include": "#control"
+        },
+        {
+            "include": "#movement"
+        },
+        {
+            "include": "#built-in-functions"
+        },
+        {
+            "include": "#types"
+        },
+        {
+            "include": "#built-in-variables"
+        },
+        {
+            "include": "#operators"
+        },
+        {
+            "include": "#bitwise-operators"
+        },
+        {
+            "include": "#identifier-invalid"
+        }
+    ],
+    "repository": {
+        "comment": {
+            "patterns": [
+                {
+                    "begin": ";",
+                    "end": "(?=\\n)",
+                    "name": "comment.line.semicolon.krl"
+                },
+                {
+                    "match": "&.*$",
+                    "name": "comment.line.ampersand.krl"
+                }
+            ]
+        },
+        "string": {
+            "patterns": [
+                {
+                    "begin": "\"",
+                    "end": "\"",
+                    "name": "string.quoted.double.krl"
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "match": "\\b\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b",
+                    "name": "constant.numeric.krl"
+                },
+                {
+                    "match": "&[A-Fa-f0-9]+",
+                    "name": "constant.numeric.hex.krl"
+                },
+                {
+                    "match": "'[Bb]?[01]+'",
+                    "name": "constant.numeric.binary.krl"
+                }
+            ]
+        },
+        "enum-values": {
+            "patterns": [
+                {
+                    "match": "#[A-Za-z_][A-Za-z0-9_]*",
+                    "name": "variable.other.enummember.krl"
+                }
+            ]
+        },
+        "identifier-invalid": {
+            "patterns": [
+                {
+                    "comment": "Names starting with digit",
+                    "match": "\\b\\d[A-Za-z0-9_]*\\b",
+                    "name": "invalid.illegal.identifier.digit.krl"
+                },
+                {
+                    "comment": "Names exceeding 24 characters",
+                    "match": "\\b[A-Za-z_][A-Za-z0-9_]{24,}\\b",
+                    "name": "invalid.illegal.identifier.toolong.krl"
+                }
+            ]
+        },
+        "interrupt": {
+            "patterns": [
+                {
+                    "match": "(?i)\\b(INTERRUPT)\\s+(DECL|ON|OFF|ENABLE|DISABLE)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "storage.type.interrupt.krl"
+                        },
+                        "2": {
+                            "name": "keyword.control.krl"
+                        }
+                    }
+                },
+                {
+                    "match": "(?i)\\b(WHEN|DO|PRIO)\\b",
+                    "name": "keyword.control.krl"
+                }
+            ]
+        },
+        "trigger": {
+            "patterns": [
+                {
+                    "match": "(?i)\\b(TRIGGER)\\s+(WHEN)\\s+(DISTANCE|PATH)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "storage.type.trigger.krl"
+                        },
+                        "2": {
+                            "name": "keyword.control.krl"
+                        },
+                        "3": {
+                            "name": "keyword.control.krl"
+                        }
+                    }
+                },
+                {
+                    "match": "(?i)\\b(DELAY|ONSTART)\\b",
+                    "name": "keyword.control.krl"
+                }
+            ]
+        },
+        "control": {
+            "patterns": [
+                {
+                    "match": "(?i)\\b(REPEAT|FOR|WHILE|LOOP|DEF|IF|THEN|ELSE|SWITCH|UNTIL|ENDFOR|ENDWHILE|ENDLOOP|END|ENDIF|ENDSWITCH|INI|ENDFCT|ENDDAT|WAIT|GOTO|CASE|DEFAULT|DEFFCT|SEC|DEFDAT|PUBLIC|RETURN|EXIT|HALT|BRAKE|RESUME|CONTINUE|STEP|TO|WITH|EXTFCT|EXT)\\b",
+                    "name": "keyword.control.krl"
+                },
+                {
+                    "match": "(?i)\\b(X|Y|Z|A|B|C|E1|E2|E3|E4|E5|E6|A1|A2|A3|A4|A5|A6|S|T)\\b",
+                    "name": "variable.language.axis.krl"
+                }
+            ]
+        },
+        "movement": {
+            "patterns": [
+                {
+                    "match": "(?i)\\b(PTP|LIN|CIRC|SPTP|SLIN|SCIRC|PTP_REL|LIN_REL|CIRC_REL|SPLINE|ENDSPLINE|SPL|ASYPTP|ASYSTOP|ASYCONT|ASYCANCEL|TIME_BLOCK|START|PART|CA)\\b",
+                    "name": "keyword.function.movement.krl"
+                },
+                {
+                    "match": "(?i)\\b(C_DIS|C_PTP|C_VEL|C_ORI)\\b",
+                    "name": "constant.language.approximation.krl"
+                }
+            ]
+        },
+        "bitwise-operators": {
+            "patterns": [
+                {
+                    "match": "(?i)\\b(B_AND|B_OR|B_XOR|B_NOT|B_NAND|B_NOR|B_XNOR|EXOR)\\b",
+                    "name": "keyword.operator.bitwise.krl"
+                },
+                {
+                    "match": "(?i)\\b(AND|OR|NOT)\\b",
+                    "name": "keyword.operator.logical.krl"
+                }
+            ]
+        },
+        "built-in-functions": {
+            "patterns": [
+                {
+                    "match": "(?i)\\b(\\$LOOP_MSG|\\$LOOP_CONT|BAS|SET_KRLMSG|EXISTS_KRLMSG|CLEAR_KRLMSG|DISTANCE|SET_KRLDLG|EXISTS_KRLDLG|StrClear|StrAdd|StrComp|StrCopy|StrFind|StrLen|StrDecl|LOOP_MSG|LOOP_CONT|INVERSE|FORWARD|ATAN2|SIN|COS|TAN|ASIN|ACOS|SQRT|ABS|MAX|MIN|SWRITE|SREAD|CWRITE|CREAD|COPEN|CCLOSE|CAST_TO|CAST_FROM|PULSE|MsgNotify|MsgQuit|MsgDialog|MsgConfirm|MsgState|GET_MSGBUFFER|DELETE_MSGBUFFER|CHK_KRLMSG)\\b",
+                    "name": "support.function.builtin.krl"
+                },
+                {
+                    "match": "(?i)\\b(EXT|DMY)\\b",
+                    "name": "keyword.other.krl"
+                }
+            ]
+        },
+        "types": {
+            "patterns": [
+                {
+                    "match": "(?i)\\b(DECL|GLOBAL|CONST|INT|REAL|BOOL|CHAR|STRING|PRIO|FRAME|POS|E6POS|AXIS|E6AXIS|LOAD|STRUC|ENUM|SIGNAL)\\b",
+                    "name": "storage.type.krl"
+                }
+            ]
+        },
+        "built-in-variables": {
+            "patterns": [
+                {
+                    "comment": "System variables with $ prefix",
+                    "match": "(?i)(\\$)(BASE_DATA|TOOL_DATA|LOAD_DATA|ADVANCE|TOOL|BASE|LOAD|AXIS_ACT|POS_ACT|ACT_EX_AX|EX_AX_DATA|INITMOV|BWDSTART|VEL_PTP|ACC_PTP|ANOUT|OUT|IN|ANIN|ACC|VEL|APO|TIMER_STOP|TIMER_FLAG|TIMER|VEL\\.CP|ACT_BASE|ACT_TOOL|APO\\.CPTP|APO\\.CDIS|APO\\.CVEL|APO\\.CORI|VEL\\.ORI1|VEL\\.ORI2|ACC\\.ORI1|ACC\\.ORI2|OV_PRO|OV_JOG|MODE_OP|NULLFRAME|WORLD|ROOT|MSG_T|BRAKE_SIG|MOVE_ENABLE|DRIVES_ON|DRIVES_OFF|ALARM_STOP|T1|T2|AUT|EXT|PRO_ACT|PRO_IP|PRO_STATE0|PRO_STATE1|PRO_MOVE|CYCFLAG|FLAG|DATE|ROB_TIMER|STOPMESS|POWER_FAIL|IN_HOME|IN_HOME1|IN_HOME2|IN_HOME3|IN_HOME4|IN_HOME5|LINE_SEL_OK|MASTERINGTEST_REQ_INT|H_POS|GEAR_JERK|COLLMON_TOL_PRO|ERR|ERR\\.NUMBER|BRAKETEST_REQ_EX|BRAKETEST_REQ_INT|BRAKES_OK|BRAKETEST_WARN|EXT_START|LOOP_MSG)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.variable.krl"
+                        },
+                        "2": {
+                            "name": "variable.language.system.krl"
+                        }
+                    }
+                },
+                {
+                    "comment": "Enum constants with # prefix",
+                    "match": "(?i)(#)(INITMOV|BASE|TOOL|CP_PARAMS|PTP_PARAMS|SPLINE_INIT)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.enum.krl"
+                        },
+                        "2": {
+                            "name": "constant.language.enum.krl"
+                        }
+                    }
+                },
+                {
+                    "comment": "Boolean and common constants",
+                    "match": "(?i)\\b(ON|OFF|TRUE|FALSE)\\b",
+                    "name": "constant.language.boolean.krl"
+                },
+                {
+                    "comment": "Data arrays without $ prefix",
+                    "match": "(?i)\\b(BASE_DATA|TOOL_DATA|LOAD_DATA|GRIPPER)\\b",
+                    "name": "variable.language.data.krl"
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "match": "<>|<=|>=|==|<|>|=",
+                    "name": "keyword.operator.comparison.krl"
+                },
+                {
+                    "match": "[+\\-*/:]",
+                    "name": "keyword.operator.arithmetic.krl"
+                },
+                {
+                    "match": "[,(){}\\[\\]]",
+                    "name": "punctuation.krl"
+                }
+            ]
+        }
+    }
+}
