@@ -100,7 +100,35 @@ Smart code completion for:
 
 #### 🎨 WorkVisual Theme
 
-Included light theme matching KUKA WorkVisual IDE colors for familiar look.
+5 included color themes:
+
+- **KUKA WorkVisual** — light theme matching KUKA WorkVisual IDE
+- **KUKA WorkVisual Dark** — dark version with KUKA orange accents
+- **KRL Modern Dark** — modern GitHub Dark style
+- **KRL High Contrast** — for bright environments
+- **KRL Monokai** — classic Monokai adaptation
+
+#### 📊 I/O Signal Tree View
+
+New sidebar panel showing all digital and analog I/O signals used in your project:
+
+- `$IN[n]` / `$OUT[n]` — digital inputs/outputs
+- `$ANIN[n]` / `$ANOUT[n]` — analog signals
+- Click to navigate to usage location
+
+#### 🤖 KRC Project Tree View
+
+Hierarchical view of your KUKA project structure:
+
+- KRC / R1 robot folders
+- Program, System, MADA directories
+- Grouped by file type (.src / .dat / .sub)
+
+#### 🔍 Find System Variables
+
+`Ctrl+Shift+P` → `KRL: Find System Variables`
+
+Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 
 ### Installation
 

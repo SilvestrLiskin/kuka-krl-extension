@@ -5,6 +5,29 @@ All notable changes to this extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-12-20
+
+### Added
+
+- **5 Color Themes**:
+  - KUKA WorkVisual (improved light)
+  - KUKA WorkVisual Dark
+  - KRL Modern Dark (GitHub Dark style)
+  - KRL High Contrast (for bright environments)
+  - KRL Monokai (classic Monokai)
+- **System Variable Documentation**: Inline hover documentation for 50+ system variables (`$TOOL`, `$BASE`, `$VEL.CP`, etc.) in 3 languages (EN/RU/TR)
+- **I/O Tree View**: New panel showing all `$IN`, `$OUT`, `$ANIN`, `$ANOUT` signals with navigation to usage locations
+- **KRC Project Tree View**: Hierarchical view of KRC project structure (KRC/R1/Program folders)
+- **Find System Variables**: Quick Pick command (`KRL: Find System Variables`) to search all `$`-prefixed variables in workspace
+
+### Commands
+
+- `KRL: Find System Variables` - Search system variables with navigation
+- `KRL: Refresh I/O View` - Refresh I/O signals tree
+- `KRL: Refresh KRC View` - Refresh project structure tree
+
+---
+
 ## [1.0.1] - 2025-12-20
 
 ### Added
