@@ -1,7 +1,7 @@
 # KUKA KRL Extension
 
 <p align="center">
-  <img src="./logo.png" alt="KUKA KRL Extension Logo" width="300">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/logo.png" alt="KUKA KRL Extension Logo" width="300">
 </p>
 
 <p align="center">
@@ -10,11 +10,13 @@
 
 <p align="center">
   <a href="#english">English</a> •
-  <a href="#русский">Русский</a> •
-  <a href="#türkçe">Türkçe</a>
+  <a href="#russian">Русский</a> •
+  <a href="#turkish">Türkçe</a>
 </p>
 
 ---
+
+<a id="english"></a>
 
 ## English
 
@@ -25,7 +27,7 @@
 ### Features at a Glance
 
 <p align="center">
-  <img src="./images/syntax_highlighting.png" alt="Syntax Highlighting" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/syntax_highlighting.png" alt="Syntax Highlighting" width="600">
 </p>
 <p align="center"><em>Full syntax highlighting with FOLD regions, system variables, and data types</em></p>
 
@@ -41,7 +43,7 @@ Full syntax highlighting for all KRL constructs including keywords, data types, 
 - **FOLD regions**: `;FOLD ... ;ENDFOLD` with icons
 
 <p align="center">
-  <img src="./images/codelens.png" alt="CodeLens with metrics" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/codelens.png" alt="CodeLens with metrics" width="600">
 </p>
 <p align="center"><em>CodeLens shows line count and references for each function</em></p>
 
@@ -63,7 +65,7 @@ Native support for `;FOLD ... ;ENDFOLD` regions with automatic folding on file o
 Instant error detection while you type:
 
 <p align="center">
-  <img src="./images/diagnostics_errors.png" alt="Diagnostics Panel" width="700">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/diagnostics_errors.png" alt="Diagnostics Panel" width="700">
 </p>
 <p align="center"><em>Problems panel showing errors and warnings with detailed descriptions</em></p>
 
@@ -76,12 +78,12 @@ Instant error detection while you type:
 | **Dead code** | Unreachable code after `RETURN/EXIT/GOTO` |
 
 <p align="center">
-  <img src="./images/type_error.png" alt="Type Error" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/type_error.png" alt="Type Error" width="600">
 </p>
 <p align="center"><em>Type error detection: decimal value assigned to INT variable</em></p>
 
 <p align="center">
-  <img src="./images/safety_warning.png" alt="Safety Warning" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/safety_warning.png" alt="Safety Warning" width="600">
 </p>
 <p align="center"><em>Safety warning: velocity exceeds maximum KUKA limit (3 m/s)</em></p>
 
@@ -92,7 +94,7 @@ Instant error detection while you type:
 One-click solutions for common issues:
 
 <p align="center">
-  <img src="./images/quick_fix.png" alt="Quick Fix Menu" width="500">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/quick_fix.png" alt="Quick Fix Menu" width="500">
 </p>
 <p align="center"><em>Quick Fix menu: declare undefined variable as INT, REAL, or BOOL</em></p>
 
@@ -109,7 +111,7 @@ One-click solutions for common issues:
 Smart code completion for:
 
 <p align="center">
-  <img src="./images/hover_info.png" alt="Hover Information" width="300">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/hover_info.png" alt="Hover Information" width="300">
 </p>
 <p align="center"><em>Hover shows variable type and category</em></p>
 
@@ -123,7 +125,7 @@ Smart code completion for:
 #### 📍 Navigation
 
 <p align="center">
-  <img src="./images/symbol_navigation.png" alt="Symbol Navigation" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/symbol_navigation.png" alt="Symbol Navigation" width="600">
 </p>
 <p align="center"><em>Symbol navigation with @ prefix shows all file symbols with type icons</em></p>
 
@@ -139,7 +141,7 @@ Smart code completion for:
 #### ✏️ Refactoring
 
 <p align="center">
-  <img src="./images/rename.png" alt="Rename Symbol" width="450">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/rename.png" alt="Rename Symbol" width="450">
 </p>
 <p align="center"><em>Rename symbol with preview support</em></p>
 
@@ -153,7 +155,7 @@ Smart code completion for:
 #### 📊 I/O Signal Tree View
 
 <p align="center">
-  <img src="./images/io_signals_tree.png" alt="I/O Signals Tree" width="700">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/io_signals_tree.png" alt="I/O Signals Tree" width="700">
 </p>
 <p align="center"><em>I/O Signals sidebar: digital/analog inputs and outputs with usage count</em></p>
 
@@ -212,6 +214,8 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 
 ---
 
+<a id="russian"></a>
+
 ## Русский
 
 ### Обзор
@@ -225,7 +229,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 Полная подсветка всех конструкций KRL: ключевые слова, типы данных, системные переменные, комментарии.
 
 <p align="center">
-  <img src="./images/syntax_highlighting.png" alt="Подсветка синтаксиса" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/syntax_highlighting.png" alt="Подсветка синтаксиса" width="600">
 </p>
 <p align="center"><em>Подсветка синтаксиса с FOLD-регионами, системными переменными и типами данных</em></p>
 
@@ -241,7 +245,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 - **CodeLens** — показывает количество строк и ссылок над функциями
 
 <p align="center">
-  <img src="./images/codelens.png" alt="CodeLens" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/codelens.png" alt="CodeLens" width="600">
 </p>
 <p align="center"><em>CodeLens показывает количество строк и ссылок для каждой функции</em></p>
 
@@ -252,7 +256,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 Мгновенное обнаружение ошибок:
 
 <p align="center">
-  <img src="./images/diagnostics_errors.png" alt="Панель проблем" width="700">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/diagnostics_errors.png" alt="Панель проблем" width="700">
 </p>
 <p align="center"><em>Панель "Проблемы" с ошибками и предупреждениями</em></p>
 
@@ -265,7 +269,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 | **Недостижимый код** | Код после `RETURN/EXIT/GOTO` |
 
 <p align="center">
-  <img src="./images/safety_warning.png" alt="Предупреждение безопасности" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/safety_warning.png" alt="Предупреждение безопасности" width="600">
 </p>
 <p align="center"><em>Предупреждение: скорость превышает лимит KUKA (3 м/с)</em></p>
 
@@ -276,7 +280,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 Решение проблем одним кликом:
 
 <p align="center">
-  <img src="./images/quick_fix.png" alt="Быстрое исправление" width="500">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/quick_fix.png" alt="Быстрое исправление" width="500">
 </p>
 <p align="center"><em>Меню быстрого исправления: объявить переменную как INT, REAL или BOOL</em></p>
 
@@ -293,7 +297,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 Умное автодополнение:
 
 <p align="center">
-  <img src="./images/hover_info.png" alt="Информация при наведении" width="300">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/hover_info.png" alt="Информация при наведении" width="300">
 </p>
 <p align="center"><em>При наведении показывается тип переменной</em></p>
 
@@ -307,7 +311,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 #### 📍 Навигация
 
 <p align="center">
-  <img src="./images/symbol_navigation.png" alt="Навигация по символам" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/symbol_navigation.png" alt="Навигация по символам" width="600">
 </p>
 <p align="center"><em>Навигация по символам с иконками типов</em></p>
 
@@ -323,7 +327,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 #### ✏️ Рефакторинг
 
 <p align="center">
-  <img src="./images/rename.png" alt="Переименование" width="450">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/rename.png" alt="Переименование" width="450">
 </p>
 <p align="center"><em>Переименование символа с предпросмотром</em></p>
 
@@ -337,7 +341,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 #### 📊 Панель I/O сигналов
 
 <p align="center">
-  <img src="./images/io_signals_tree.png" alt="Дерево I/O сигналов" width="700">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/io_signals_tree.png" alt="Дерево I/O сигналов" width="700">
 </p>
 <p align="center"><em>Боковая панель I/O сигналов с количеством использований</em></p>
 
@@ -370,6 +374,8 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 
 ---
 
+<a id="turkish"></a>
+
 ## Türkçe
 
 ### Genel Bakış
@@ -383,7 +389,7 @@ Quick Pick search for all `$`-prefixed variables in workspace with navigation.
 Tüm KRL yapıları için tam sözdizimi vurgulama: anahtar kelimeler, veri türleri, sistem değişkenleri, yorumlar.
 
 <p align="center">
-  <img src="./images/syntax_highlighting.png" alt="Sözdizimi Vurgulama" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/syntax_highlighting.png" alt="Sözdizimi Vurgulama" width="600">
 </p>
 
 ---
@@ -404,7 +410,7 @@ Tüm KRL yapıları için tam sözdizimi vurgulama: anahtar kelimeler, veri tür
 Yazarken anında hata tespiti:
 
 <p align="center">
-  <img src="./images/diagnostics_errors.png" alt="Tanılama Paneli" width="700">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/diagnostics_errors.png" alt="Tanılama Paneli" width="700">
 </p>
 
 | Kategori | Örnekler |
@@ -419,7 +425,7 @@ Yazarken anında hata tespiti:
 #### 🔧 Hızlı Düzeltmeler
 
 <p align="center">
-  <img src="./images/quick_fix.png" alt="Hızlı Düzeltme" width="500">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/quick_fix.png" alt="Hızlı Düzeltme" width="500">
 </p>
 
 Tek tıklamayla sorun çözümleri:
@@ -434,7 +440,7 @@ Tek tıklamayla sorun çözümleri:
 #### 💡 IntelliSense
 
 <p align="center">
-  <img src="./images/hover_info.png" alt="Hover Bilgisi" width="300">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/hover_info.png" alt="Hover Bilgisi" width="300">
 </p>
 
 Akıllı kod tamamlama:
@@ -449,7 +455,7 @@ Akıllı kod tamamlama:
 #### 📍 Gezinme
 
 <p align="center">
-  <img src="./images/symbol_navigation.png" alt="Sembol Gezinme" width="600">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/symbol_navigation.png" alt="Sembol Gezinme" width="600">
 </p>
 
 | Özellik | Kısayol | Açıklama |
@@ -464,7 +470,7 @@ Akıllı kod tamamlama:
 #### ✏️ Yeniden Düzenleme
 
 <p align="center">
-  <img src="./images/rename.png" alt="Yeniden Adlandır" width="450">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/rename.png" alt="Yeniden Adlandır" width="450">
 </p>
 
 - **Sembolü Yeniden Adlandır** (`F2`) — tüm dosyalarda yeniden adlandır
@@ -477,7 +483,7 @@ Akıllı kod tamamlama:
 #### 📊 I/O Sinyal Ağacı
 
 <p align="center">
-  <img src="./images/io_signals_tree.png" alt="I/O Sinyalleri" width="700">
+  <img src="https://raw.githubusercontent.com/SilvestrLiskin/kuka-krl-extension/main/extension/images/io_signals_tree.png" alt="I/O Sinyalleri" width="700">
 </p>
 
 Projedeki tüm dijital ve analog I/O sinyallerini gösteren yeni kenar çubuğu paneli.
