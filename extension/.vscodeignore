@@ -5,6 +5,9 @@ tsconfig.json
 **/tsconfig.json
 **/tsconfig.tsbuildinfo
 
+# Demo examples (only for GitHub, not needed in package)
+examples/**
+
 # Kaynak dosyalar (derlenmış JS dosyaları kullanılacak)
 **/src/**
 **/*.ts

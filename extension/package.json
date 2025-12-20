@@ -14,6 +14,43 @@
     "type": "git",
     "url": "https://github.com/SilvestrLiskin/kuka-krl-extension.git"
   },
+  "license": "MIT",
+  "homepage": "https://github.com/SilvestrLiskin/kuka-krl-extension",
+  "bugs": {
+    "url": "https://github.com/SilvestrLiskin/kuka-krl-extension/issues"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Linters",
+    "Themes",
+    "Snippets"
+  ],
+  "keywords": [
+    "kuka",
+    "krl",
+    "robot",
+    "industrial",
+    "automation",
+    "robotics",
+    "kuka robot language"
+  ],
+  "galleryBanner": {
+    "color": "#FF6600",
+    "theme": "dark"
+  },
+  "badges": [
+    {
+      "url": "https://img.shields.io/github/v/release/SilvestrLiskin/kuka-krl-extension",
+      "href": "https://github.com/SilvestrLiskin/kuka-krl-extension/releases",
+      "description": "GitHub Release"
+    },
+    {
+      "url": "https://img.shields.io/github/license/SilvestrLiskin/kuka-krl-extension",
+      "href": "https://github.com/SilvestrLiskin/kuka-krl-extension/blob/main/LICENSE.txt",
+      "description": "License"
+    }
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },

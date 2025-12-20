@@ -1,0 +1,232 @@
+&ACCESS RVP
+&REL 3
+&COMMENT KUKA KRL Extension Demo - Screenshot Example
+DEF Demo_Screenshot()
+   ;==============================================================================
+   ; KUKA KRL Extension — Demonstration File
+   ; This file showcases all extension features for screenshots
+   ;==============================================================================
+
+   ;----------------------------
+   ; Variable Declarations
+   ;----------------------------
+   DECL INT i, counter, loopCount
+   DECL REAL speed, DISTANCE, tempValue
+   DECL BOOL isActive, isPaused, hasError
+   DECL E6POS targetPos, homePos, safePos
+   DECL E6AXIS axisTarget
+   DECL FRAME baseFrame, toolFrame
+
+   ;----------------------------
+   ; Constant Values
+   ;----------------------------
+   loopCount = 10
+   speed = 0.5
+   DISTANCE = 250.75
+   isActive = TRUE
+   isPaused = FALSE
+
+   ;FOLD INITIALIZATION ;%{PE}
+   ;--------------------------------------------------
+   ; Robot Initialization Section
+   ;--------------------------------------------------
+   BAS(#INITMOV, 0)
+
+   ; Configure tool and base
+   $TOOL = TOOL_DATA[1]
+   $BASE = BASE_DATA[2]
+
+   ; Set default velocity parameters
+   $VEL.CP = 0.5          ; Cartesian velocity m/s
+   $VEL.ORI1 = 100        ; Orientation velocity %
+   $VEL.ORI2 = 100        ; Orientation velocity %
+   $ACC.CP = 1.0          ; Cartesian acceleration
+
+   ; Acceleration parameters
+   $ACC.ORI1 = 100        ; Orientation acceleration
+   $ACC.ORI2 = 100
+
+   ; Position targets
+   homePos = {X 500, Y 0, Z 800, A 0, B 90, C 0, S 2, T 35}
+   targetPos = {X 700, Y 200, Z 400, A -90, B 0, C 180}
+   safePos = {X 400, Y -100, Z 600, A 0, B 45, C 90}
+   ;ENDFOLD
+
+   ;FOLD MAIN LOOP ;%{PE}
+   ;--------------------------------------------------
+   ; Main Processing Loop
+   ;--------------------------------------------------
+   FOR i = 1 TO loopCount
+
+      ; Check current status
+      IF isActive == TRUE THEN
+
+         ; Move to target position
+         PTP homePos C_PTP
+         LIN targetPos C_DIS
+
+         ; Conditional processing
+         IF i > 5 THEN
+            speed = speed * 1.1
+            $VEL.CP = speed
+         ELSE
+            speed = 0.5
+         ENDIF
+
+         ; SWITCH example for status handling
+         SWITCH counter
+         CASE 1
+            ; First state
+            $OUT[10] = TRUE
+            WAIT SEC 0.5
+         CASE 2
+            ; Second state
+            $OUT[11] = TRUE
+            WAIT SEC 0.3
+         CASE 3
+            ; Third state
+            $OUT[12] = TRUE
+         DEFAULT
+            ; Default state
+            $OUT[10] = FALSE
+            $OUT[11] = FALSE
+            $OUT[12] = FALSE
+         ENDSWITCH
+
+         counter = counter + 1
+
+      ENDIF
+
+   ENDFOR
+   ;ENDFOLD
+
+   ;FOLD ERROR EXAMPLES - DEMONSTRATION ;%{PE}
+   ;==============================================================================
+   ;  SECTION WITH INTENTIONAL ERRORS FOR DEMONSTRATION
+   ;  ⚠️ Below are examples that will show diagnostics in the extension
+   ;==============================================================================
+
+   ; ❌ ERROR: Undefined variable (will show red underline)
+   undefinedVariable = 100
+   anotherUndefined = undefinedVariable + myValue
+
+   ; ❌ ERROR: Type mismatch - REAL in SWITCH/CASE
+   DECL REAL switchVar
+   switchVar = 3.14
+   SWITCH switchVar
+   CASE 1
+      ; Will show type error
+   CASE 2
+      ; Invalid
+   ENDSWITCH
+
+   ; ❌ ERROR: Decimal value in INT variable
+   DECL INT integerVar
+   integerVar = 15.75    ; Should be integer only!
+
+   ; ⚠️ WARNING: Unsafe speed (>3 m/s)
+   $VEL.CP = 5.0
+
+   ; ⚠️ WARNING: Movement without BAS initialization
+   ; (Uncomment next lines to test)
+   ; PTP somePosition
+
+   ;ENDFOLD
+
+   ;FOLD CORRECT CODE EXAMPLES ;%{PE}
+   ;--------------------------------------------------
+   ; Examples of correct KRL code patterns
+   ;--------------------------------------------------
+
+   ; Proper WHILE loop
+   DECL INT retry
+   retry = 0
+   WHILE retry < 3
+      IF $IN[1] == TRUE THEN
+         $OUT[1] = TRUE
+         WAIT SEC 0.1
+         EXIT
+      ENDIF
+      retry = retry + 1
+      WAIT SEC 0.5
+   ENDWHILE
+
+   ; Proper REPEAT loop
+   DECL INT attempts
+   attempts = 0
+   REPEAT
+      attempts = attempts + 1
+      ; Waiting for signal
+      IF $IN[5] == TRUE THEN
+         hasError = FALSE
+      ELSE
+         hasError = TRUE
+      ENDIF
+   UNTIL hasError == FALSE OR attempts >= 10
+
+   ; Array usage
+   DECL REAL values[5]
+   values[1] = 10.5
+   values[2] = 20.0
+   values[3] = 30.25
+   values[4] = 40.0
+   values[5] = 50.5
+
+   ; Struct access examples
+   targetPos.X = $POS_ACT.X + 100
+   targetPos.Y = $POS_ACT.Y
+   targetPos.Z = $POS_ACT.Z + 50
+
+   ; System variables usage
+   IF $MODE_OP == #T1 THEN
+      ; Test mode - reduced speed
+      $VEL.CP = 0.25
+   ELSE
+      ; Automatic mode
+      $VEL.CP = 2.0
+   ENDIF
+
+   ; Final movements
+   PTP safePos
+   PTP homePos
+   ;ENDFOLD
+
+END
+
+;==============================================================================
+; Helper function demonstrating function definitions
+;==============================================================================
+DEF CalculateDistance(startX:IN, startY:IN, endX:IN, endY:IN):REAL
+   DECL REAL dx, dy, result
+
+   dx = endX - startX
+   dy = endY - startY
+   result = SQRT(dx * dx + dy * dy)
+
+   RETURN result
+END
+
+;==============================================================================
+; Example subprogram with parameters
+;==============================================================================
+DEF MoveToPosition(POS:IN, VEL:IN, waitTime:IN)
+   DECL E6POS POS
+   DECL REAL VEL
+   DECL REAL waitTime
+
+   ; Set velocity
+   $VEL.CP = VEL
+
+   ; Move to position with approximation
+   LIN POS C_DIS
+
+   ; Wait if required
+   IF waitTime > 0 THEN
+      WAIT SEC waitTime
+   ENDIF
+
+   $VEL.CP = 0.5
+   PTP homePos C_PTP
+
+
+END
