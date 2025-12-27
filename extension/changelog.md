@@ -5,6 +5,55 @@ All notable changes to this extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-27
+
+### Added
+
+- **kuka_krl_wonderlibrary Integration**: Added 50+ functions from the [kuka_krl_wonderlibrary](https://github.com/skilledAutomation/kuka_krl_wonderlibrary) project
+  - **Math**: `IN_RANGE`, `IN_TOLERANCE`
+  - **String**: `STOF`, `STOI`, `FTOS`, `ITOS`, `BTOS`, `PTOS`, `MID`, `SPRINTF`
+  - **Logical**: `BOOL_CHOOSEI`, `BOOL_CHOOSEF`, `BOOL_CHOOSE_E6POS`, `BOOL_CHOOSESTR`, `INT_CHOOSEF`
+  - **File I/O**: `fopen`, `fclose`, `fprintf`, `fgets`, `feof`, `LOG`, `LOGDEBUG`, `LOGERROR`
+  - **Geometry 2D**: `LINE2D_FROM_2P`, `LINE2D_INTERSECTION`, `CIRC_FROM_CENTER_RADIUS`, `RADICAL_AXIS`, etc.
+  - **Geometry 3D**: `PLANE_FROM_3p`, `LINE3D_FROM_PLANES`, `VECTOR3D_DIRECTOR_COSINE`, etc.
+- **18 New Snippets**: File operations, string conversions, geometry primitives, ternary operators
+- **Geometry Structs**: `STR_LINE2D`, `STR_CIRCUMFERENCE2D`, `STR_PLANE`, `STR_VECTOR3D`, `STR_LINE3D`
+
+---
+
+## [1.1.5] - 2025-12-27
+
+### Fixed
+
+- **False Positive Diagnostics**: Fixed race condition causing false "undefined variable" errors when opening files
+  - Added `workspaceInitialized` flag to delay variable validation until workspace is fully loaded
+  - Increased debounce delay from 500ms to 750ms for more stable diagnostics
+- **Comment Index Mismatch**: Fixed bug where comment detection used original line indices instead of processed line indices, causing incorrect error positions when strings contain quotes
+- **Windows Line Endings**: Fixed grammar regex for comments to properly handle `\r\n` line endings on Windows
+- **System Variable Detection**: Fixed detection of `$`, `#`, and `.` prefixes to use processed line instead of original line
+
+---
+
+## [1.1.3] - 2025-12-27
+
+### Added
+
+- **FOLD/ENDFOLD Highlighting**: `;FOLD` and `;ENDFOLD` comments now have a distinct color from regular comments (muted gray, italic) across all 5 themes
+- **New Keywords**: `TIMEOUT`, `CONFIRM`, `ANIN`, `ANOUT`, `PULSE`, `SUBMIT`, `STOP`
+- **New Built-in Functions**: `ROUND`, `FLOOR`, `CEILING`, `EXP`, `LOG`, `POW`, `VARSTATE`, `VARINFO`, `TOOL_ADJ`, `INV`
+
+### Fixed
+
+- **WAIT FOR Recognition**: Fixed false positive lint errors for `WAIT FOR` being incorrectly recognized as a `FOR` loop
+- **Diagnostic Delay**: Added debounce (500ms) to validation to prevent false "undefined variable" errors during fast typing
+- **DEF...END Block**: Fixed incorrect "unmatched block" errors when valid DEF...END structure exists
+
+### Changed
+
+- **Auto-fold Disabled by Default**: `krl.autoFold` is now `false` by default
+
+---
+
 ## [1.1.0] - 2025-12-20
 
 ### Added

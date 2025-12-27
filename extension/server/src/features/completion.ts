@@ -10,6 +10,7 @@ import { ServerState } from '../types';
 import { CODE_KEYWORDS } from '../lib/parser';
 import { KSS_87_SYSTEM_VARS } from '../lib/systemVars';
 import { t } from '../lib/i18n';
+import { WONDERLIB_FUNCTIONS } from '../lib/wonderlibFunctions';
 
 export class AutoCompleter {
   /**
@@ -118,7 +119,33 @@ export class AutoCompleter {
       filterText: v.name,
     }));
 
-    // === 5. Tüm tamamlamaları döndür ===
-    return [...functionItems, ...uniqueKeywordItems, ...sysVarItems, ...varItems];
+    // === 5. Wonderlibrary Functions ===
+    const wonderlibItems: CompletionItem[] = WONDERLIB_FUNCTIONS.map((fn) => {
+      const paramList = fn.params
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean);
+      const snippetParams = paramList.map((p, i) => `\${${i + 1}:${p.split(':')[0]}}`).join(', ');
+
+      return {
+        label: fn.name,
+        kind: CompletionItemKind.Function,
+        detail: `${fn.returnType} ${fn.name}(${fn.params}) [wonderlib:${fn.module}]`,
+        insertText: `${fn.name}(${snippetParams})`,
+        insertTextFormat: InsertTextFormat.Snippet,
+        documentation: fn.description,
+        commitCharacters: ['('],
+        filterText: fn.name,
+        sortText: `zz_${fn.name}`, // Sort after user functions
+      };
+    });
+
+    // Filter out wonderlib functions that are already declared by user
+    const uniqueWonderlibItems = wonderlibItems.filter(
+      (wlItem) => !functionItems.some((fnItem) => fnItem.label.toUpperCase() === wlItem.label.toUpperCase()),
+    );
+
+    // === 6. Tüm tamamlamaları döndür ===
+    return [...functionItems, ...uniqueWonderlibItems, ...uniqueKeywordItems, ...sysVarItems, ...varItems];
   }
 }

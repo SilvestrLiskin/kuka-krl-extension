@@ -46,7 +46,8 @@
         {
             "name": "FOLD regions",
             "scope": [
-                "meta.fold.krl"
+                "meta.fold.krl",
+                "comment.line.fold.krl"
             ],
             "settings": {
                 "foreground": "#6E7681",

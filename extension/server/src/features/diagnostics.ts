@@ -269,18 +269,21 @@ export class DiagnosticsProvider {
         const varName = match[1];
 
         // ';' ile başlayan yorumları atla
-        const commentIndex = line.indexOf(';');
+        // NOT: processedLine üzerinde arama yapılmalı, orijinal line değil!
+        // Çünkü match.index processedLine'a aittir.
+        const commentIndex = processedLine.indexOf(';');
         if (commentIndex !== -1 && match.index >= commentIndex) continue;
 
         // '&' ile başlayan parametreleri atla
-        const lineBeforeMatch = line.substring(0, match.index);
+        const lineBeforeMatch = processedLine.substring(0, match.index);
         if (lineBeforeMatch.includes('&')) continue;
 
         // '$' veya '#' ile başlayan sistem değişkenlerini atla
+        // NOT: processedLine üzerinde kontrol yapılmalı!
         if (
           match.index !== undefined &&
           match.index > 0 &&
-          (line[match.index - 1] === '$' || line[match.index - 1] === '#' || line[match.index - 1] === '.')
+          (processedLine[match.index - 1] === '$' || processedLine[match.index - 1] === '#' || processedLine[match.index - 1] === '.')
         )
           continue;
 
@@ -502,6 +505,13 @@ export class DiagnosticsProvider {
         const regex = new RegExp(`\\b${openKeyword}\\b`, 'i');
         const match = regex.exec(codePart);
         if (match) {
+          // Пропустить "WAIT FOR" — это команда ожидания условия, а не цикл FOR
+          if (openKeyword === 'FOR') {
+            const beforeFor = codePart.substring(0, match.index);
+            if (/\bWAIT\s*$/i.test(beforeFor)) {
+              continue; // Это WAIT FOR, пропускаем
+            }
+          }
           // Пропустить DEFFCT внутри DEF (они закрываются отдельно)
           blockStack.push({
             type: openKeyword,
@@ -670,10 +680,10 @@ export class DiagnosticsProvider {
     const lines = text.split(/\r?\n/);
 
     const blockPatterns = [
-      { start: /^\s*IF\b.*\bTHEN\b/i, end: /^\s*(ELSE|ENDIF)\b/i, name: 'IF' },
-      { start: /^\s*FOR\b/i, end: /^\s*ENDFOR\b/i, name: 'FOR' },
-      { start: /^\s*WHILE\b/i, end: /^\s*ENDWHILE\b/i, name: 'WHILE' },
-      { start: /^\s*LOOP\b/i, end: /^\s*ENDLOOP\b/i, name: 'LOOP' },
+      { start: /^\s*IF\b.*\bTHEN\b/i, end: /^\s*(ELSE|ENDIF)\b/i, name: 'IF', excludePattern: null as RegExp | null },
+      { start: /^\s*FOR\b/i, end: /^\s*ENDFOR\b/i, name: 'FOR', excludePattern: /\bWAIT\s+FOR\b/i },
+      { start: /^\s*WHILE\b/i, end: /^\s*ENDWHILE\b/i, name: 'WHILE', excludePattern: null as RegExp | null },
+      { start: /^\s*LOOP\b/i, end: /^\s*ENDLOOP\b/i, name: 'LOOP', excludePattern: null as RegExp | null },
     ];
 
     for (const pattern of blockPatterns) {
@@ -684,7 +694,8 @@ export class DiagnosticsProvider {
         const commentIdx = line.indexOf(';');
         const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
-        if (pattern.start.test(codePart)) {
+        // Проверяем начало блока, но исключаем паттерны вроде WAIT FOR
+        if (pattern.start.test(codePart) && !(pattern.excludePattern && pattern.excludePattern.test(codePart))) {
           blockStartLine = i;
         } else if (pattern.end.test(codePart) && blockStartLine >= 0) {
           // Проверяем есть ли код между началом и концом

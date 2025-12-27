@@ -160,4 +160,32 @@ export const CODE_KEYWORDS = [
   'SET_CD_PARAMS',
   // Init fonksiyonları
   'INIT_IO', 'INI', 'INIT',
+  // === kuka_krl_wonderlibrary functions ===
+  // Math functions (mathlib)
+  'IN_RANGE', 'IN_TOLERANCE',
+  // String functions (stringlib)
+  'STOF', 'STOI', 'FTOS', 'ITOS', 'BTOS', 'PTOS', 'MID',
+  // Logical functions (logicallib)
+  'BOOL_CHOOSEI', 'BOOL_CHOOSEF', 'BOOL_CHOOSE_E6POS', 'BOOL_CHOOSESTR', 'INT_CHOOSEF',
+  // File functions (fileslib)
+  'fopen', 'fclose', 'fclose_all', 'fgetc', 'fgets', 'feof',
+  'fprint', 'fprintf', 'fscanf_int', 'fscanf_real',
+  'LOG', 'LOGERROR', 'LOGDEBUG', 'WRITE_FILE', 'MSG',
+  // Geometry 2D functions (geometrylib)
+  'DISTANCE_POINT_POINT',
+  'LINE2D_FROM_2P', 'LINE2D_FROM_ABC', 'LINE2D_DIST_FROM_POINT',
+  'LINE2D_Y_GIVEN_X', 'LINE2D_X_GIVEN_Y', 'LINE2D_INTERSECTION',
+  'LINE2D_CIRC_INTERSECTION',
+  'CIRC_FROM_CENTER_RADIUS', 'CIRC_FROM_3POINTS',
+  'CIRCUMFERENCE_CENTER', 'CIRCUMFERENCE_RADIUS', 'RADICAL_AXIS',
+  // Geometry 3D functions (geometrylib)
+  'PLANE_FROM_3p', 'PLANE_X_GivenYZ', 'PLANE_Y_GivenXZ', 'PLANE_Z_GivenXY',
+  'PLANE_DIST_TO_POINT',
+  'LINE3D_FROM_PLANES', 'LINE3D_FROM_PARAMETRIC', 'LINE3D_POINT_FROM_ORIGIN',
+  'LINE3D_TO_POLAR_COORD', 'LINE3D_yzGivenX', 'LINE3D_xzGivenY', 'LINE3D_xyGivenZ',
+  'VECTOR3D_DIRECTOR_COSINE',
+  // Geometry structs
+  'STR_LINE2D', 'STR_CIRCUMFERENCE2D', 'STR_PLANE', 'STR_VECTOR3D', 'STR_LINE3D',
+  // Math constant
+  'M_PI',
 ];

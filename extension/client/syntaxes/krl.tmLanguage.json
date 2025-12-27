@@ -50,6 +50,16 @@
         "comment": {
             "patterns": [
                 {
+                    "comment": "FOLD region markers - special highlighting",
+                    "match": ";FOLD\\b.*$",
+                    "name": "meta.fold.krl comment.line.fold.krl"
+                },
+                {
+                    "comment": "ENDFOLD region markers - special highlighting",
+                    "match": ";ENDFOLD\\b.*$",
+                    "name": "meta.fold.krl comment.line.fold.krl"
+                },
+                {
                     "begin": ";",
                     "end": "(?=\\n)",
                     "name": "comment.line.semicolon.krl"
@@ -151,7 +161,7 @@
         "control": {
             "patterns": [
                 {
-                    "match": "(?i)\\b(REPEAT|FOR|WHILE|LOOP|DEF|IF|THEN|ELSE|SWITCH|UNTIL|ENDFOR|ENDWHILE|ENDLOOP|END|ENDIF|ENDSWITCH|INI|ENDFCT|ENDDAT|WAIT|GOTO|CASE|DEFAULT|DEFFCT|SEC|DEFDAT|PUBLIC|RETURN|EXIT|HALT|BRAKE|RESUME|CONTINUE|STEP|TO|WITH|EXTFCT|EXT)\\b",
+                    "match": "(?i)\\b(REPEAT|FOR|WHILE|LOOP|DEF|IF|THEN|ELSE|SWITCH|UNTIL|ENDFOR|ENDWHILE|ENDLOOP|END|ENDIF|ENDSWITCH|INI|ENDFCT|ENDDAT|WAIT|GOTO|CASE|DEFAULT|DEFFCT|SEC|DEFDAT|PUBLIC|RETURN|EXIT|HALT|BRAKE|RESUME|CONTINUE|STEP|TO|WITH|EXTFCT|EXT|TIMEOUT|CONFIRM|ANIN|ANOUT|PULSE|SUBMIT|STOP|IMPORT|MAXIMUM|MINIMUM|IS|DIGIN|CHANNEL|DELAY|DISTANCE|WHEN|PRIO)\\b",
                     "name": "keyword.control.krl"
                 },
                 {
@@ -175,7 +185,7 @@
         "bitwise-operators": {
             "patterns": [
                 {
-                    "match": "(?i)\\b(B_AND|B_OR|B_XOR|B_NOT|B_NAND|B_NOR|B_XNOR|EXOR)\\b",
+                    "match": "(?i)\\b(B_AND|B_OR|B_XOR|B_NOT|B_NAND|B_NOR|B_XNOR|B_EXOR|EXOR)\\b",
                     "name": "keyword.operator.bitwise.krl"
                 },
                 {
@@ -187,7 +197,7 @@
         "built-in-functions": {
             "patterns": [
                 {
-                    "match": "(?i)\\b(\\$LOOP_MSG|\\$LOOP_CONT|BAS|SET_KRLMSG|EXISTS_KRLMSG|CLEAR_KRLMSG|DISTANCE|SET_KRLDLG|EXISTS_KRLDLG|StrClear|StrAdd|StrComp|StrCopy|StrFind|StrLen|StrDecl|LOOP_MSG|LOOP_CONT|INVERSE|FORWARD|ATAN2|SIN|COS|TAN|ASIN|ACOS|SQRT|ABS|MAX|MIN|SWRITE|SREAD|CWRITE|CREAD|COPEN|CCLOSE|CAST_TO|CAST_FROM|PULSE|MsgNotify|MsgQuit|MsgDialog|MsgConfirm|MsgState|GET_MSGBUFFER|DELETE_MSGBUFFER|CHK_KRLMSG)\\b",
+                    "match": "(?i)\\b(\\$LOOP_MSG|\\$LOOP_CONT|BAS|SET_KRLMSG|EXISTS_KRLMSG|CLEAR_KRLMSG|DISTANCE|SET_KRLDLG|EXISTS_KRLDLG|StrClear|StrAdd|StrComp|StrCopy|StrFind|StrLen|StrDecl|LOOP_MSG|LOOP_CONT|INVERSE|FORWARD|ATAN2|SIN|COS|TAN|ASIN|ACOS|SQRT|ABS|MAX|MIN|SWRITE|SREAD|CWRITE|CREAD|COPEN|CCLOSE|CAST_TO|CAST_FROM|PULSE|MsgNotify|MsgQuit|MsgDialog|MsgConfirm|MsgState|GET_MSGBUFFER|DELETE_MSGBUFFER|CHK_KRLMSG|ROUND|FLOOR|CEILING|EXP|LOG|POW|VARSTATE|VARINFO|TOOL_ADJ|INV)\\b",
                     "name": "support.function.builtin.krl"
                 },
                 {
@@ -208,7 +218,7 @@
             "patterns": [
                 {
                     "comment": "System variables with $ prefix",
-                    "match": "(?i)(\\$)(BASE_DATA|TOOL_DATA|LOAD_DATA|ADVANCE|TOOL|BASE|LOAD|AXIS_ACT|POS_ACT|ACT_EX_AX|EX_AX_DATA|INITMOV|BWDSTART|VEL_PTP|ACC_PTP|ANOUT|OUT|IN|ANIN|ACC|VEL|APO|TIMER_STOP|TIMER_FLAG|TIMER|VEL\\.CP|ACT_BASE|ACT_TOOL|APO\\.CPTP|APO\\.CDIS|APO\\.CVEL|APO\\.CORI|VEL\\.ORI1|VEL\\.ORI2|ACC\\.ORI1|ACC\\.ORI2|OV_PRO|OV_JOG|MODE_OP|NULLFRAME|WORLD|ROOT|MSG_T|BRAKE_SIG|MOVE_ENABLE|DRIVES_ON|DRIVES_OFF|ALARM_STOP|T1|T2|AUT|EXT|PRO_ACT|PRO_IP|PRO_STATE0|PRO_STATE1|PRO_MOVE|CYCFLAG|FLAG|DATE|ROB_TIMER|STOPMESS|POWER_FAIL|IN_HOME|IN_HOME1|IN_HOME2|IN_HOME3|IN_HOME4|IN_HOME5|LINE_SEL_OK|MASTERINGTEST_REQ_INT|H_POS|GEAR_JERK|COLLMON_TOL_PRO|ERR|ERR\\.NUMBER|BRAKETEST_REQ_EX|BRAKETEST_REQ_INT|BRAKES_OK|BRAKETEST_WARN|EXT_START|LOOP_MSG)\\b",
+                    "match": "(?i)(\\$)(BASE_DATA|TOOL_DATA|LOAD_DATA|ADVANCE|TOOL|BASE|LOAD|AXIS_ACT|POS_ACT|ACT_EX_AX|EX_AX_DATA|INITMOV|BWDSTART|VEL_PTP|ACC_PTP|ANOUT|OUT|IN|ANIN|ACC|VEL|APO|TIMER_STOP|TIMER_FLAG|TIMER|VEL\\.CP|ACT_BASE|ACT_TOOL|APO\\.CPTP|APO\\.CDIS|APO\\.CVEL|APO\\.CORI|VEL\\.ORI1|VEL\\.ORI2|ACC\\.ORI1|ACC\\.ORI2|OV_PRO|OV_JOG|MODE_OP|NULLFRAME|WORLD|ROOT|MSG_T|BRAKE_SIG|MOVE_ENABLE|DRIVES_ON|DRIVES_OFF|ALARM_STOP|T1|T2|AUT|EXT|PRO_ACT|PRO_IP|PRO_STATE0|PRO_STATE1|PRO_MOVE|CYCFLAG|FLAG|DATE|ROB_TIMER|STOPMESS|POWER_FAIL|IN_HOME|IN_HOME1|IN_HOME2|IN_HOME3|IN_HOME4|IN_HOME5|LINE_SEL_OK|MASTERINGTEST_REQ_INT|H_POS|GEAR_JERK|COLLMON_TOL_PRO|ERR|ERR\\.NUMBER|BRAKETEST_REQ_EX|BRAKETEST_REQ_INT|BRAKES_OK|BRAKETEST_WARN|EXT_START|LOOP_MSG|ACC_MA|ACC_AXIS|VEL_AXIS|DATA_SER1|DATA_SER2|DISTANCE|ASYNC_AXIS|POS_INT|POS_FOR|POS_BACK|TORQUE_AXIS|CURR_ACT|IBUS|IPO_MODE|OPERATING_MODE|TOOL_REF|BASE_REF|OV_MAX|PROG_NAME|NUM_AX)\\b",
                     "captures": {
                         "1": {
                             "name": "punctuation.definition.variable.krl"
@@ -220,7 +230,7 @@
                 },
                 {
                     "comment": "Enum constants with # prefix",
-                    "match": "(?i)(#)(INITMOV|BASE|TOOL|CP_PARAMS|PTP_PARAMS|SPLINE_INIT)\\b",
+                    "match": "(?i)(#)(INITMOV|BASE|TOOL|CP_PARAMS|PTP_PARAMS|SPLINE_INIT|T1|T2|AUT|EX|P_FREE|P_RESET|P_ACTIVE|P_STOP|P_END|ISTEP|PSTEP|MSTEP|CSTEP|GO|BSTEP|BUSY|IDLE|CANCELLED|PEND|PATH|FORWARD|BACKWARD|TCP|VAR|CONSTANT|JOINT|SOURCE|BEST|WORLD|ROBROOT|OFF|INSIDE|OUTSIDE|INSIDE_STOP|OUTSIDE_STOP|RELEASED|PRESSED|CMD_OK|CMD_ABORT|CMD_STAT|CMD_SYN|FMT_ERR|DATA_ERR|DATA_OK|COND|ABS|SYNC|ASYNC)\\b",
                     "captures": {
                         "1": {
                             "name": "punctuation.definition.enum.krl"

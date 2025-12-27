@@ -41,6 +41,17 @@
             }
         },
         {
+            "name": "FOLD regions",
+            "scope": [
+                "meta.fold.krl",
+                "comment.line.fold.krl"
+            ],
+            "settings": {
+                "foreground": "#9A958A",
+                "fontStyle": "italic"
+            }
+        },
+        {
             "name": "Keywords",
             "scope": [
                 "keyword",

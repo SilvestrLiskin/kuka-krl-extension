@@ -88,6 +88,29 @@ let serverConfig = {
   separateAfterBlocks: false,
 };
 
+// Debounce механизм для валидации документов
+// Это предотвращает ложные ошибки при быстром редактировании
+const validationTimeouts = new Map<string, NodeJS.Timeout>();
+const VALIDATION_DELAY_MS = 750; // Увеличена задержка для предотвращения ложных ошибок
+
+// Флаг готовности инициализации workspace
+// Пока workspace не загружен полностью, не показываем ошибки "переменная не определена"
+let workspaceInitialized = false;
+
+function scheduleValidation(uri: string, validationFn: () => void) {
+  // Отменяем предыдущий таймаут для этого документа
+  const existingTimeout = validationTimeouts.get(uri);
+  if (existingTimeout) {
+    clearTimeout(existingTimeout);
+  }
+  // Планируем новую валидацию
+  const timeout = setTimeout(() => {
+    validationTimeouts.delete(uri);
+    validationFn();
+  }, VALIDATION_DELAY_MS);
+  validationTimeouts.set(uri, timeout);
+}
+
 // Özellikler
 const definitions = new SymbolResolver();
 const completions = new AutoCompleter();
@@ -192,6 +215,9 @@ connection.onInitialized(async () => {
   // Fonksiyon önbelleğini güncelle
   diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
 
+  // Workspace полностью инициализирован - теперь можно показывать ошибки
+  workspaceInitialized = true;
+
   log(`[Başlatma] ${state.functionsDeclared.length} fonksiyon ve ${state.mergedVariables.length} değişken yüklendi.`);
 });
 
@@ -287,6 +313,9 @@ documents.onDidChangeContent(async (change) => {
 
     // Fonksiyon önbelleğini güncelle
     diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
+
+    // Workspace полностью инициализирован (неявное определение)
+    workspaceInitialized = true;
   }
 
   if (document.uri.endsWith('.dat')) {
@@ -310,31 +339,51 @@ documents.onDidChangeContent(async (change) => {
   // Fonksiyon önbelleğini güncelle
   diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
 
-  // Tüm teşhisleri topla ve tek seferde gönder
-  let allDiagnostics: import('vscode-languageserver/node').Diagnostic[] = [];
+  // Запланировать валидацию с задержкой (предотвращает ложные ошибки)
+  // Сохраняем URI и версию документа для безопасного обращения в callback
+  const docUri = document.uri;
+  const docVersion = document.version;
 
-  // Kullanım doğrulaması
-  const varDiags = diagnostics.validateVariablesUsage(document, state.mergedVariables);
-  allDiagnostics.push(...varDiags);
+  scheduleValidation(docUri, () => {
+    // Получаем актуальный документ из коллекции
+    const currentDoc = documents.get(docUri);
+    // Если документ закрыт или версия изменилась — пропускаем валидацию
+    if (!currentDoc || currentDoc.version !== docVersion) {
+      return;
+    }
 
-  // Safety diagnostics для SRC файлов
-  if (document.uri.toLowerCase().endsWith('.src')) {
-    allDiagnostics.push(
-      ...diagnostics.validateSafetySpeeds(document),
-      ...diagnostics.validateToolBaseInit(document),
-      ...diagnostics.validateBlockBalance(document),
-      ...diagnostics.validateDuplicateNames(document),
-      ...diagnostics.validateDeadCode(document),
-      ...diagnostics.validateEmptyBlocks(document),
-      ...diagnostics.validateDangerousStatements(document),
-      ...diagnostics.validateTypeUsage(document, state.mergedVariables),
-    );
-  }
+    // Tüm teşhisleri topla ve tek seferde gönder
+    let allDiagnostics: import('vscode-languageserver/node').Diagnostic[] = [];
 
-  // Tüm teşhisleri tek seferde gönder
-  connection.sendDiagnostics({
-    uri: document.uri,
-    diagnostics: allDiagnostics
+    // Обновляем mergedVariables перед валидацией (могут быть загружены новые переменные)
+    state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+
+    // Kullanım doğrulaması - только если workspace полностью загружен
+    // Это предотвращает ложные ошибки "переменная не определена" при открытии файлов
+    if (workspaceInitialized) {
+      const varDiags = diagnostics.validateVariablesUsage(currentDoc, state.mergedVariables);
+      allDiagnostics.push(...varDiags);
+    }
+
+    // Safety diagnostics для SRC файлов
+    if (currentDoc.uri.toLowerCase().endsWith('.src')) {
+      allDiagnostics.push(
+        ...diagnostics.validateSafetySpeeds(currentDoc),
+        ...diagnostics.validateToolBaseInit(currentDoc),
+        ...diagnostics.validateBlockBalance(currentDoc),
+        ...diagnostics.validateDuplicateNames(currentDoc),
+        ...diagnostics.validateDeadCode(currentDoc),
+        ...diagnostics.validateEmptyBlocks(currentDoc),
+        ...diagnostics.validateDangerousStatements(currentDoc),
+        ...diagnostics.validateTypeUsage(currentDoc, state.mergedVariables),
+      );
+    }
+
+    // Tüm teşhisleri tek seferde gönder
+    connection.sendDiagnostics({
+      uri: currentDoc.uri,
+      diagnostics: allDiagnostics
+    });
   });
 });
 
