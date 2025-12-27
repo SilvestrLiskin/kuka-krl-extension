@@ -1,11 +1,15 @@
-import { Hover, HoverParams } from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { TextDocuments } from 'vscode-languageserver/node';
-import { ServerState } from '../types';
-import { isSymbolDeclared, getWordAtPosition, CODE_KEYWORDS } from '../lib/parser';
-import { KSS_87_SYSTEM_VARS } from '../lib/systemVars';
-import { getSystemVarDoc } from '../lib/systemVarDocs';
-import { t, getLocale } from '../lib/i18n';
+import { Hover, HoverParams } from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { TextDocuments } from "vscode-languageserver/node";
+import { ServerState } from "../types";
+import {
+  isSymbolDeclared,
+  getWordAtPosition,
+  CODE_KEYWORDS,
+} from "../lib/parser";
+import { KSS_87_SYSTEM_VARS } from "../lib/systemVars";
+import { getSystemVarDoc } from "../lib/systemVarDocs";
+import { t, getLocale } from "../lib/i18n";
 
 export class InfoProvider {
   /**
@@ -24,7 +28,8 @@ export class InfoProvider {
     const lineText = lines[params.position.line];
 
     // Bildirim satırlarını atla
-    if (/^\s*(GLOBAL\s+)?(DEF|DEFFCT|DECL|SIGNAL|STRUC)\b/i.test(lineText)) return;
+    if (/^\s*(GLOBAL\s+)?(DEF|DEFFCT|DECL|SIGNAL|STRUC)\b/i.test(lineText))
+      return;
 
     const wordInfo = getWordAtPosition(lineText, params.position.character);
     if (!wordInfo) return;
@@ -34,8 +39,8 @@ export class InfoProvider {
     if (CODE_KEYWORDS.includes(symbolName.toUpperCase())) {
       return {
         contents: {
-          kind: 'markdown',
-          value: `**${symbolName.toUpperCase()}** ${t('hover.krlKeyword')}`,
+          kind: "markdown",
+          value: `**${symbolName.toUpperCase()}** ${t("hover.krlKeyword")}`,
         },
       };
     }
@@ -46,7 +51,7 @@ export class InfoProvider {
     if (sysVarDoc) {
       return {
         contents: {
-          kind: 'markdown',
+          kind: "markdown",
           value: sysVarDoc,
         },
       };
@@ -54,40 +59,42 @@ export class InfoProvider {
 
     // Fallback: dokümantasyonu olmayan sistem değişkenleri için
     const sysVar = KSS_87_SYSTEM_VARS.find(
-      (v) => v.toUpperCase() === `$${symbolName}`.toUpperCase() || v.toUpperCase() === symbolName.toUpperCase()
+      (v) =>
+        v.toUpperCase() === `$${symbolName}`.toUpperCase() ||
+        v.toUpperCase() === symbolName.toUpperCase(),
     );
     if (sysVar) {
       return {
         contents: {
-          kind: 'markdown',
-          value: `**${sysVar}** ${t('hover.systemVariable')}`,
+          kind: "markdown",
+          value: `**${sysVar}** ${t("hover.systemVariable")}`,
         },
       };
     }
 
     // Önce fonksiyon listesinden ara
     const cachedFunc = state.functionsDeclared.find(
-      (f) => f.name.toUpperCase() === symbolName.toUpperCase()
+      (f) => f.name.toUpperCase() === symbolName.toUpperCase(),
     );
     if (cachedFunc) {
       return {
         contents: {
-          kind: 'markdown',
-          value: `**${cachedFunc.name}**(${cachedFunc.params})\n\n${t('hover.userFunction')}`,
+          kind: "markdown",
+          value: `**${cachedFunc.name}**(${cachedFunc.params})\n\n${t("hover.userFunction")}`,
         },
       };
     }
 
     // Değişken listesinden ara
     const variable = state.mergedVariables.find(
-      (v) => v.name.toUpperCase() === symbolName.toUpperCase()
+      (v) => v.name.toUpperCase() === symbolName.toUpperCase(),
     );
     if (variable) {
-      const typeDisplay = variable.type || 'Unknown';
+      const typeDisplay = variable.type || "Unknown";
       return {
         contents: {
-          kind: 'markdown',
-          value: `**${symbolName}**: \`${typeDisplay}\`\n\n${t('hover.variable')}`,
+          kind: "markdown",
+          value: `**${symbolName}**: \`${typeDisplay}\`\n\n${t("hover.variable")}`,
         },
       };
     }
@@ -98,19 +105,23 @@ export class InfoProvider {
         const members = state.structDefinitions[structName];
         return {
           contents: {
-            kind: 'markdown',
-            value: `**${t('hover.struct')} ${structName}**\n\n${t('hover.members')}: \`${members.join('`, `')}\``,
+            kind: "markdown",
+            value: `**${t("hover.struct")} ${structName}**\n\n${t("hover.members")}: \`${members.join("`, `")}\``,
           },
         };
       }
     }
 
     // Önbellekte yoksa dosyalardan fonksiyon ara
-    const result = await isSymbolDeclared(state.workspaceRoot, symbolName, 'function');
+    const result = await isSymbolDeclared(
+      state.workspaceRoot,
+      symbolName,
+      "function",
+    );
     if (result) {
       return {
         contents: {
-          kind: 'markdown',
+          kind: "markdown",
           value: `**${symbolName}**(${result.params})`,
         },
       };

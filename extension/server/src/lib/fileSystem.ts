@@ -1,10 +1,13 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 /**
  * Bir dizinde belirli uzantılara sahip tüm dosyaları özyinelemeli olarak bulur.
  */
-export async function findFilesByExtension(dir: string, extensions: string[]): Promise<string[]> {
+export async function findFilesByExtension(
+  dir: string,
+  extensions: string[],
+): Promise<string[]> {
   let results: string[] = [];
   try {
     const list = await fs.promises.readdir(dir, { withFileTypes: true });
@@ -12,13 +15,17 @@ export async function findFilesByExtension(dir: string, extensions: string[]): P
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         // node_modules ve benzeri dizinleri atla
-        if (entry.name === 'node_modules' || entry.name.startsWith('.')) {
+        if (entry.name === "node_modules" || entry.name.startsWith(".")) {
           continue;
         }
         const subFiles = await findFilesByExtension(fullPath, extensions);
         results = results.concat(subFiles);
       } else if (entry.isFile()) {
-        if (extensions.some((ext) => entry.name.toLowerCase().endsWith(ext.toLowerCase()))) {
+        if (
+          extensions.some((ext) =>
+            entry.name.toLowerCase().endsWith(ext.toLowerCase()),
+          )
+        ) {
           results.push(fullPath);
         }
       }
@@ -34,12 +41,12 @@ export async function findFilesByExtension(dir: string, extensions: string[]): P
  * Tüm .dat dosyalarını özyinelemeli olarak bulur.
  */
 export async function getAllDatFiles(dir: string): Promise<string[]> {
-  return findFilesByExtension(dir, ['.dat']);
+  return findFilesByExtension(dir, [".dat"]);
 }
 
 /**
  * Tüm kaynak dosyalarını (.src, .dat, .sub) özyinelemeli olarak bulur.
  */
 export async function getAllSourceFiles(dir: string): Promise<string[]> {
-  return findFilesByExtension(dir, ['.src', '.dat', '.sub']);
+  return findFilesByExtension(dir, [".src", ".dat", ".sub"]);
 }

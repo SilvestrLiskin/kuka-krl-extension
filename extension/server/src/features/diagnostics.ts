@@ -1,8 +1,12 @@
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { Connection, Diagnostic, DiagnosticSeverity } from 'vscode-languageserver/node';
-import { CODE_KEYWORDS } from '../lib/parser';
-import { VariableInfo } from '../types';
-import { t } from '../lib/i18n';
+import { TextDocument } from "vscode-languageserver-textdocument";
+import {
+  Connection,
+  Diagnostic,
+  DiagnosticSeverity,
+} from "vscode-languageserver/node";
+import { CODE_KEYWORDS } from "../lib/parser";
+import { VariableInfo } from "../types";
+import { t } from "../lib/i18n";
 
 /**
  * Görünmez Unicode karakterlerini kaldırır.
@@ -19,7 +23,7 @@ function stripInvisibleChars(text: string): string {
   // U+FEFF (Byte Order Mark / Zero Width No-Break Space)
   // U+00AD (Soft Hyphen)
   // U+2060 (Word Joiner)
-  return text.replace(/[\u200B-\u200F\uFEFF\u00AD\u2060]/g, '');
+  return text.replace(/[\u200B-\u200F\uFEFF\u00AD\u2060]/g, "");
 }
 
 // Önbellek - fonksiyon isimleri için hızlı arama
@@ -50,13 +54,16 @@ export class DiagnosticsProvider {
    * .dat dosyasını doğrular - GLOBAL/PUBLIC tutarlılığını kontrol eder.
    * Ayrıca ASCII olmayan karakterleri ve kapatılmamış stringleri kontrol eder.
    */
-  public async validateDatFile(document: TextDocument, validateNonAscii: boolean = true) {
+  public async validateDatFile(
+    document: TextDocument,
+    validateNonAscii: boolean = true,
+  ) {
     // SİSTEM DOSYALARINI ATLA (büyük/küçük harf duyarsız)
-    const lowerUri = document.uri.toLowerCase().replace(/\\/g, '/');
+    const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
     if (
-      lowerUri.includes('/mada/') ||
-      lowerUri.includes('/system/') ||
-      lowerUri.includes('/tp/')
+      lowerUri.includes("/mada/") ||
+      lowerUri.includes("/system/") ||
+      lowerUri.includes("/tp/")
     ) {
       this.connection.sendDiagnostics({ uri: document.uri, diagnostics: [] });
       return;
@@ -86,8 +93,8 @@ export class DiagnosticsProvider {
                   start: { line: i, character: j },
                   end: { line: i, character: j + 1 },
                 },
-                message: t('diag.nonAsciiChar', char),
-                source: 'krl-language-support',
+                message: t("diag.nonAsciiChar", char),
+                source: "krl-language-support",
               });
             }
           }
@@ -96,9 +103,11 @@ export class DiagnosticsProvider {
 
       // Kapatılmamış stringleri kontrol et
       const quoteCount = (line.match(/"/g) || []).length;
-      const commentIndex = line.indexOf(';');
-      const lineBeforeComment = commentIndex >= 0 ? line.substring(0, commentIndex) : line;
-      const quoteCountBeforeComment = (lineBeforeComment.match(/"/g) || []).length;
+      const commentIndex = line.indexOf(";");
+      const lineBeforeComment =
+        commentIndex >= 0 ? line.substring(0, commentIndex) : line;
+      const quoteCountBeforeComment = (lineBeforeComment.match(/"/g) || [])
+        .length;
 
       if (quoteCountBeforeComment % 2 !== 0) {
         // Tek sayıda tırnak = kapatılmamış string
@@ -110,8 +119,8 @@ export class DiagnosticsProvider {
               start: { line: i, character: firstQuote },
               end: { line: i, character: lineBeforeComment.length },
             },
-            message: t('diag.unclosedString'),
-            source: 'krl-language-support',
+            message: t("diag.unclosedString"),
+            source: "krl-language-support",
           });
         }
       }
@@ -133,7 +142,10 @@ export class DiagnosticsProvider {
 
       if (insideDefdat) {
         // Bildirim satırı mı kontrol et
-        const isDeclLine = /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+\w+/i.test(trimmedLine) ||
+        const isDeclLine =
+          /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+\w+/i.test(
+            trimmedLine,
+          ) ||
           /^SIGNAL\b/i.test(trimmedLine) ||
           /^STRUC\b/i.test(trimmedLine);
 
@@ -151,8 +163,8 @@ export class DiagnosticsProvider {
                 start: { line: i, character: 0 },
                 end: { line: i, character: trimmedLine.length },
               },
-              message: t('diag.notGlobalButPublic'),
-              source: 'krl-language-support',
+              message: t("diag.notGlobalButPublic"),
+              source: "krl-language-support",
             };
             diagnostics.push(newDiagnostic);
           }
@@ -165,15 +177,17 @@ export class DiagnosticsProvider {
                 start: { line: i, character: 0 },
                 end: { line: i, character: trimmedLine.length },
               },
-              message: t('diag.globalButNotPublic'),
-              source: 'krl-language-support',
+              message: t("diag.globalButNotPublic"),
+              source: "krl-language-support",
             };
             diagnostics.push(newDiagnostic);
           }
         }
 
         // KUKA 24-karakter değişken isim limitini kontrol et
-        const declMatch = trimmedLine.match(/^(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?\w+\s+(\w+)/i);
+        const declMatch = trimmedLine.match(
+          /^(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?\w+\s+(\w+)/i,
+        );
         if (declMatch) {
           const varName = declMatch[1];
           // 24-karakter limiti
@@ -182,10 +196,13 @@ export class DiagnosticsProvider {
               severity: DiagnosticSeverity.Error,
               range: {
                 start: { line: i, character: trimmedLine.indexOf(varName) },
-                end: { line: i, character: trimmedLine.indexOf(varName) + varName.length },
+                end: {
+                  line: i,
+                  character: trimmedLine.indexOf(varName) + varName.length,
+                },
               },
-              message: t('diag.nameTooLong', varName, varName.length),
-              source: 'krl-language-support',
+              message: t("diag.nameTooLong", varName, varName.length),
+              source: "krl-language-support",
             });
           }
           // Rakamla başlayan isimler
@@ -194,10 +211,13 @@ export class DiagnosticsProvider {
               severity: DiagnosticSeverity.Error,
               range: {
                 start: { line: i, character: trimmedLine.indexOf(varName) },
-                end: { line: i, character: trimmedLine.indexOf(varName) + varName.length },
+                end: {
+                  line: i,
+                  character: trimmedLine.indexOf(varName) + varName.length,
+                },
               },
-              message: t('diag.nameStartsWithDigit', varName),
-              source: 'krl-language-support',
+              message: t("diag.nameStartsWithDigit", varName),
+              source: "krl-language-support",
             });
           }
         }
@@ -210,33 +230,41 @@ export class DiagnosticsProvider {
    * Değişken kullanımlarını doğrular - tanımsız değişkenleri tespit eder.
    * Optimize edildi: async çağrılar önbellekle değiştirildi.
    */
-  public validateVariablesUsage(document: TextDocument, declaredVariables: VariableInfo[]): Diagnostic[] {
+  public validateVariablesUsage(
+    document: TextDocument,
+    declaredVariables: VariableInfo[],
+  ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
     const lines = text.split(/\r?\n/);
     const variableRegex = /\b([a-zA-Z_]\w*)\b/g;
 
     // MAKİNA DAT DOSYALARINI VE SİSTEM KONFİGÜRASYONUNU ATLA
-    const lowerUri = document.uri.toLowerCase().replace(/\\/g, '/');
+    const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
     if (
-      lowerUri.includes('/mada/') ||
-      lowerUri.includes('/system/') ||
-      lowerUri.includes('/tp/') ||
-      lowerUri.includes('machine.dat') ||
-      lowerUri.includes('config.dat')
+      lowerUri.includes("/mada/") ||
+      lowerUri.includes("/system/") ||
+      lowerUri.includes("/tp/") ||
+      lowerUri.includes("machine.dat") ||
+      lowerUri.includes("config.dat")
     ) {
       return [];
     }
 
     // Dizi'den Set'e dönüştür - O(1) arama için (büyük/küçük harf duyarsız)
-    const validatedNames = new Set(declaredVariables.map((v) => v.name.toUpperCase()));
+    const validatedNames = new Set(
+      declaredVariables.map((v) => v.name.toUpperCase()),
+    );
 
     // Mevcut belgeden YEREL değişkenleri de çıkar
-    const localDeclRegex = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
+    const localDeclRegex =
+      /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
     let localMatch;
     while ((localMatch = localDeclRegex.exec(text)) !== null) {
       const varList = localMatch[1];
-      const vars = varList.split(',').map((v) => v.replace(/\[.*?\]/g, '').trim());
+      const vars = varList
+        .split(",")
+        .map((v) => v.replace(/\[.*?\]/g, "").trim());
       for (const v of vars) {
         if (/^[a-zA-Z_]\w*$/.test(v)) {
           validatedNames.add(v.toUpperCase());
@@ -260,7 +288,7 @@ export class DiagnosticsProvider {
       // Tırnak içindeki stringleri gizle
       let processedLine = line.replace(/"[^"]*"/g, '""');
       // Bilimsel gösterimi gizle (örn: 1.0E+02)
-      processedLine = processedLine.replace(/\d+\.?\d*[eE][+-]?\d+/g, '0');
+      processedLine = processedLine.replace(/\d+\.?\d*[eE][+-]?\d+/g, "0");
       // Görünmez Unicode karakterlerini kaldır (zero-width space vb.)
       processedLine = stripInvisibleChars(processedLine);
 
@@ -271,19 +299,21 @@ export class DiagnosticsProvider {
         // ';' ile başlayan yorumları atla
         // NOT: processedLine üzerinde arama yapılmalı, orijinal line değil!
         // Çünkü match.index processedLine'a aittir.
-        const commentIndex = processedLine.indexOf(';');
+        const commentIndex = processedLine.indexOf(";");
         if (commentIndex !== -1 && match.index >= commentIndex) continue;
 
         // '&' ile başlayan parametreleri atla
         const lineBeforeMatch = processedLine.substring(0, match.index);
-        if (lineBeforeMatch.includes('&')) continue;
+        if (lineBeforeMatch.includes("&")) continue;
 
         // '$' veya '#' ile başlayan sistem değişkenlerini atla
         // NOT: processedLine üzerinde kontrol yapılmalı!
         if (
           match.index !== undefined &&
           match.index > 0 &&
-          (processedLine[match.index - 1] === '$' || processedLine[match.index - 1] === '#' || processedLine[match.index - 1] === '.')
+          (processedLine[match.index - 1] === "$" ||
+            processedLine[match.index - 1] === "#" ||
+            processedLine[match.index - 1] === ".")
         )
           continue;
 
@@ -299,12 +329,12 @@ export class DiagnosticsProvider {
         // Bilinmeyen sembol ise hata bildir
         const newDiagnostic: Diagnostic = {
           severity: DiagnosticSeverity.Error,
-          message: t('diag.variableNotDefined', varName),
+          message: t("diag.variableNotDefined", varName),
           range: {
             start: { line: lineIndex, character: match.index },
             end: { line: lineIndex, character: match.index + varName.length },
           },
-          source: 'krl-language-support',
+          source: "krl-language-support",
         };
 
         if (!this.isDuplicateDiagnostic(newDiagnostic, diagnostics)) {
@@ -315,7 +345,10 @@ export class DiagnosticsProvider {
     return diagnostics;
   }
 
-  private isDuplicateDiagnostic(newDiag: Diagnostic, existingDiagnostics: Diagnostic[]): boolean {
+  private isDuplicateDiagnostic(
+    newDiag: Diagnostic,
+    existingDiagnostics: Diagnostic[],
+  ): boolean {
     return existingDiagnostics.some(
       (diag) =>
         diag.range.start.line === newDiag.range.start.line &&
@@ -345,7 +378,7 @@ export class DiagnosticsProvider {
       const line = lines[i];
 
       // Пропустить комментарии
-      const commentIdx = line.indexOf(';');
+      const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
       // Проверка $VEL.CP
@@ -360,8 +393,8 @@ export class DiagnosticsProvider {
               start: { line: i, character: match.index },
               end: { line: i, character: match.index + match[0].length },
             },
-            message: t('diag.velocityTooHigh', velocity.toString()),
-            source: 'krl-language-support',
+            message: t("diag.velocityTooHigh", velocity.toString()),
+            source: "krl-language-support",
           });
         }
       }
@@ -377,8 +410,8 @@ export class DiagnosticsProvider {
               start: { line: i, character: match.index },
               end: { line: i, character: match.index + match[0].length },
             },
-            message: t('diag.ptpVelocityTooHigh', velocity.toString()),
-            source: 'krl-language-support',
+            message: t("diag.ptpVelocityTooHigh", velocity.toString()),
+            source: "krl-language-support",
           });
         }
       }
@@ -409,7 +442,7 @@ export class DiagnosticsProvider {
       const line = lines[i];
 
       // Пропустить комментарии
-      const commentIdx = line.indexOf(';');
+      const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
       // Проверить инициализацию TOOL
@@ -429,10 +462,13 @@ export class DiagnosticsProvider {
             severity: DiagnosticSeverity.Warning,
             range: {
               start: { line: i, character: movementMatch.index },
-              end: { line: i, character: movementMatch.index + movementMatch[0].length },
+              end: {
+                line: i,
+                character: movementMatch.index + movementMatch[0].length,
+              },
             },
-            message: t('diag.toolNotInitialized'),
-            source: 'krl-language-support',
+            message: t("diag.toolNotInitialized"),
+            source: "krl-language-support",
           });
         }
         if (!baseInitialized) {
@@ -440,10 +476,13 @@ export class DiagnosticsProvider {
             severity: DiagnosticSeverity.Warning,
             range: {
               start: { line: i, character: movementMatch.index },
-              end: { line: i, character: movementMatch.index + movementMatch[0].length },
+              end: {
+                line: i,
+                character: movementMatch.index + movementMatch[0].length,
+              },
             },
-            message: t('diag.baseNotInitialized'),
-            source: 'krl-language-support',
+            message: t("diag.baseNotInitialized"),
+            source: "krl-language-support",
           });
         }
       }
@@ -477,15 +516,15 @@ export class DiagnosticsProvider {
 
     // Маппинг открывающих на закрывающие
     const blockPairs: Record<string, string> = {
-      'IF': 'ENDIF',
-      'FOR': 'ENDFOR',
-      'WHILE': 'ENDWHILE',
-      'LOOP': 'ENDLOOP',
-      'REPEAT': 'UNTIL',
-      'SWITCH': 'ENDSWITCH',
-      'DEF': 'END',
-      'DEFFCT': 'ENDFCT',
-      'DEFDAT': 'ENDDAT',
+      IF: "ENDIF",
+      FOR: "ENDFOR",
+      WHILE: "ENDWHILE",
+      LOOP: "ENDLOOP",
+      REPEAT: "UNTIL",
+      SWITCH: "ENDSWITCH",
+      DEF: "END",
+      DEFFCT: "ENDFCT",
+      DEFDAT: "ENDDAT",
     };
 
     // Обратный маппинг
@@ -496,17 +535,17 @@ export class DiagnosticsProvider {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      const commentIdx = line.indexOf(';');
+      const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
       const upperCode = codePart.toUpperCase();
 
       // Проверка открывающих блоков
       for (const openKeyword of Object.keys(blockPairs)) {
-        const regex = new RegExp(`\\b${openKeyword}\\b`, 'i');
+        const regex = new RegExp(`\\b${openKeyword}\\b`, "i");
         const match = regex.exec(codePart);
         if (match) {
           // Пропустить "WAIT FOR" — это команда ожидания условия, а не цикл FOR
-          if (openKeyword === 'FOR') {
+          if (openKeyword === "FOR") {
             const beforeFor = codePart.substring(0, match.index);
             if (/\bWAIT\s*$/i.test(beforeFor)) {
               continue; // Это WAIT FOR, пропускаем
@@ -523,7 +562,7 @@ export class DiagnosticsProvider {
 
       // Проверка закрывающих блоков
       for (const closeKeyword of Object.keys(closeToOpen)) {
-        const regex = new RegExp(`\\b${closeKeyword}\\b`, 'i');
+        const regex = new RegExp(`\\b${closeKeyword}\\b`, "i");
         const match = regex.exec(codePart);
         if (match) {
           const expectedOpen = closeToOpen[closeKeyword];
@@ -534,8 +573,8 @@ export class DiagnosticsProvider {
                 start: { line: i, character: match.index },
                 end: { line: i, character: match.index + closeKeyword.length },
               },
-              message: t('diag.unmatchedBlock', closeKeyword, expectedOpen),
-              source: 'krl-language-support',
+              message: t("diag.unmatchedBlock", closeKeyword, expectedOpen),
+              source: "krl-language-support",
             });
           } else {
             const lastBlock = blockStack[blockStack.length - 1];
@@ -554,10 +593,13 @@ export class DiagnosticsProvider {
         severity: DiagnosticSeverity.Error,
         range: {
           start: { line: block.line, character: block.character },
-          end: { line: block.line, character: block.character + block.type.length },
+          end: {
+            line: block.line,
+            character: block.character + block.type.length,
+          },
         },
-        message: t('diag.unmatchedBlock', block.type, expectedClose),
-        source: 'krl-language-support',
+        message: t("diag.unmatchedBlock", block.type, expectedClose),
+        source: "krl-language-support",
       });
     }
 
@@ -581,7 +623,7 @@ export class DiagnosticsProvider {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      const commentIdx = line.indexOf(';');
+      const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
       // Проверка функций
@@ -594,13 +636,21 @@ export class DiagnosticsProvider {
             severity: DiagnosticSeverity.Error,
             range: {
               start: { line: i, character: codePart.indexOf(funcMatch[2]) },
-              end: { line: i, character: codePart.indexOf(funcMatch[2]) + funcMatch[2].length },
+              end: {
+                line: i,
+                character: codePart.indexOf(funcMatch[2]) + funcMatch[2].length,
+              },
             },
-            message: t('diag.duplicateName', 'function', funcMatch[2], existing.line + 1),
-            source: 'krl-language-support',
+            message: t(
+              "diag.duplicateName",
+              "function",
+              funcMatch[2],
+              existing.line + 1,
+            ),
+            source: "krl-language-support",
           });
         } else {
-          foundNames.set(funcName, { type: 'function', line: i });
+          foundNames.set(funcName, { type: "function", line: i });
         }
       }
     }
@@ -618,19 +668,19 @@ export class DiagnosticsProvider {
     const lines = text.split(/\r?\n/);
 
     // Не включаем GOTO в exit keywords, т.к. код после GOTO может быть достижим через метки
-    const exitKeywords = ['RETURN', 'EXIT', 'HALT'];
+    const exitKeywords = ["RETURN", "EXIT", "HALT"];
     let skipUntilBlockEnd = false;
-    let lastExitKeyword = '';
+    let lastExitKeyword = "";
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      const commentIdx = line.indexOf(';');
+      const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
       const trimmed = codePart.trim();
       const upperTrimmed = trimmed.toUpperCase();
 
       // Пропускаем пустые строки и комментарии
-      if (trimmed === '') continue;
+      if (trimmed === "") continue;
 
       // Проверка метки (label:) - метка делает код достижимым через GOTO
       if (/^\w+\s*:\s*$/i.test(trimmed)) {
@@ -639,7 +689,11 @@ export class DiagnosticsProvider {
       }
 
       // Проверка конца блока - снимаем флаг
-      if (/^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i.test(upperTrimmed)) {
+      if (
+        /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i.test(
+          upperTrimmed,
+        )
+      ) {
         skipUntilBlockEnd = false;
         continue;
       }
@@ -652,15 +706,15 @@ export class DiagnosticsProvider {
             start: { line: i, character: 0 },
             end: { line: i, character: trimmed.length },
           },
-          message: t('diag.deadCode', lastExitKeyword),
-          source: 'krl-language-support',
+          message: t("diag.deadCode", lastExitKeyword),
+          source: "krl-language-support",
         });
         continue;
       }
 
       // Проверка exit-ключевых слов
       for (const kw of exitKeywords) {
-        if (new RegExp(`^${kw}\\b`, 'i').test(upperTrimmed)) {
+        if (new RegExp(`^${kw}\\b`, "i").test(upperTrimmed)) {
           skipUntilBlockEnd = true;
           lastExitKeyword = kw;
           break;
@@ -680,10 +734,30 @@ export class DiagnosticsProvider {
     const lines = text.split(/\r?\n/);
 
     const blockPatterns = [
-      { start: /^\s*IF\b.*\bTHEN\b/i, end: /^\s*(ELSE|ENDIF)\b/i, name: 'IF', excludePattern: null as RegExp | null },
-      { start: /^\s*FOR\b/i, end: /^\s*ENDFOR\b/i, name: 'FOR', excludePattern: /\bWAIT\s+FOR\b/i },
-      { start: /^\s*WHILE\b/i, end: /^\s*ENDWHILE\b/i, name: 'WHILE', excludePattern: null as RegExp | null },
-      { start: /^\s*LOOP\b/i, end: /^\s*ENDLOOP\b/i, name: 'LOOP', excludePattern: null as RegExp | null },
+      {
+        start: /^\s*IF\b.*\bTHEN\b/i,
+        end: /^\s*(ELSE|ENDIF)\b/i,
+        name: "IF",
+        excludePattern: null as RegExp | null,
+      },
+      {
+        start: /^\s*FOR\b/i,
+        end: /^\s*ENDFOR\b/i,
+        name: "FOR",
+        excludePattern: /\bWAIT\s+FOR\b/i,
+      },
+      {
+        start: /^\s*WHILE\b/i,
+        end: /^\s*ENDWHILE\b/i,
+        name: "WHILE",
+        excludePattern: null as RegExp | null,
+      },
+      {
+        start: /^\s*LOOP\b/i,
+        end: /^\s*ENDLOOP\b/i,
+        name: "LOOP",
+        excludePattern: null as RegExp | null,
+      },
     ];
 
     for (const pattern of blockPatterns) {
@@ -691,20 +765,26 @@ export class DiagnosticsProvider {
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        const commentIdx = line.indexOf(';');
+        const commentIdx = line.indexOf(";");
         const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
         // Проверяем начало блока, но исключаем паттерны вроде WAIT FOR
-        if (pattern.start.test(codePart) && !(pattern.excludePattern && pattern.excludePattern.test(codePart))) {
+        if (
+          pattern.start.test(codePart) &&
+          !(pattern.excludePattern && pattern.excludePattern.test(codePart))
+        ) {
           blockStartLine = i;
         } else if (pattern.end.test(codePart) && blockStartLine >= 0) {
           // Проверяем есть ли код между началом и концом
           let hasCode = false;
           for (let j = blockStartLine + 1; j < i; j++) {
             const innerLine = lines[j];
-            const innerComment = innerLine.indexOf(';');
-            const innerCode = innerComment >= 0 ? innerLine.substring(0, innerComment) : innerLine;
-            if (innerCode.trim() !== '') {
+            const innerComment = innerLine.indexOf(";");
+            const innerCode =
+              innerComment >= 0
+                ? innerLine.substring(0, innerComment)
+                : innerLine;
+            if (innerCode.trim() !== "") {
               hasCode = true;
               break;
             }
@@ -715,10 +795,13 @@ export class DiagnosticsProvider {
               severity: DiagnosticSeverity.Warning,
               range: {
                 start: { line: blockStartLine, character: 0 },
-                end: { line: blockStartLine, character: lines[blockStartLine].length },
+                end: {
+                  line: blockStartLine,
+                  character: lines[blockStartLine].length,
+                },
               },
-              message: t('diag.emptyBlock', pattern.name),
-              source: 'krl-language-support',
+              message: t("diag.emptyBlock", pattern.name),
+              source: "krl-language-support",
             });
           }
 
@@ -740,7 +823,7 @@ export class DiagnosticsProvider {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      const commentIdx = line.indexOf(';');
+      const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
       // WAIT FOR без TIMEOUT
@@ -753,8 +836,8 @@ export class DiagnosticsProvider {
               start: { line: i, character: match.index || 0 },
               end: { line: i, character: (match.index || 0) + match[0].length },
             },
-            message: t('diag.waitWithoutTimeout'),
-            source: 'krl-language-support',
+            message: t("diag.waitWithoutTimeout"),
+            source: "krl-language-support",
           });
         }
       }
@@ -769,8 +852,8 @@ export class DiagnosticsProvider {
               start: { line: i, character: match.index || 0 },
               end: { line: i, character: (match.index || 0) + 4 },
             },
-            message: t('diag.dangerousHalt'),
-            source: 'krl-language-support',
+            message: t("diag.dangerousHalt"),
+            source: "krl-language-support",
           });
         }
       }
@@ -784,7 +867,7 @@ export class DiagnosticsProvider {
    */
   public validateTypeUsage(
     document: TextDocument,
-    declaredVariables: Array<{ name: string; type: string }>
+    declaredVariables: Array<{ name: string; type: string }>,
   ): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
@@ -808,12 +891,12 @@ export class DiagnosticsProvider {
     }
 
     let insideSwitch = false;
-    let switchVarName = '';
+    let switchVarName = "";
     let switchLine = -1;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      const commentIdx = line.indexOf(';');
+      const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
       // Проверка SWITCH с REAL переменной
@@ -822,7 +905,7 @@ export class DiagnosticsProvider {
         const varName = switchMatch[1].toUpperCase();
         const varType = varTypeMap.get(varName);
 
-        if (varType === 'REAL') {
+        if (varType === "REAL") {
           const matchIndex = codePart.indexOf(switchMatch[1]);
           diagnostics.push({
             severity: DiagnosticSeverity.Error,
@@ -830,10 +913,10 @@ export class DiagnosticsProvider {
               start: { line: i, character: matchIndex },
               end: { line: i, character: matchIndex + switchMatch[1].length },
             },
-            message: t('diag.realInSwitch'),
-            source: 'krl-language-support',
-            code: 'realInSwitch',
-            data: { varName: switchMatch[1], line: i }
+            message: t("diag.realInSwitch"),
+            source: "krl-language-support",
+            code: "realInSwitch",
+            data: { varName: switchMatch[1], line: i },
           });
         }
         insideSwitch = true;
@@ -852,7 +935,7 @@ export class DiagnosticsProvider {
         const value = assignMatch[2];
         const varType = varTypeMap.get(varName);
 
-        if (varType === 'INT') {
+        if (varType === "INT") {
           const matchIndex = codePart.indexOf(assignMatch[0]);
           diagnostics.push({
             severity: DiagnosticSeverity.Warning,
@@ -860,10 +943,10 @@ export class DiagnosticsProvider {
               start: { line: i, character: matchIndex },
               end: { line: i, character: matchIndex + assignMatch[0].length },
             },
-            message: t('diag.shouldBeReal', value, assignMatch[1]),
-            source: 'krl-language-support',
-            code: 'shouldBeReal',
-            data: { varName: assignMatch[1], value, line: i }
+            message: t("diag.shouldBeReal", value, assignMatch[1]),
+            source: "krl-language-support",
+            code: "shouldBeReal",
+            data: { varName: assignMatch[1], value, line: i },
           });
         }
       }

@@ -11,13 +11,13 @@
  * @returns true if the position is inside a string
  */
 export function isInsideString(line: string, position: number): boolean {
-    let inString = false;
-    for (let i = 0; i < position && i < line.length; i++) {
-        if (line[i] === '"') {
-            inString = !inString;
-        }
+  let inString = false;
+  for (let i = 0; i < position && i < line.length; i++) {
+    if (line[i] === '"') {
+      inString = !inString;
     }
-    return inString;
+  }
+  return inString;
 }
 
 /**
@@ -26,7 +26,7 @@ export function isInsideString(line: string, position: number): boolean {
  * @returns The escaped string safe for use in RegExp
  */
 export function escapeRegex(str: string): string {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /**
@@ -35,6 +35,6 @@ export function escapeRegex(str: string): string {
  * @returns The code part without the comment
  */
 export function getCodePart(line: string): string {
-    const commentIndex = line.indexOf(';');
-    return commentIndex >= 0 ? line.substring(0, commentIndex) : line;
+  const commentIndex = line.indexOf(";");
+  return commentIndex >= 0 ? line.substring(0, commentIndex) : line;
 }

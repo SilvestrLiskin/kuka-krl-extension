@@ -1,8 +1,12 @@
-import { DefinitionParams, Location, Position } from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { TextDocuments } from 'vscode-languageserver/node';
-import { ServerState, EnclosuresLines, WordInfo } from '../types';
-import { isSymbolDeclared, getWordAtPosition } from '../lib/parser';
+import {
+  DefinitionParams,
+  Location,
+  Position,
+} from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { TextDocuments } from "vscode-languageserver/node";
+import { ServerState, EnclosuresLines, WordInfo } from "../types";
+import { isSymbolDeclared, getWordAtPosition } from "../lib/parser";
 
 export class SymbolResolver {
   /**
@@ -20,7 +24,11 @@ export class SymbolResolver {
     const lineText = lines[params.position.line];
 
     // Bildirim satırlarını atla
-    if (/^\s*(GLOBAL\s+)?(DEF|DEFFCT|DECL\s+INT|DECL\s+REAL|DECL\s+BOOL|DECL\s+FRAME)\b/i.test(lineText))
+    if (
+      /^\s*(GLOBAL\s+)?(DEF|DEFFCT|DECL\s+INT|DECL\s+REAL|DECL\s+BOOL|DECL\s+FRAME)\b/i.test(
+        lineText,
+      )
+    )
       return;
 
     // Struct içindeki alt değişkenleri atla
@@ -28,11 +36,18 @@ export class SymbolResolver {
       return;
     }
 
-    const functionName = getWordAtPosition(lineText, params.position.character)?.word;
+    const functionName = getWordAtPosition(
+      lineText,
+      params.position.character,
+    )?.word;
     if (!functionName) return;
 
     // Önce fonksiyon olarak ara
-    const resultFct = await isSymbolDeclared(state.workspaceRoot, functionName, 'function');
+    const resultFct = await isSymbolDeclared(
+      state.workspaceRoot,
+      functionName,
+      "function",
+    );
     if (resultFct != undefined) {
       return Location.create(resultFct.uri, {
         start: Position.create(resultFct.line, resultFct.startChar),
@@ -43,7 +58,11 @@ export class SymbolResolver {
     // Özel kullanıcı değişken tipi (Struct) olarak ara
     for (const key in state.structDefinitions) {
       if (key === functionName) {
-        const resultStruc = await isSymbolDeclared(state.workspaceRoot, functionName, 'struc');
+        const resultStruc = await isSymbolDeclared(
+          state.workspaceRoot,
+          functionName,
+          "struc",
+        );
         if (resultStruc != undefined) {
           return Location.create(resultStruc.uri, {
             start: Position.create(resultStruc.line, resultStruc.startChar),
@@ -63,11 +82,11 @@ export class SymbolResolver {
         const scopedResult = await isSymbolDeclared(
           state.workspaceRoot,
           functionName,
-          'variable',
+          "variable",
           params.textDocument.uri,
           enclosures.upperLine,
           enclosures.bottomLine,
-          lines.join('\n'),
+          lines.join("\n"),
         );
 
         if (scopedResult) {
@@ -78,7 +97,11 @@ export class SymbolResolver {
         }
 
         // Yerel olarak bulunamadıysa global arama yap
-        const resultVar = await isSymbolDeclared(state.workspaceRoot, functionName, 'variable');
+        const resultVar = await isSymbolDeclared(
+          state.workspaceRoot,
+          functionName,
+          "variable",
+        );
 
         if (resultVar) {
           return Location.create(resultVar.uri, {
@@ -96,7 +119,10 @@ export class SymbolResolver {
    * Kapsam satırlarını bulur - DEF/DEFFCT/DEFDAT bloğunun sınırları.
    * Düzeltildi: includes yerine \b regex kullanılarak kesin eşleşme sağlandı.
    */
-  private findEnclosuresLines(lineNumber: number, lines: string[]): EnclosuresLines {
+  private findEnclosuresLines(
+    lineNumber: number,
+    lines: string[],
+  ): EnclosuresLines {
     let row = lineNumber;
     const result: EnclosuresLines = {
       upperLine: 0,
@@ -106,8 +132,10 @@ export class SymbolResolver {
     // Yukarı doğru ara - başlangıç sınırı
     while (row >= 0) {
       const line = lines[row];
-      if (/^\s*(?:GLOBAL\s+)?(?:DEFFCT|DEFDAT)\b/i.test(line) ||
-        /^\s*(?:GLOBAL\s+)?DEF\b(?!DAT|FCT)/i.test(line)) {
+      if (
+        /^\s*(?:GLOBAL\s+)?(?:DEFFCT|DEFDAT)\b/i.test(line) ||
+        /^\s*(?:GLOBAL\s+)?DEF\b(?!DAT|FCT)/i.test(line)
+      ) {
         result.upperLine = row + 1;
         break;
       }
@@ -120,9 +148,11 @@ export class SymbolResolver {
     // Aşağı doğru ara - bitiş sınırı
     while (row < lines.length) {
       const line = lines[row];
-      if (/^\s*ENDFCT\b/i.test(line) ||
+      if (
+        /^\s*ENDFCT\b/i.test(line) ||
         /^\s*ENDDAT\b/i.test(line) ||
-        /^\s*END\b(?!FOR|IF|WHILE|LOOP|SWITCH|FCT|DAT)/i.test(line)) {
+        /^\s*END\b(?!FOR|IF|WHILE|LOOP|SWITCH|FCT|DAT)/i.test(line)
+      ) {
         result.bottomLine = row + 1;
         break;
       }

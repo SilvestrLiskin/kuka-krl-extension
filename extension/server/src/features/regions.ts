@@ -1,6 +1,10 @@
-import { FoldingRange, FoldingRangeParams, FoldingRangeKind } from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { TextDocuments } from 'vscode-languageserver/node';
+import {
+  FoldingRange,
+  FoldingRangeParams,
+  FoldingRangeKind,
+} from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { TextDocuments } from "vscode-languageserver/node";
 
 export class RegionProvider {
   /**

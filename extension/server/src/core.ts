@@ -17,34 +17,36 @@ import {
   SignatureHelpParams,
   CodeActionParams,
   CodeLensParams,
-} from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { URI } from 'vscode-uri';
-import { ServerState, VariableInfo, FunctionDeclaration } from './types';
-import { SymbolResolver } from './features/definition';
-import { AutoCompleter } from './features/completion';
-import { DiagnosticsProvider } from './features/diagnostics';
-import { InfoProvider } from './features/hover';
-import { RegionProvider } from './features/regions';
-import { KrlFormatter, setFormattingSettings } from './features/formatter';
-import { DocumentSymbolsProvider } from './features/symbols';
-import { WorkspaceSymbolsProvider } from './features/workspaceSymbols';
-import { RenameProvider } from './features/rename';
-import { ReferencesProvider } from './features/references';
-import { SignatureHelpProvider } from './features/signatureHelp';
-import { CodeActionsProvider } from './features/codeActions';
-import { CodeLensProvider } from './features/codeLens';
-import { SymbolExtractor, extractStrucVariables } from './lib/collector';
-import { getAllDatFiles, getAllSourceFiles } from './lib/fileSystem';
-import { setLocale } from './lib/i18n';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
+} from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { URI } from "vscode-uri";
+import { ServerState, VariableInfo, FunctionDeclaration } from "./types";
+import { SymbolResolver } from "./features/definition";
+import { AutoCompleter } from "./features/completion";
+import { DiagnosticsProvider } from "./features/diagnostics";
+import { InfoProvider } from "./features/hover";
+import { RegionProvider } from "./features/regions";
+import { KrlFormatter, setFormattingSettings } from "./features/formatter";
+import { DocumentSymbolsProvider } from "./features/symbols";
+import { WorkspaceSymbolsProvider } from "./features/workspaceSymbols";
+import { RenameProvider } from "./features/rename";
+import { ReferencesProvider } from "./features/references";
+import { SignatureHelpProvider } from "./features/signatureHelp";
+import { CodeActionsProvider } from "./features/codeActions";
+import { CodeLensProvider } from "./features/codeLens";
+import { SymbolExtractor, extractStrucVariables } from "./lib/collector";
+import { getAllDatFiles, getAllSourceFiles } from "./lib/fileSystem";
+import { setLocale } from "./lib/i18n";
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
 
 // DEBUG KAYIT - Hata ayıklama için log dosyası
 // Sadece DEBUG ortam değişkeni ayarlandığında loglar
-const DEBUG_ENABLED = process.env.KRL_DEBUG === 'true';
-const logFile = DEBUG_ENABLED ? path.join(os.tmpdir(), 'krl-server-debug.log') : '';
+const DEBUG_ENABLED = process.env.KRL_DEBUG === "true";
+const logFile = DEBUG_ENABLED
+  ? path.join(os.tmpdir(), "krl-server-debug.log")
+  : "";
 
 function log(msg: string) {
   if (!DEBUG_ENABLED) return;
@@ -59,12 +61,12 @@ function log(msg: string) {
 log(`Sunucu başlatılıyor. Node: ${process.version}, PID: ${process.pid}`);
 
 // Hata yakalama
-process.on('uncaughtException', (err) => {
-  log('Yakalanmamış Hata: ' + err.toString() + '\n' + (err.stack || ''));
+process.on("uncaughtException", (err) => {
+  log("Yakalanmamış Hata: " + err.toString() + "\n" + (err.stack || ""));
   process.exit(1);
 });
-process.on('unhandledRejection', (err) => {
-  log('İşlenmemiş Red: ' + (err instanceof Error ? err.stack : err));
+process.on("unhandledRejection", (err) => {
+  log("İşlenmemiş Red: " + (err instanceof Error ? err.stack : err));
 });
 
 // Bağlantı oluştur
@@ -132,7 +134,9 @@ const diagnostics = new DiagnosticsProvider(connection);
 
 connection.onInitialize((params: InitializeParams): InitializeResult => {
   log(`[Başlatma] Kök URI: ${params.rootUri}`);
-  state.workspaceRoot = params.rootUri ? URI.parse(params.rootUri).fsPath : null;
+  state.workspaceRoot = params.rootUri
+    ? URI.parse(params.rootUri).fsPath
+    : null;
   log(`[Başlatma] Çalışma alanı kökü ayarlandı: ${state.workspaceRoot}`);
   diagnostics.setWorkspaceRoot(state.workspaceRoot);
 
@@ -150,16 +154,27 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
       },
       referencesProvider: true,
       signatureHelpProvider: {
-        triggerCharacters: ['(', ','],
-        retriggerCharacters: [','],
+        triggerCharacters: ["(", ","],
+        retriggerCharacters: [","],
       },
       codeActionProvider: {
-        codeActionKinds: ['quickfix', 'refactor.extract'],
+        codeActionKinds: ["quickfix", "refactor.extract"],
       },
       completionProvider: {
         triggerCharacters: [
-          '.', '(', ',', ' ', '=', '+', '-', '*', '/', '<', '>', '!',
-          ...'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_',
+          ".",
+          "(",
+          ",",
+          " ",
+          "=",
+          "+",
+          "-",
+          "*",
+          "/",
+          "<",
+          ">",
+          "!",
+          ..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_",
         ],
       },
       codeLensProvider: {
@@ -170,17 +185,20 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
 });
 
 // Получение настроек конфигурации от клиента
-connection.onNotification('custom/updateSettings', (settings: typeof serverConfig) => {
-  serverConfig = { ...serverConfig, ...settings };
-  setFormattingSettings({
-    separateBeforeBlocks: serverConfig.separateBeforeBlocks,
-    separateAfterBlocks: serverConfig.separateAfterBlocks,
-  });
-  log(`[Настройки] Обновлены: ${JSON.stringify(serverConfig)}`);
-});
+connection.onNotification(
+  "custom/updateSettings",
+  (settings: typeof serverConfig) => {
+    serverConfig = { ...serverConfig, ...settings };
+    setFormattingSettings({
+      separateBeforeBlocks: serverConfig.separateBeforeBlocks,
+      separateAfterBlocks: serverConfig.separateAfterBlocks,
+    });
+    log(`[Настройки] Обновлены: ${JSON.stringify(serverConfig)}`);
+  },
+);
 
 // Получение локали от клиента
-connection.onNotification('custom/setLocale', (locale: string) => {
+connection.onNotification("custom/setLocale", (locale: string) => {
   setLocale(locale);
   log(`[Локаль] Установлена: ${locale}`);
 });
@@ -192,7 +210,7 @@ connection.onInitialized(async () => {
   const datFiles = await getAllDatFiles(state.workspaceRoot);
   for (const filePath of datFiles) {
     try {
-      const content = await fs.promises.readFile(filePath, 'utf8');
+      const content = await fs.promises.readFile(filePath, "utf8");
       const uri = URI.file(filePath).toString();
 
       const extractor = new SymbolExtractor();
@@ -218,19 +236,24 @@ connection.onInitialized(async () => {
   // Workspace полностью инициализирован - теперь можно показывать ошибки
   workspaceInitialized = true;
 
-  log(`[Başlatma] ${state.functionsDeclared.length} fonksiyon ve ${state.mergedVariables.length} değişken yüklendi.`);
+  log(
+    `[Başlatma] ${state.functionsDeclared.length} fonksiyon ve ${state.mergedVariables.length} değişken yüklendi.`,
+  );
 });
 
 /**
  * Çalışma alanındaki tüm kaynak dosyalardan fonksiyon tanımlarını çıkarır.
  */
-async function extractFunctionsFromWorkspace(workspaceRoot: string): Promise<void> {
+async function extractFunctionsFromWorkspace(
+  workspaceRoot: string,
+): Promise<void> {
   const sourceFiles = await getAllSourceFiles(workspaceRoot);
-  const defRegex = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(([^)]*)\)/gim;
+  const defRegex =
+    /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(([^)]*)\)/gim;
 
   for (const filePath of sourceFiles) {
     try {
-      const content = await fs.promises.readFile(filePath, 'utf8');
+      const content = await fs.promises.readFile(filePath, "utf8");
       const uri = URI.file(filePath).toString();
       const lines = content.split(/\r?\n/);
 
@@ -241,11 +264,15 @@ async function extractFunctionsFromWorkspace(workspaceRoot: string): Promise<voi
 
         while ((match = defRegex.exec(line)) !== null) {
           const funcName = match[2];
-          const params = match[3] ? match[3].trim() : '';
+          const params = match[3] ? match[3].trim() : "";
           const startChar = line.indexOf(funcName);
 
           // Tekrar kontrolü
-          if (!state.functionsDeclared.some((f) => f.name.toUpperCase() === funcName.toUpperCase())) {
+          if (
+            !state.functionsDeclared.some(
+              (f) => f.name.toUpperCase() === funcName.toUpperCase(),
+            )
+          ) {
             state.functionsDeclared.push({
               uri,
               line: i,
@@ -276,9 +303,9 @@ documents.onDidChangeContent(async (change) => {
     // Kök bulmak için yukarı doğru ara
     while (currentDir.length > 1) {
       if (
-        fs.existsSync(path.join(currentDir, 'KRC')) ||
-        fs.existsSync(path.join(currentDir, 'R1')) ||
-        path.basename(currentDir).toUpperCase() === 'KRC'
+        fs.existsSync(path.join(currentDir, "KRC")) ||
+        fs.existsSync(path.join(currentDir, "R1")) ||
+        path.basename(currentDir).toUpperCase() === "KRC"
       ) {
         break;
       }
@@ -294,7 +321,7 @@ documents.onDidChangeContent(async (change) => {
     const datFiles = await getAllDatFiles(state.workspaceRoot);
     for (const filePath of datFiles) {
       try {
-        const content = await fs.promises.readFile(filePath, 'utf8');
+        const content = await fs.promises.readFile(filePath, "utf8");
         const uri = URI.file(filePath).toString();
         const extractor = new SymbolExtractor();
         extractor.extractFromText(content);
@@ -318,7 +345,7 @@ documents.onDidChangeContent(async (change) => {
     workspaceInitialized = true;
   }
 
-  if (document.uri.endsWith('.dat')) {
+  if (document.uri.endsWith(".dat")) {
     diagnostics.validateDatFile(document);
 
     // Struct tanımlarını güncelle
@@ -353,7 +380,7 @@ documents.onDidChangeContent(async (change) => {
     }
 
     // Tüm teşhisleri topla ve tek seferde gönder
-    let allDiagnostics: import('vscode-languageserver/node').Diagnostic[] = [];
+    let allDiagnostics: import("vscode-languageserver/node").Diagnostic[] = [];
 
     // Обновляем mergedVariables перед валидацией (могут быть загружены новые переменные)
     state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
@@ -361,12 +388,15 @@ documents.onDidChangeContent(async (change) => {
     // Kullanım doğrulaması - только если workspace полностью загружен
     // Это предотвращает ложные ошибки "переменная не определена" при открытии файлов
     if (workspaceInitialized) {
-      const varDiags = diagnostics.validateVariablesUsage(currentDoc, state.mergedVariables);
+      const varDiags = diagnostics.validateVariablesUsage(
+        currentDoc,
+        state.mergedVariables,
+      );
       allDiagnostics.push(...varDiags);
     }
 
     // Safety diagnostics для SRC файлов
-    if (currentDoc.uri.toLowerCase().endsWith('.src')) {
+    if (currentDoc.uri.toLowerCase().endsWith(".src")) {
       allDiagnostics.push(
         ...diagnostics.validateSafetySpeeds(currentDoc),
         ...diagnostics.validateToolBaseInit(currentDoc),
@@ -382,7 +412,7 @@ documents.onDidChangeContent(async (change) => {
     // Tüm teşhisleri tek seferde gönder
     connection.sendDiagnostics({
       uri: currentDoc.uri,
-      diagnostics: allDiagnostics
+      diagnostics: allDiagnostics,
     });
   });
 });
@@ -394,10 +424,13 @@ function updateFunctionsFromDocument(document: TextDocument): void {
   const uri = document.uri;
   const content = document.getText();
   const lines = content.split(/\r?\n/);
-  const defRegex = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(([^)]*)\)/gim;
+  const defRegex =
+    /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(([^)]*)\)/gim;
 
   // Bu URI'ye ait eski fonksiyonları kaldır
-  state.functionsDeclared = state.functionsDeclared.filter((f) => f.uri !== uri);
+  state.functionsDeclared = state.functionsDeclared.filter(
+    (f) => f.uri !== uri,
+  );
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -406,7 +439,7 @@ function updateFunctionsFromDocument(document: TextDocument): void {
 
     while ((match = defRegex.exec(line)) !== null) {
       const funcName = match[2];
-      const params = match[3] ? match[3].trim() : '';
+      const params = match[3] ? match[3].trim() : "";
       const startChar = line.indexOf(funcName);
 
       state.functionsDeclared.push({
@@ -425,21 +458,21 @@ function updateFunctionsFromDocument(document: TextDocument): void {
 // Özel İstekler
 // =====================
 
-connection.onNotification('custom/validateWorkspace', async () => {
+connection.onNotification("custom/validateWorkspace", async () => {
   if (!state.workspaceRoot) return;
 
-  log('[ÇalışmaAlanıDoğrulama] Tam tarama başlatılıyor...');
+  log("[ÇalışmaAlanıDoğrulama] Tam tarama başlatılıyor...");
   const files = await getAllSourceFiles(state.workspaceRoot);
 
   for (const filePath of files) {
     try {
-      const content = await fs.promises.readFile(filePath, 'utf8');
+      const content = await fs.promises.readFile(filePath, "utf8");
       const uri = URI.file(filePath).toString();
 
       // Teşhis için TextDocument oluştur
-      const doc = TextDocument.create(uri, 'krl', 1, content);
+      const doc = TextDocument.create(uri, "krl", 1, content);
 
-      if (doc.uri.endsWith('.dat')) {
+      if (doc.uri.endsWith(".dat")) {
         diagnostics.validateDatFile(doc);
       }
       diagnostics.validateVariablesUsage(doc, state.mergedVariables);
@@ -523,7 +556,7 @@ function mergeAllVariables(map: Map<string, VariableInfo[]>): VariableInfo[] {
       const upperName = v.name.toUpperCase();
       if (!seen.has(upperName)) {
         seen.add(upperName);
-        result.push({ name: v.name, type: v.type || '' });
+        result.push({ name: v.name, type: v.type || "" });
       }
     }
   }

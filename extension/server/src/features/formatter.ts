@@ -3,18 +3,20 @@ import {
   TextDocuments,
   TextEdit,
   Range,
-} from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { CODE_KEYWORDS } from '../lib/parser';
+} from "vscode-languageserver/node";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import { CODE_KEYWORDS } from "../lib/parser";
 
 // Преобразуем массив ключевых слов в Set для O(1) поиска
 const KEYWORDS = new Set(CODE_KEYWORDS);
 
 // Girinti azaltan anahtar kelimeler - satır yazdırılmadan ÖNCE
-const DECREASE_INDENT = /^\s*(END|ENDFCT|ENDDAT|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|UNTIL|ENDSWITCH|CASE|DEFAULT|ELSE)\b/i;
+const DECREASE_INDENT =
+  /^\s*(END|ENDFCT|ENDDAT|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|UNTIL|ENDSWITCH|CASE|DEFAULT|ELSE)\b/i;
 
 // Girinti artıran anahtar kelimeler - satır yazdırıldıktan SONRA
-const INCREASE_INDENT = /^\s*(DEF|DEFFCT|DEFDAT|IF|ELSE|FOR|WHILE|LOOP|REPEAT|SWITCH|CASE|DEFAULT)\b/i;
+const INCREASE_INDENT =
+  /^\s*(DEF|DEFFCT|DEFDAT|IF|ELSE|FOR|WHILE|LOOP|REPEAT|SWITCH|CASE|DEFAULT)\b/i;
 
 // Блоки, перед которыми можно добавить пустую строку
 const BLOCK_START = /^\s*(FOR|IF|WHILE|LOOP|REPEAT|SWITCH)\b/i;
@@ -37,7 +39,9 @@ let formattingSettings: FormattingSettings = {
 /**
  * Устанавливает настройки форматирования.
  */
-export function setFormattingSettings(settings: Partial<FormattingSettings>): void {
+export function setFormattingSettings(
+  settings: Partial<FormattingSettings>,
+): void {
   formattingSettings = { ...formattingSettings, ...settings };
 }
 
@@ -47,7 +51,7 @@ export class KrlFormatter {
    */
   provideFormatting(
     params: DocumentFormattingParams,
-    documents: TextDocuments<TextDocument>
+    documents: TextDocuments<TextDocument>,
   ): TextEdit[] {
     const document = documents.get(params.textDocument.uri);
     if (!document) {
@@ -62,7 +66,7 @@ export class KrlFormatter {
     let indentLevel = 0;
     const tabSize = params.options.tabSize || 2;
     const insertSpaces = params.options.insertSpaces;
-    const indentChar = insertSpaces ? ' '.repeat(tabSize) : '\t';
+    const indentChar = insertSpaces ? " ".repeat(tabSize) : "\t";
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -70,21 +74,20 @@ export class KrlFormatter {
 
       if (line.length === 0) {
         // Boş satır - sadece boşlukları temizle
-        resultLines.push('');
+        resultLines.push("");
         continue;
       }
 
       // Yorum kısmını ayır
-      const commentIndex = line.indexOf(';');
+      const commentIndex = line.indexOf(";");
       let codePart = commentIndex >= 0 ? line.substring(0, commentIndex) : line;
 
       // Anahtar kelimeleri büyük harfe dönüştür
       codePart = this.uppercaseKeywords(codePart);
 
       // Satırı yeniden oluştur
-      const formattedLine = commentIndex >= 0
-        ? codePart + line.substring(commentIndex)
-        : codePart;
+      const formattedLine =
+        commentIndex >= 0 ? codePart + line.substring(commentIndex) : codePart;
 
       // Girinti hesapla
       // 1. Bu satır için azaltma gerekiyor mu?
@@ -93,10 +96,16 @@ export class KrlFormatter {
       }
 
       // Добавить пустую строку перед блоком (если включено)
-      if (formattingSettings.separateBeforeBlocks && BLOCK_START.test(codePart)) {
+      if (
+        formattingSettings.separateBeforeBlocks &&
+        BLOCK_START.test(codePart)
+      ) {
         // Проверяем, что предыдущая строка не пустая
-        if (resultLines.length > 0 && resultLines[resultLines.length - 1].trim() !== '') {
-          resultLines.push('');
+        if (
+          resultLines.length > 0 &&
+          resultLines[resultLines.length - 1].trim() !== ""
+        ) {
+          resultLines.push("");
         }
       }
 
@@ -109,8 +118,8 @@ export class KrlFormatter {
       if (formattingSettings.separateAfterBlocks && BLOCK_END.test(codePart)) {
         // Пустая строка будет добавлена в следующей итерации, если следующая строка не пустая
         // Добавляем только если это не последняя строка
-        if (i < lines.length - 1 && lines[i + 1].trim() !== '') {
-          resultLines.push('');
+        if (i < lines.length - 1 && lines[i + 1].trim() !== "") {
+          resultLines.push("");
         }
       }
 
@@ -126,12 +135,19 @@ export class KrlFormatter {
     }
 
     // Формируем единый TextEdit для всего документа
-    const newText = resultLines.join('\n');
-    if (newText !== text.replace(/\r\n/g, '\n')) {
-      edits.push(TextEdit.replace(
-        Range.create(0, 0, lines.length, lines[lines.length - 1]?.length || 0),
-        newText
-      ));
+    const newText = resultLines.join("\n");
+    if (newText !== text.replace(/\r\n/g, "\n")) {
+      edits.push(
+        TextEdit.replace(
+          Range.create(
+            0,
+            0,
+            lines.length,
+            lines[lines.length - 1]?.length || 0,
+          ),
+          newText,
+        ),
+      );
     }
 
     return edits;
@@ -149,4 +165,3 @@ export class KrlFormatter {
     });
   }
 }
-
