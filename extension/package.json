@@ -302,7 +302,7 @@
     "compile": "tsc -b client server",
     "watch": "tsc -b client server -w",
     "lint": "eslint . --ext .ts",
-    "test": "sh ./scripts/e2e.sh"
+    "test": "node tests/extension.test.js"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.50.0",

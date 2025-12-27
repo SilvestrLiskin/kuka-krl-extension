@@ -41,3 +41,9 @@ eslint.config.js
 **/node_modules/**/.github/**
 **/node_modules/**/example*/**
 **/node_modules/**/docs/**
+
+# Test files and scripts
+tests/**
+test_krl_extension.src
+validate-json.js
+*.test.js
