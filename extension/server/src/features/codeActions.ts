@@ -23,7 +23,7 @@ export class CodeActionsProvider {
   public onCodeAction(
     params: CodeActionParams,
     documents: TextDocuments<TextDocument>,
-    state: ServerState,
+    _state: ServerState,
   ): CodeAction[] {
     const doc = documents.get(params.textDocument.uri);
     if (!doc) return [];

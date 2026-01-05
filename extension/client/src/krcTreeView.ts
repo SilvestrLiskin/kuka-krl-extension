@@ -161,8 +161,8 @@ export class KRCTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
       }
 
       return new FolderItem(name, folderPath, children);
-    } catch (err) {
-      console.error(`Error reading folder ${folderPath}:`, err);
+    } catch {
+      // Error reading folder - silently ignored
       return null;
     }
   }

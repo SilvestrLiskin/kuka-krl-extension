@@ -3,10 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { t } from "./i18n";
 
-interface SystemVarInfo {
-  name: string;
-  locations: vscode.Location[];
-}
+// SystemVarInfo interface removed - not used
 
 /**
  * Ищет все системные переменные ($...) в workspace

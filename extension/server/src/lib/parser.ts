@@ -45,8 +45,8 @@ export async function isSymbolDeclared(
     try {
       content =
         fileContentOverride ?? (await fs.promises.readFile(filePath, "utf8"));
-    } catch (e) {
-      console.error(`Dosya okunamadı ${filePath}`, e);
+    } catch {
+      // File read error - silently ignored
       continue;
     }
 

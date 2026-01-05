@@ -20,7 +20,7 @@ import {
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
-import { ServerState, VariableInfo, FunctionDeclaration } from "./types";
+import { ServerState, VariableInfo } from "./types";
 import { SymbolResolver } from "./features/definition";
 import { AutoCompleter } from "./features/completion";
 import { DiagnosticsProvider } from "./features/diagnostics";
@@ -52,7 +52,7 @@ function log(msg: string) {
   if (!DEBUG_ENABLED) return;
   try {
     fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${msg}\n`);
-  } catch (_e) {
+  } catch {
     // Log yazma hatası sessizce yok sayılır
   }
 }

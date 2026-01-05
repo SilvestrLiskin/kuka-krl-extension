@@ -102,27 +102,40 @@ export class DiagnosticsProvider {
       }
 
       // Kapatılmamış stringleri kontrol et
-      const quoteCount = (line.match(/"/g) || []).length;
-      const commentIndex = line.indexOf(";");
-      const lineBeforeComment =
-        commentIndex >= 0 ? line.substring(0, commentIndex) : line;
-      const quoteCountBeforeComment = (lineBeforeComment.match(/"/g) || [])
-        .length;
+      // Düzeltildi: String içindeki noktalı virgülleri yorum olarak algılama
 
-      if (quoteCountBeforeComment % 2 !== 0) {
-        // Tek sayıda tırnak = kapatılmamış string
-        const firstQuote = lineBeforeComment.indexOf('"');
-        if (firstQuote >= 0) {
-          diagnostics.push({
-            severity: DiagnosticSeverity.Error,
-            range: {
-              start: { line: i, character: firstQuote },
-              end: { line: i, character: lineBeforeComment.length },
-            },
-            message: t("diag.unclosedString"),
-            source: "krl-language-support",
-          });
+      let inString = false;
+      let quoteCount = 0;
+      let effectiveLineLength = line.length;
+
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+        if (char === '"') {
+          inString = !inString;
+          quoteCount++;
+        } else if (char === ";" && !inString) {
+          // String dışındaysak, bu bir yorum başlangıcıdır
+          effectiveLineLength = j;
+          break;
         }
+      }
+
+      // Yorum kısmını at
+      const codePart = line.substring(0, effectiveLineLength);
+      // Sayılan tırnaklar yorum öncesi kısımdakilerdir
+
+      // Eğer tırnak sayısı tekse, string kapatılmamıştır
+      if (quoteCount % 2 !== 0) {
+        const firstQuote = codePart.indexOf('"');
+        diagnostics.push({
+          severity: DiagnosticSeverity.Error,
+          range: {
+            start: { line: i, character: firstQuote >= 0 ? firstQuote : 0 },
+            end: { line: i, character: codePart.length },
+          },
+          message: t("diag.unclosedString"),
+          source: "krl-language-support",
+        });
       }
 
       // DEFDAT başlangıcını algıla
@@ -537,7 +550,7 @@ export class DiagnosticsProvider {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
-      const upperCode = codePart.toUpperCase();
+      // const upperCode = codePart.toUpperCase(); // Reserved for future use
 
       // Проверка открывающих блоков
       for (const openKeyword of Object.keys(blockPairs)) {
@@ -619,7 +632,7 @@ export class DiagnosticsProvider {
 
     // Регулярки
     const funcRegex = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
-    const varRegex = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(\w+)\s+(\w+)/i;
+    // const varRegex = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(\w+)\s+(\w+)/i; // Reserved for future use
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -890,9 +903,10 @@ export class DiagnosticsProvider {
       }
     }
 
-    let insideSwitch = false;
-    let switchVarName = "";
-    let switchLine = -1;
+    // Switch tracking variables - reserved for future use
+    // let insideSwitch = false;
+    // let switchVarName = "";
+    // let switchLine = -1;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -919,13 +933,13 @@ export class DiagnosticsProvider {
             data: { varName: switchMatch[1], line: i },
           });
         }
-        insideSwitch = true;
-        switchVarName = varName;
-        switchLine = i;
+        // insideSwitch = true;
+        // switchVarName = varName;
+        // switchLine = i;
       }
 
       if (/\bENDSWITCH\b/i.test(codePart)) {
-        insideSwitch = false;
+        // insideSwitch = false;
       }
 
       // Проверка присваивания дробных чисел INT переменным

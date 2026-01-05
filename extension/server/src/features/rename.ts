@@ -22,7 +22,7 @@ export class RenameProvider {
   public async prepareRename(
     params: PrepareRenameParams,
     documents: TextDocuments<TextDocument>,
-    state: ServerState,
+    _state: ServerState,
   ): Promise<Range | null> {
     const doc = documents.get(params.textDocument.uri);
     if (!doc) return null;
@@ -116,7 +116,7 @@ export class RenameProvider {
       } else {
         try {
           content = await fs.promises.readFile(filePath, "utf8");
-        } catch (e) {
+        } catch {
           continue;
         }
       }
@@ -147,8 +147,7 @@ export class RenameProvider {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      // Yorum kısmını atla
-      const commentIndex = line.indexOf(";");
+      // Yorum kısmını atla (codePart kullanılıyor)
       const codePart = getCodePart(line);
 
       let match;

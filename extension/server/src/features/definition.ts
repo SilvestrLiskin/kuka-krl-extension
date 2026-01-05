@@ -5,7 +5,7 @@ import {
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { TextDocuments } from "vscode-languageserver/node";
-import { ServerState, EnclosuresLines, WordInfo } from "../types";
+import { ServerState, EnclosuresLines } from "../types";
 import { isSymbolDeclared, getWordAtPosition } from "../lib/parser";
 
 export class SymbolResolver {

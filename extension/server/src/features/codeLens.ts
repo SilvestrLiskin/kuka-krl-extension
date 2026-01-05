@@ -4,12 +4,11 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { t } from "../lib/i18n";
 
 /**
- * Code Lens Provider - показывает метрики над функциями
- * Уникальная функция: количество строк и ссылок
+ * Code Lens Provider - shows metrics above functions and inline forms
  */
 export class CodeLensProvider {
   /**
-   * Генерирует Code Lens для документа
+   * Generates Code Lens for the document
    */
   public onCodeLens(
     params: CodeLensParams,
@@ -25,7 +24,7 @@ export class CodeLensProvider {
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    // Найти все определения функций в текущем документе
+    // 1. Find all function definitions in current document
     const defRegex = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
 
     for (let i = 0; i < lines.length; i++) {
@@ -36,7 +35,7 @@ export class CodeLensProvider {
         const functionName = match[2];
         const functionType = match[1].toUpperCase();
 
-        // Найти конец функции
+        // Find end of function
         const endPattern =
           functionType === "DEFFCT" ? /^\s*ENDFCT\b/i : /^\s*END\b/i;
         let endLine = i + 1;
@@ -49,10 +48,9 @@ export class CodeLensProvider {
 
         const lineCount = endLine - i + 1;
 
-        // Подсчитать количество вызовов этой функции в workspace
+        // Count references
         const referenceCount = this.countReferences(functionName, state);
 
-        // Создать Code Lens
         const range: Range = {
           start: { line: i, character: 0 },
           end: { line: i, character: line.length },
@@ -70,23 +68,74 @@ export class CodeLensProvider {
       }
     }
 
+    // 2. Find Motion Folds (PTP, LIN, etc.) - Visualization of Inline Forms
+    const foldRegex =
+      /^\s*;FOLD\s+(PTP|LIN|CIRC|SPTP|SLIN|SCIRC)\s+(.*);%{PE}%R/i;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const match = foldRegex.exec(line);
+      if (match) {
+        const command = match[1];
+        // match[2] contains "P1 Vel=100 % PDAT1 Tool[1] Base[1]" usually
+        const params = match[2].trim();
+
+        const range: Range = {
+          start: { line: i, character: 0 },
+          end: { line: i, character: line.length },
+        };
+
+        codeLenses.push({
+          range,
+          data: {
+            type: "motion",
+            command,
+            params,
+          },
+        });
+      }
+    }
+
     return codeLenses;
   }
 
   /**
-   * Разрешает Code Lens (добавляет команду и заголовок)
+   * Resolves Code Lens (adds command and title)
    */
   public onCodeLensResolve(codeLens: CodeLens): CodeLens {
-    const data = codeLens.data as {
-      functionName: string;
-      lineCount: number;
-      referenceCount: number;
-    };
+    const data = codeLens.data as
+      | {
+          type?: string;
+          command?: string;
+          params?: string;
+          functionName?: string;
+          lineCount?: number;
+          referenceCount?: number;
+        }
+      | undefined;
 
-    if (data) {
+    if (!data) {
+      return codeLens;
+    }
+
+    if (data.type === "motion") {
+      const icon =
+        data.command === "PTP" ? "🚀" : data.command === "LIN" ? "📏" : "↪️";
       codeLens.command = {
-        title: t("codeLens.metrics", data.lineCount, data.referenceCount),
-        command: "", // Нет команды - только информационный
+        title: `${icon} ${data.command} ${data.params}`,
+        command: "",
+        arguments: [],
+      };
+      return codeLens;
+    }
+
+    if (data.functionName) {
+      codeLens.command = {
+        title: t(
+          "codeLens.metrics",
+          data.lineCount ?? 0,
+          data.referenceCount ?? 0,
+        ),
+        command: "",
         arguments: [],
       };
     }
@@ -95,7 +144,7 @@ export class CodeLensProvider {
   }
 
   /**
-   * Подсчитывает количество вызовов функции в workspace
+   * Counts references
    */
   private countReferences(
     functionName: string,
@@ -103,13 +152,9 @@ export class CodeLensProvider {
       functionsDeclared: Array<{ name: string; uri: string; line: number }>;
     },
   ): number {
-    // Считаем количество функций с таким именем (упрощённо)
-    // В реальности нужно искать все вызовы по всем файлам
     const count = state.functionsDeclared.filter(
       (f) => f.name.toUpperCase() === functionName.toUpperCase(),
     ).length;
-
-    // Если функция объявлена, значит есть минимум 1 (само объявление)
     return Math.max(0, count);
   }
 }

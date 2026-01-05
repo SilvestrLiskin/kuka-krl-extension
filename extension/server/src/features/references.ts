@@ -47,7 +47,7 @@ export class ReferencesProvider {
       } else {
         try {
           content = await fs.promises.readFile(filePath, "utf8");
-        } catch (e) {
+        } catch {
           continue;
         }
       }

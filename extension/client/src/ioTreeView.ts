@@ -186,9 +186,8 @@ export class IOTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> 
             this.lineTexts.set(`${fileUri.fsPath}:${i}`, line);
           }
         }
-      } catch (err) {
-        // Логируем ошибку чтения файла для отладки
-        console.error(`Error reading KRL file ${fileUri.fsPath}:`, err);
+      } catch {
+        // Error reading KRL file - silently ignored
       }
     }
   }

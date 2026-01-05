@@ -188,6 +188,30 @@
         "title": "%command.refreshKRCView%",
         "category": "KRL",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "krl.cleanupUnusedVariables",
+        "title": "Clean Up Unused Variables",
+        "category": "KRL",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "krl.deploy",
+        "title": "Deploy to Robot (FTP)",
+        "category": "KRL",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "krl.openArchive",
+        "title": "Open KUKA Archive (ZIP)",
+        "category": "KRL",
+        "icon": "$(archive)"
+      },
+      {
+        "command": "krl.showCalculator",
+        "title": "KRL Frame Calculator",
+        "category": "KRL",
+        "icon": "$(calculator)"
       }
     ],
     "views": {
@@ -252,6 +276,11 @@
           "command": "krl.insertFold",
           "group": "1_modification@5",
           "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.cleanupUnusedVariables",
+          "group": "1_modification@6",
+          "when": "resourceLangId == krl"
         }
       ]
     },
@@ -294,6 +323,26 @@
           "type": "boolean",
           "default": true,
           "description": "%config.validateNonAscii.description%"
+        },
+        "krl.deploy.ip": {
+          "type": "string",
+          "default": "172.31.1.147",
+          "description": "Robot IP address for FTP deployment"
+        },
+        "krl.deploy.user": {
+          "type": "string",
+          "default": "kukauser",
+          "description": "FTP User"
+        },
+        "krl.deploy.password": {
+          "type": "string",
+          "default": "kukauser",
+          "description": "FTP Password"
+        },
+        "krl.deploy.targetPath": {
+          "type": "string",
+          "default": "/R1/Program",
+          "description": "Remote target path"
         }
       }
     }
@@ -314,6 +363,9 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "adm-zip": "^0.5.16",
+    "basic-ftp": "^5.1.0",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12",
     "vscode-uri": "^3.1.0"

@@ -70,7 +70,7 @@ export class KrlFormatter {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
-      const originalLine = lines[i];
+      // const originalLine = lines[i]; // Not used
 
       if (line.length === 0) {
         // Boş satır - sadece boşlukları temizle

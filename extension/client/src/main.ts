@@ -12,6 +12,10 @@ import { DocGenerator } from "./docGenerator";
 import { IOTreeProvider } from "./ioTreeView";
 import { KRCTreeProvider } from "./krcTreeView";
 import { showSystemVariablesPicker } from "./systemVarFinder";
+import { cleanupUnusedVariables } from "./features/cleanup";
+import { deployToRobot } from "./features/deploy";
+import { ZipFileSystemProvider } from "./features/zipFileSystem";
+import { showCalculator } from "./features/calculator";
 
 // KRL tanılama koleksiyonu
 const krlDiagnostics = vscode.languages.createDiagnosticCollection("krl");
@@ -289,6 +293,55 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(
         t("info.declarationsSorted", declarations.length),
       );
+    }),
+  );
+
+  // Clean up unused variables command
+  context.subscriptions.push(
+    vscode.commands.registerCommand("krl.cleanupUnusedVariables", () => {
+      cleanupUnusedVariables();
+    }),
+  );
+
+  // Deploy command
+  context.subscriptions.push(
+    vscode.commands.registerCommand("krl.deploy", () => {
+      deployToRobot();
+    }),
+  );
+
+  // Zip Archive Support
+  context.subscriptions.push(
+    vscode.workspace.registerFileSystemProvider(
+      "kuka-zip",
+      new ZipFileSystemProvider(),
+      { isCaseSensitive: true, isReadonly: true },
+    ),
+    vscode.commands.registerCommand("krl.openArchive", async () => {
+      const uris = await vscode.window.showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        filters: { "KUKA Archives": ["zip"] },
+      });
+      if (uris && uris.length > 0) {
+        const zipUri = uris[0];
+        const zipPath = zipUri.fsPath.replace(/\\/g, "/");
+        // Construct URI: kuka-zip:///path/to/zip/::/
+        // Need to ensure leading slash for path if not present (Windows drive letter)
+        const cleanPath = zipPath.startsWith("/") ? zipPath : "/" + zipPath;
+        const rootUri = vscode.Uri.parse(`kuka-zip://${cleanPath}/::/`);
+
+        vscode.workspace.updateWorkspaceFolders(
+          vscode.workspace.workspaceFolders
+            ? vscode.workspace.workspaceFolders.length
+            : 0,
+          0,
+          { uri: rootUri, name: path.basename(zipPath) },
+        );
+      }
+    }),
+    vscode.commands.registerCommand("krl.showCalculator", () => {
+      showCalculator(context);
     }),
   );
 

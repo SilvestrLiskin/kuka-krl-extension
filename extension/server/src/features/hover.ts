@@ -10,6 +10,7 @@ import {
 import { KSS_87_SYSTEM_VARS } from "../lib/systemVars";
 import { getSystemVarDoc } from "../lib/systemVarDocs";
 import { t, getLocale } from "../lib/i18n";
+import { getKeywordDoc } from "../lib/krlDocs";
 
 export class InfoProvider {
   /**
@@ -37,6 +38,18 @@ export class InfoProvider {
 
     // Anahtar kelime mi kontrol et
     if (CODE_KEYWORDS.includes(symbolName.toUpperCase())) {
+      const lang = getLocale();
+      const detailedDoc = getKeywordDoc(symbolName, lang);
+
+      if (detailedDoc) {
+        return {
+          contents: {
+            kind: "markdown",
+            value: detailedDoc,
+          },
+        };
+      }
+
       return {
         contents: {
           kind: "markdown",
@@ -91,10 +104,18 @@ export class InfoProvider {
     );
     if (variable) {
       const typeDisplay = variable.type || "Unknown";
+      let hoverText = `**${symbolName}**: \`${typeDisplay}\``;
+
+      if (variable.value) {
+        hoverText += ` = \`${variable.value}\``;
+      }
+
+      hoverText += `\n\n${t("hover.variable")}`;
+
       return {
         contents: {
           kind: "markdown",
-          value: `**${symbolName}**: \`${typeDisplay}\`\n\n${t("hover.variable")}`,
+          value: hoverText,
         },
       };
     }

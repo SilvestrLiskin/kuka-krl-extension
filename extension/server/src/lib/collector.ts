@@ -90,7 +90,7 @@ export function extractStrucVariables(
  * Belge metninden bildirilen değişkenleri çıkaran yardımcı sınıf.
  */
 export class SymbolExtractor {
-  private variables: Map<string, string> = new Map(); // isim -> tip
+  private variables: Map<string, VariableInfo> = new Map(); // isim -> info
 
   extractFromText(documentText: string): void {
     // DECL regex'i - CONST dahil
@@ -99,19 +99,49 @@ export class SymbolExtractor {
 
     let match: RegExpExecArray | null;
     while ((match = declRegex.exec(documentText)) !== null) {
-      const type = match[1] || match[2];
+      let type = match[1] || match[2];
       const varList = match[3];
 
-      const varNames = splitVarsRespectingBrackets(varList)
-        .map((name) => name.trim())
-        .map((name) => name.replace(/\[.*?\]/g, "").trim())
-        .map((name) => name.replace(/\s*=\s*.+$/, ""))
-        .map((name) => name.split(/\s+/)[0]) // "SIGNAL s $IN..." durumunu işle
-        .filter((name) => /^[a-zA-Z_]\w*$/.test(name));
+      const varParts = splitVarsRespectingBrackets(varList);
 
-      for (const name of varNames) {
-        if (!this.variables.has(name.toUpperCase())) {
-          this.variables.set(name.toUpperCase(), type);
+      for (const rawPart of varParts) {
+        let part = rawPart.trim();
+        // Yorumları temizle
+        part = part.split(";")[0].trim();
+        if (!part) continue;
+
+        let name = part;
+        let value: string | undefined = undefined;
+
+        // SIGNAL durumunu özel işle
+        if (type.toUpperCase() === "SIGNAL") {
+          // "SIGNAL Name $IN[1] ..."
+          // Boşlukla ilk ayırıcıyı bul
+          const firstSpace = part.search(/\s/);
+          if (firstSpace > 0) {
+            name = part.substring(0, firstSpace);
+            value = part.substring(firstSpace).trim();
+          }
+        } else {
+          // Normal DECL: "a=5" veya "a"
+          const eqIndex = part.indexOf("=");
+          if (eqIndex > 0) {
+            name = part.substring(0, eqIndex).trim();
+            value = part.substring(eqIndex + 1).trim();
+          }
+        }
+
+        // Dizi indekslerini temizle: "arr[5]" -> "arr"
+        const cleanName = name.replace(/\[.*?\]/g, "").trim();
+
+        if (/^[a-zA-Z_]\w*$/.test(cleanName)) {
+          if (!this.variables.has(cleanName.toUpperCase())) {
+            this.variables.set(cleanName.toUpperCase(), {
+              name: cleanName,
+              type: type,
+              value: value,
+            });
+          }
         }
       }
     }
@@ -126,7 +156,10 @@ export class SymbolExtractor {
           /^[a-zA-Z_]\w*$/.test(member) &&
           !this.variables.has(member.toUpperCase())
         ) {
-          this.variables.set(member.toUpperCase(), "ENUM_MEMBER");
+          this.variables.set(member.toUpperCase(), {
+            name: member,
+            type: "ENUM_MEMBER",
+          });
         }
       }
     }
@@ -144,17 +177,14 @@ export class SymbolExtractor {
 
       for (const p of params) {
         if (!this.variables.has(p.toUpperCase())) {
-          this.variables.set(p.toUpperCase(), "PARAM");
+          this.variables.set(p.toUpperCase(), { name: p, type: "PARAM" });
         }
       }
     }
   }
 
   getVariables(): VariableInfo[] {
-    return Array.from(this.variables.entries()).map(([name, type]) => ({
-      name,
-      type,
-    }));
+    return Array.from(this.variables.values());
   }
 
   clear(): void {

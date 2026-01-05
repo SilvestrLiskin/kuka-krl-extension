@@ -2,6 +2,7 @@
 export interface VariableInfo {
   name: string;
   type: string;
+  value?: string;
 }
 
 // Struct haritası - struct adı => üye isimleri

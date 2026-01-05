@@ -30,7 +30,7 @@ export async function findFilesByExtension(
         }
       }
     }
-  } catch (error) {
+  } catch {
     // Dizin okuma hatası sessizce yoksayılır
     // console.error(`Dizin okuma hatası ${dir}:`, error);
   }
