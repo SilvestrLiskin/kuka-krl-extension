@@ -60,6 +60,31 @@
                     "name": "meta.fold.krl comment.line.fold.krl"
                 },
                 {
+                    "comment": "TODO comments",
+                    "match": ";\\s*(TODO|todo)\\s*:?.*$",
+                    "name": "comment.line.todo.krl"
+                },
+                {
+                    "comment": "FIXME comments",
+                    "match": ";\\s*(FIXME|fixme)\\s*:?.*$",
+                    "name": "comment.line.fixme.krl"
+                },
+                {
+                    "comment": "BUG comments",
+                    "match": ";\\s*(BUG|bug)\\s*:?.*$",
+                    "name": "comment.line.bug.krl"
+                },
+                {
+                    "comment": "HACK comments",
+                    "match": ";\\s*(HACK|hack)\\s*:?.*$",
+                    "name": "comment.line.hack.krl"
+                },
+                {
+                    "comment": "NOTE comments",
+                    "match": ";\\s*(NOTE|note)\\s*:?.*$",
+                    "name": "comment.line.note.krl"
+                },
+                {
                     "begin": ";",
                     "end": "(?=\\n)",
                     "name": "comment.line.semicolon.krl"

@@ -5,6 +5,25 @@ All notable changes to this extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-01-17
+
+### Added
+
+- **KRL File Icons Theme**: Custom file icons for `.src`, `.dat`, `.sub` files with KUKA orange branding
+- **Error Lens**: Inline diagnostic messages displayed at the end of lines (can be toggled via `krl.errorLens.enabled` setting)
+- **TODO/FIXME Highlighting**: Comments containing TODO, FIXME, BUG, HACK, NOTE are now highlighted with distinct colors
+- **Call Hierarchy**: View incoming and outgoing function calls (`Shift+Alt+H`)
+- **Signature Help**: Parameter hints when calling functions
+- **Breadcrumbs**: Navigation breadcrumbs for KRL file structure
+- **Outline View**: Hierarchical view of document symbols
+- **2 New Color Themes**: KRL Tao and KRL Tao Dark themes
+
+### Changed
+
+- Improved symbol provider for better Breadcrumbs and Outline support
+
+---
+
 ## [1.2.0] - 2025-12-27
 
 ### Added

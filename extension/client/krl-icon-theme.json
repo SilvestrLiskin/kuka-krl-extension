@@ -1,0 +1,24 @@
+{
+    "iconDefinitions": {
+        "krl-src": {
+            "iconPath": "./icons/krl-src.svg"
+        },
+        "krl-dat": {
+            "iconPath": "./icons/krl-dat.svg"
+        },
+        "krl-sub": {
+            "iconPath": "./icons/krl-sub.svg"
+        }
+    },
+    "fileExtensions": {
+        "src": "krl-src",
+        "dat": "krl-dat",
+        "sub": "krl-sub"
+    },
+    "fileNames": {},
+    "folderNames": {},
+    "folderNamesExpanded": {},
+    "languageIds": {
+        "krl": "krl-src"
+    }
+}

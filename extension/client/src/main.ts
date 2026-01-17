@@ -16,12 +16,16 @@ import { cleanupUnusedVariables } from "./features/cleanup";
 import { deployToRobot } from "./features/deploy";
 import { ZipFileSystemProvider } from "./features/zipFileSystem";
 import { showCalculator } from "./features/calculator";
+import { initErrorLens } from "./features/errorLens";
 
 // KRL tanılama koleksiyonu
 const krlDiagnostics = vscode.languages.createDiagnosticCollection("krl");
 let lsClient: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
+  // Initialize Error Lens
+  initErrorLens(context);
+
   // Sunucu yolunu belirle
   const serverPath = context.asAbsolutePath(
     path.join("server", "out", "core.js"),

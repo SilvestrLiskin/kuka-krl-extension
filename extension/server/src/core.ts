@@ -34,6 +34,7 @@ import { ReferencesProvider } from "./features/references";
 import { SignatureHelpProvider } from "./features/signatureHelp";
 import { CodeActionsProvider } from "./features/codeActions";
 import { CodeLensProvider } from "./features/codeLens";
+import { CallHierarchyProvider } from "./features/callHierarchy";
 import { SymbolExtractor, extractStrucVariables } from "./lib/collector";
 import { getAllDatFiles, getAllSourceFiles } from "./lib/fileSystem";
 import { setLocale } from "./lib/i18n";
@@ -126,6 +127,7 @@ const referencesProvider = new ReferencesProvider();
 const signatureHelp = new SignatureHelpProvider();
 const codeActions = new CodeActionsProvider();
 const codeLens = new CodeLensProvider();
+const callHierarchy = new CallHierarchyProvider();
 const diagnostics = new DiagnosticsProvider(connection);
 
 // =======================
@@ -180,6 +182,7 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
       codeLensProvider: {
         resolveProvider: true,
       },
+      callHierarchyProvider: true,
     },
   };
 });
@@ -541,6 +544,18 @@ connection.onCodeLens((params: CodeLensParams) => {
 
 connection.onCodeLensResolve((lens) => {
   return codeLens.onCodeLensResolve(lens);
+});
+
+connection.languages.callHierarchy.onPrepare((params) => {
+  return callHierarchy.prepareCallHierarchy(params, documents, state);
+});
+
+connection.languages.callHierarchy.onIncomingCalls((params) => {
+  return callHierarchy.incomingCalls(params, documents, state);
+});
+
+connection.languages.callHierarchy.onOutgoingCalls((params) => {
+  return callHierarchy.outgoingCalls(params, documents, state);
 });
 
 // =====================

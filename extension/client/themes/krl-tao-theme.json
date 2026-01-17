@@ -80,6 +80,56 @@
             }
         },
         {
+            "name": "TODO comments - Bright yellow",
+            "scope": [
+                "comment.line.todo.krl"
+            ],
+            "settings": {
+                "foreground": "#FFD700",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "FIXME comments - Warning orange",
+            "scope": [
+                "comment.line.fixme.krl"
+            ],
+            "settings": {
+                "foreground": "#FF8C00",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "BUG comments - Error red",
+            "scope": [
+                "comment.line.bug.krl"
+            ],
+            "settings": {
+                "foreground": "#FF4444",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "HACK comments - Purple",
+            "scope": [
+                "comment.line.hack.krl"
+            ],
+            "settings": {
+                "foreground": "#BA55D3",
+                "fontStyle": "bold italic"
+            }
+        },
+        {
+            "name": "NOTE comments - Info blue",
+            "scope": [
+                "comment.line.note.krl"
+            ],
+            "settings": {
+                "foreground": "#00BFFF",
+                "fontStyle": "italic"
+            }
+        },
+        {
             "name": "Keywords - Pyro element inspired",
             "scope": [
                 "keyword",
