@@ -49,8 +49,16 @@
       "url": "https://img.shields.io/github/license/SilvestrLiskin/kuka-krl-extension",
       "href": "https://github.com/SilvestrLiskin/kuka-krl-extension/blob/main/LICENSE.txt",
       "description": "License"
+    },
+    {
+      "url": "https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa",
+      "href": "https://github.com/sponsors/SilvestrLiskin",
+      "description": "Sponsor"
     }
   ],
+  "sponsor": {
+    "url": "https://github.com/sponsors/SilvestrLiskin"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },

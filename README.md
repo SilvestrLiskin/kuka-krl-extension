@@ -7,6 +7,7 @@ Designed by robot programmers, for robot programmers.
 [![Version](https://img.shields.io/visual-studio-marketplace/v/LiskinLabs.kuka-krl-extension)](https://marketplace.visualstudio.com/items?itemName=LiskinLabs.kuka-krl-extension)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/LiskinLabs.kuka-krl-extension)](https://marketplace.visualstudio.com/items?itemName=LiskinLabs.kuka-krl-extension)
 [![License](https://img.shields.io/github/license/SilvestrLiskin/kuka-krl-extension)](LICENSE.txt)
+[![Sponsor](https://img.shields.io/badge/Sponsor-❤-ea4aaa)](https://github.com/sponsors/SilvestrLiskin)
 
 ---
 
@@ -287,7 +288,8 @@ MIT License — see [LICENSE.txt](LICENSE.txt) for details.
 
 **Liskin Labs**  
 📧 <silvlis@outlook.com>  
-🔗 [github.com/SilvestrLiskin](https://github.com/SilvestrLiskin)
+🔗 [github.com/SilvestrLiskin](https://github.com/SilvestrLiskin)  
+💖 [Sponsor this project](https://github.com/sponsors/SilvestrLiskin)
 
 ---
 
