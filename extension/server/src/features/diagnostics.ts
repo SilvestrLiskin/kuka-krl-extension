@@ -171,7 +171,7 @@ export class DiagnosticsProvider {
           // PUBLIC DEFDAT içinde GLOBAL olmalı
           if (!hasGlobal && /^(?:DECL|SIGNAL|STRUC)\b/i.test(trimmedLine)) {
             const newDiagnostic: Diagnostic = {
-              severity: DiagnosticSeverity.Warning,
+              severity: DiagnosticSeverity.Information,
               range: {
                 start: { line: i, character: 0 },
                 end: { line: i, character: trimmedLine.length },
@@ -268,22 +268,6 @@ export class DiagnosticsProvider {
     const validatedNames = new Set(
       declaredVariables.map((v) => v.name.toUpperCase()),
     );
-
-    // Mevcut belgeden YEREL değişkenleri de çıkar
-    const localDeclRegex =
-      /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
-    let localMatch;
-    while ((localMatch = localDeclRegex.exec(text)) !== null) {
-      const varList = localMatch[1];
-      const vars = varList
-        .split(",")
-        .map((v) => v.replace(/\[.*?\]/g, "").trim());
-      for (const v of vars) {
-        if (/^[a-zA-Z_]\w*$/.test(v)) {
-          validatedNames.add(v.toUpperCase());
-        }
-      }
-    }
 
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       const line = lines[lineIndex];
@@ -890,17 +874,6 @@ export class DiagnosticsProvider {
     const varTypeMap = new Map<string, string>();
     for (const v of declaredVariables) {
       varTypeMap.set(v.name.toUpperCase(), v.type.toUpperCase());
-    }
-
-    // Также извлекаем локальные переменные из текущего документа
-    const localDeclRegex = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(\w+)\s+(\w+)/gim;
-    let localMatch;
-    while ((localMatch = localDeclRegex.exec(text)) !== null) {
-      const varType = localMatch[1].toUpperCase();
-      const varName = localMatch[2].toUpperCase();
-      if (!varTypeMap.has(varName)) {
-        varTypeMap.set(varName, varType);
-      }
     }
 
     // Switch tracking variables - reserved for future use

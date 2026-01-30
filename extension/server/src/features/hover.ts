@@ -99,7 +99,25 @@ export class InfoProvider {
     }
 
     // Değişken listesinden ara
-    const variable = state.mergedVariables.find(
+    const visibleVars = [...state.globalVariables];
+
+    // Mevcut dosyanın değişkenlerini ekle
+    const currentVars = state.fileVariablesMap.get(doc.uri);
+    if (currentVars) visibleVars.push(...currentVars);
+
+    if (doc.uri.toLowerCase().endsWith(".src")) {
+      const datUri = doc.uri.replace(/\.src$/i, ".dat");
+      let datVars: import("../types").VariableInfo[] | undefined;
+      for (const [key, val] of state.fileVariablesMap.entries()) {
+        if (key.toLowerCase() === datUri.toLowerCase()) {
+          datVars = val;
+          break;
+        }
+      }
+      if (datVars) visibleVars.push(...datVars);
+    }
+
+    const variable = visibleVars.find(
       (v) => v.name.toUpperCase() === symbolName.toUpperCase(),
     );
     if (variable) {

@@ -81,7 +81,7 @@ const state: ServerState = {
   variableStructTypes: {},
   structDefinitions: {},
   functionsDeclared: [],
-  mergedVariables: [],
+  globalVariables: [],
 };
 
 // Конфигурация (получаемая от клиента)
@@ -231,7 +231,7 @@ connection.onInitialized(async () => {
   // .src ve .sub dosyalarından fonksiyonları yükle
   await extractFunctionsFromWorkspace(state.workspaceRoot);
 
-  state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+  state.globalVariables = extractGlobalVariables(state.fileVariablesMap);
 
   // Fonksiyon önbelleğini güncelle
   diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
@@ -240,7 +240,7 @@ connection.onInitialized(async () => {
   workspaceInitialized = true;
 
   log(
-    `[Başlatma] ${state.functionsDeclared.length} fonksiyon ve ${state.mergedVariables.length} değişken yüklendi.`,
+    `[Başlatma] ${state.functionsDeclared.length} fonksiyon ve ${state.globalVariables.length} global değişken yüklendi.`,
   );
 });
 
@@ -339,7 +339,7 @@ documents.onDidChangeContent(async (change) => {
 
     // Fonksiyonları da yükle
     await extractFunctionsFromWorkspace(state.workspaceRoot);
-    state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+    state.globalVariables = extractGlobalVariables(state.fileVariablesMap);
 
     // Fonksiyon önbelleğini güncelle
     diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
@@ -361,7 +361,7 @@ documents.onDidChangeContent(async (change) => {
   extractor.extractFromText(document.getText());
   state.fileVariablesMap.set(document.uri, extractor.getVariables());
 
-  state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+  state.globalVariables = extractGlobalVariables(state.fileVariablesMap);
 
   // Fonksiyonları güncelle (mevcut dosyadan)
   updateFunctionsFromDocument(document);
@@ -385,21 +385,32 @@ documents.onDidChangeContent(async (change) => {
     // Tüm teşhisleri topla ve tek seferde gönder
     let allDiagnostics: import("vscode-languageserver/node").Diagnostic[] = [];
 
-    // Обновляем mergedVariables перед валидацией (могут быть загружены новые переменные)
-    state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+    // Обновляем globalVariables перед валидацией (могут быть загружены новые переменные)
+    state.globalVariables = extractGlobalVariables(state.fileVariablesMap);
 
-    // Kullanım doğrulaması - только если workspace полностью загружен
-    // Это предотвращает ложные ошибки "переменная не определена" при открытии файлов
+    // Kullanım doğrulaması - sadece workspace başlatıldıysa
     if (workspaceInitialized) {
+      const visibleVars = getVisibleVariables(
+        currentDoc.uri,
+        state.fileVariablesMap,
+        state.globalVariables,
+      );
+
       const varDiags = diagnostics.validateVariablesUsage(
         currentDoc,
-        state.mergedVariables,
+        visibleVars,
       );
       allDiagnostics.push(...varDiags);
     }
 
     // Safety diagnostics для SRC файлов
     if (currentDoc.uri.toLowerCase().endsWith(".src")) {
+      const visibleVars = getVisibleVariables(
+        currentDoc.uri,
+        state.fileVariablesMap,
+        state.globalVariables,
+      );
+
       allDiagnostics.push(
         ...diagnostics.validateSafetySpeeds(currentDoc),
         ...diagnostics.validateToolBaseInit(currentDoc),
@@ -408,7 +419,7 @@ documents.onDidChangeContent(async (change) => {
         ...diagnostics.validateDeadCode(currentDoc),
         ...diagnostics.validateEmptyBlocks(currentDoc),
         ...diagnostics.validateDangerousStatements(currentDoc),
-        ...diagnostics.validateTypeUsage(currentDoc, state.mergedVariables),
+        ...diagnostics.validateTypeUsage(currentDoc, visibleVars),
       );
     }
 
@@ -478,7 +489,28 @@ connection.onNotification("custom/validateWorkspace", async () => {
       if (doc.uri.endsWith(".dat")) {
         diagnostics.validateDatFile(doc);
       }
-      diagnostics.validateVariablesUsage(doc, state.mergedVariables);
+
+      // Calculate visible vars for this file
+      const visibleVars = [...state.globalVariables];
+      if (uri.toLowerCase().endsWith(".src")) {
+         const datUri = uri.replace(/\.src$/i, ".dat");
+         // Need to find in map using URI string.
+         // fileVariablesMap keys are URIs.
+         let foundDatVars: VariableInfo[] | undefined;
+         for (const [key, val] of state.fileVariablesMap.entries()) {
+            if (key.toLowerCase() === datUri.toLowerCase()) {
+                foundDatVars = val;
+                break;
+            }
+         }
+         if (foundDatVars) visibleVars.push(...foundDatVars);
+      } else if (uri.toLowerCase().endsWith(".dat")) {
+         // Also include self variables
+         const selfVars = state.fileVariablesMap.get(uri);
+         if (selfVars) visibleVars.push(...selfVars);
+      }
+
+      diagnostics.validateVariablesUsage(doc, visibleVars);
     } catch (e) {
       log(`Doğrulama hatası ${filePath}: ${e}`);
     }
@@ -562,20 +594,62 @@ connection.languages.callHierarchy.onOutgoingCalls((params) => {
 // Yardımcı Fonksiyonlar
 // =====================
 
-function mergeAllVariables(map: Map<string, VariableInfo[]>): VariableInfo[] {
+function extractGlobalVariables(
+  map: Map<string, VariableInfo[]>,
+): VariableInfo[] {
   const result: VariableInfo[] = [];
   const seen = new Set<string>();
 
   for (const vars of map.values()) {
     for (const v of vars) {
-      const upperName = v.name.toUpperCase();
-      if (!seen.has(upperName)) {
-        seen.add(upperName);
-        result.push({ name: v.name, type: v.type || "" });
+      if (v.scope === "GLOBAL") {
+        const upperName = v.name.toUpperCase();
+        if (!seen.has(upperName)) {
+          seen.add(upperName);
+          result.push(v);
+        }
       }
     }
   }
   return result;
+}
+
+function getVisibleVariables(
+  docUri: string,
+  fileVarsMap: Map<string, VariableInfo[]>,
+  globalVars: VariableInfo[],
+): VariableInfo[] {
+  const visibleVars = [...globalVars];
+
+  // Mevcut dosyanın kendi değişkenlerini ekle (Local variables)
+  const currentFileVars = fileVarsMap.get(docUri);
+  if (currentFileVars) {
+    visibleVars.push(...currentFileVars);
+  }
+
+  // Eğer bu bir .src dosyasıysa, eşleşen .dat dosyasının değişkenlerini ekle
+  if (docUri.toLowerCase().endsWith(".src")) {
+    const datUri = docUri.replace(/\.src$/i, ".dat");
+
+    // Eşleşen .dat değişkenlerini bul
+    let foundDatVars: VariableInfo[] | undefined;
+    if (fileVarsMap.has(datUri)) {
+      foundDatVars = fileVarsMap.get(datUri);
+    } else {
+      // Case-insensitive fallback
+      for (const [key, val] of fileVarsMap.entries()) {
+        if (key.toLowerCase() === datUri.toLowerCase()) {
+          foundDatVars = val;
+          break;
+        }
+      }
+    }
+
+    if (foundDatVars) {
+      visibleVars.push(...foundDatVars);
+    }
+  }
+  return visibleVars;
 }
 
 // Sunucuyu Başlat

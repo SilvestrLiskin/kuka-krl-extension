@@ -120,13 +120,59 @@ export class AutoCompleter {
     }));
 
     // === 4. Değişken tamamlamaları ===
-    const varItems: CompletionItem[] = state.mergedVariables.map((v) => ({
+    const globalVarItems = state.globalVariables.map((v) => ({
       label: v.name,
       kind: CompletionItemKind.Variable,
       detail: v.type ? t("completion.type", v.type) : t("completion.variable"),
       sortText: v.name,
       filterText: v.name,
     }));
+
+    // Yerel değişkenler (Mevcut dosya)
+    let localVarItems: CompletionItem[] = [];
+    const localVars = state.fileVariablesMap.get(document.uri);
+    if (localVars) {
+      localVarItems = localVars.map((v) => ({
+        label: v.name,
+        kind: CompletionItemKind.Variable,
+        detail: v.type
+          ? t("completion.type", v.type) + " (Local)"
+          : t("completion.variable"),
+        sortText: v.name,
+        filterText: v.name,
+      }));
+    }
+
+    // Modül değişkenleri (.dat)
+    let moduleVarItems: CompletionItem[] = [];
+    if (document.uri.toLowerCase().endsWith(".src")) {
+      const datUri = document.uri.replace(/\.src$/i, ".dat");
+      let datVars: import("../types").VariableInfo[] | undefined;
+      // Case-insensitive lookup
+      for (const [key, val] of state.fileVariablesMap.entries()) {
+        if (key.toLowerCase() === datUri.toLowerCase()) {
+          datVars = val;
+          break;
+        }
+      }
+      if (datVars) {
+        moduleVarItems = datVars.map((v) => ({
+          label: v.name,
+          kind: CompletionItemKind.Variable,
+          detail: v.type
+            ? t("completion.type", v.type) + " (Module)"
+            : t("completion.variable"),
+          sortText: v.name,
+          filterText: v.name,
+        }));
+      }
+    }
+
+    const varItems: CompletionItem[] = [
+      ...globalVarItems,
+      ...localVarItems,
+      ...moduleVarItems,
+    ];
 
     // === 5. Wonderlibrary Functions ===
     const wonderlibItems: CompletionItem[] = WONDERLIB_FUNCTIONS.map((fn) => {

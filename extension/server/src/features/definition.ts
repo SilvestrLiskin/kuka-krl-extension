@@ -75,10 +75,32 @@ export class SymbolResolver {
     // Değişken olarak ara
     const enclosures = this.findEnclosuresLines(params.position.line, lines);
 
-    // Önce mergedVariables listesinden kontrol et
-    for (const element of state.mergedVariables) {
+    // Görünür değişkenleri oluştur
+    const visibleVars = [...state.globalVariables];
+
+    // Mevcut dosyanın değişkenlerini ekle
+    const currentVars = state.fileVariablesMap.get(doc.uri);
+    if (currentVars) visibleVars.push(...currentVars);
+
+    let datUri: string | undefined;
+
+    if (doc.uri.toLowerCase().endsWith(".src")) {
+      datUri = doc.uri.replace(/\.src$/i, ".dat");
+      let datVars: import("../types").VariableInfo[] | undefined;
+      for (const [key, val] of state.fileVariablesMap.entries()) {
+        if (key.toLowerCase() === datUri.toLowerCase()) {
+          datVars = val;
+          datUri = key; // Use the correct key casing if found
+          break;
+        }
+      }
+      if (datVars) visibleVars.push(...datVars);
+    }
+
+    // Önce visibleVars listesinden kontrol et
+    for (const element of visibleVars) {
       if (element.name.toUpperCase() === functionName.toUpperCase()) {
-        // İlk: yerel kapsamda ara (kapsam içinde)
+        // 1. Yerel kapsamda ara (fonksiyon içi)
         const scopedResult = await isSymbolDeclared(
           state.workspaceRoot,
           functionName,
@@ -96,18 +118,36 @@ export class SymbolResolver {
           });
         }
 
-        // Yerel olarak bulunamadıysa global arama yap
-        const resultVar = await isSymbolDeclared(
-          state.workspaceRoot,
-          functionName,
-          "variable",
-        );
+        // 2. Modül (.dat) dosyasında ara
+        if (datUri) {
+          const moduleResult = await isSymbolDeclared(
+            state.workspaceRoot,
+            functionName,
+            "variable",
+            datUri,
+          );
+          if (moduleResult) {
+            return Location.create(moduleResult.uri, {
+              start: Position.create(moduleResult.line, moduleResult.startChar),
+              end: Position.create(moduleResult.line, moduleResult.endChar),
+            });
+          }
+        }
 
-        if (resultVar) {
-          return Location.create(resultVar.uri, {
-            start: Position.create(resultVar.line, resultVar.startChar),
-            end: Position.create(resultVar.line, resultVar.endChar),
-          });
+        // 3. Global arama yap (eğer global ise)
+        if (element.scope === "GLOBAL") {
+          const resultVar = await isSymbolDeclared(
+            state.workspaceRoot,
+            functionName,
+            "variable",
+          );
+
+          if (resultVar) {
+            return Location.create(resultVar.uri, {
+              start: Position.create(resultVar.line, resultVar.startChar),
+              end: Position.create(resultVar.line, resultVar.endChar),
+            });
+          }
         }
       }
     }

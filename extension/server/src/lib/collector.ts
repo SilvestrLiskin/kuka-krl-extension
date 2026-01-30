@@ -1,19 +1,41 @@
 import { VariableInfo } from "../types";
 
 /**
- * Parantezleri dikkate alarak değişken bildirimlerini böler.
- * Örnek: "a[10], b, c[5,3]" -> ["a[10]", "b", "c[5,3]"]
+ * Strips comments from a line, respecting strings.
+ * "Hello; World" ; Comment -> "Hello; World"
+ */
+export function stripComments(text: string): string {
+  let inString = false;
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '"') inString = !inString;
+    if (text[i] === ";" && !inString) return text.substring(0, i).trim();
+  }
+  return text.trim();
+}
+
+/**
+ * Splits variable declarations respecting brackets AND strings.
+ * Example: "a[10], b, c[5,3], s=\"A,B\"" -> ["a[10]", "b", "c[5,3]", "s=\"A,B\""]
  */
 export const splitVarsRespectingBrackets = (input: string): string[] => {
   const result: string[] = [];
   let current = "";
   let bracketDepth = 0;
+  let inString = false;
 
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
-    if (char === "[") bracketDepth++;
-    if (char === "]") bracketDepth--;
-    if (char === "," && bracketDepth === 0) {
+
+    if (char === '"') {
+      inString = !inString;
+    }
+
+    if (!inString) {
+      if (char === "[") bracketDepth++;
+      if (char === "]") bracketDepth--;
+    }
+
+    if (char === "," && bracketDepth === 0 && !inString) {
       result.push(current.trim());
       current = "";
     } else {
@@ -57,7 +79,7 @@ export function extractStrucVariables(
     let membersRaw = match[3];
 
     // Yorum kısmını kaldır
-    membersRaw = membersRaw.split(";")[0].trim();
+    membersRaw = stripComments(membersRaw);
 
     const tokens = membersRaw
       .split(/[,\s]+/)
@@ -94,20 +116,28 @@ export class SymbolExtractor {
 
   extractFromText(documentText: string): void {
     // DECL regex'i - CONST dahil
+    // match[1]: Full prefix containing GLOBAL/CONST/DECL/Type
+    // match[2]: Type if captured in first group (e.g. DECL INT) - Wait, regex is complex.
+    // Let's simplify and use the previous logic but capture the whole line
     const declRegex =
-      /^\s*(?:(?:GLOBAL\s+)?(?:CONST\s+)?DECL\s+(?:GLOBAL\s+)?(?:CONST\s+)?(\w+)|(?:GLOBAL\s+)?(?:CONST\s+)?(INT|REAL|BOOL|CHAR|FRAME|POS|E6POS|E6AXIS|AXIS|LOAD|SIGNAL|STRING))\s+([^\r\n;]+)/gim;
+      /^\s*((?:GLOBAL\s+)?(?:CONST\s+)?DECL\s+(?:GLOBAL\s+)?(?:CONST\s+)?(\w+)|(?:GLOBAL\s+)?(?:CONST\s+)?(INT|REAL|BOOL|CHAR|FRAME|POS|E6POS|E6AXIS|AXIS|LOAD|SIGNAL|STRING))\s+([^\r\n]+)/gim;
 
     let match: RegExpExecArray | null;
     while ((match = declRegex.exec(documentText)) !== null) {
-      let type = match[1] || match[2];
-      const varList = match[3];
+      const fullPrefix = match[1];
+      let type = match[2] || match[3];
+      const rawLine = match[4];
+
+      const isGlobal = /\bGLOBAL\b/i.test(fullPrefix);
+      const scope: "GLOBAL" | "LOCAL" = isGlobal ? "GLOBAL" : "LOCAL";
+
+      // Strip comments respecting strings
+      const varList = stripComments(rawLine);
 
       const varParts = splitVarsRespectingBrackets(varList);
 
       for (const rawPart of varParts) {
         let part = rawPart.trim();
-        // Yorumları temizle
-        part = part.split(";")[0].trim();
         if (!part) continue;
 
         let name = part;
@@ -140,6 +170,7 @@ export class SymbolExtractor {
               name: cleanName,
               type: type,
               value: value,
+              scope: scope
             });
           }
         }
@@ -147,10 +178,15 @@ export class SymbolExtractor {
     }
 
     // ENUM üyelerini çıkar
-    const enumRegex = /^\s*(?:GLOBAL\s+)?ENUM\s+\w+\s+([^\r\n;]+)/gim;
+    const enumRegex = /^\s*((?:GLOBAL\s+)?ENUM\s+\w+\s+)([^\r\n]+)/gim;
     while ((match = enumRegex.exec(documentText)) !== null) {
-      const memberList = match[1];
+      const prefix = match[1];
+      const memberList = stripComments(match[2]);
       const members = memberList.split(",").map((m) => m.trim());
+
+      const isGlobal = /\bGLOBAL\b/i.test(prefix);
+      const scope: "GLOBAL" | "LOCAL" = isGlobal ? "GLOBAL" : "LOCAL";
+
       for (const member of members) {
         if (
           /^[a-zA-Z_]\w*$/.test(member) &&
@@ -159,12 +195,14 @@ export class SymbolExtractor {
           this.variables.set(member.toUpperCase(), {
             name: member,
             type: "ENUM_MEMBER",
+            scope: scope
           });
         }
       }
     }
 
     // Fonksiyon parametrelerini yakala
+    // Parametreler her zaman LOCAL dir
     const defRegex =
       /^\s*(?:GLOBAL\s+)?(?:DEF|DEFFCT)\s+(?:(?:\w+|\[\])\s+)?\w+\s*\(([^)]*)\)/gim;
     while ((match = defRegex.exec(documentText)) !== null) {
@@ -177,7 +215,7 @@ export class SymbolExtractor {
 
       for (const p of params) {
         if (!this.variables.has(p.toUpperCase())) {
-          this.variables.set(p.toUpperCase(), { name: p, type: "PARAM" });
+          this.variables.set(p.toUpperCase(), { name: p, type: "PARAM", scope: "LOCAL" });
         }
       }
     }

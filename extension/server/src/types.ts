@@ -3,6 +3,7 @@ export interface VariableInfo {
   name: string;
   type: string;
   value?: string;
+  scope?: "GLOBAL" | "LOCAL";
 }
 
 // Struct haritası - struct adı => üye isimleri
@@ -44,5 +45,5 @@ export interface ServerState {
   variableStructTypes: VariableToStructMap;
   structDefinitions: StructMap;
   functionsDeclared: FunctionDeclaration[];
-  mergedVariables: VariableInfo[];
+  globalVariables: VariableInfo[];
 }
