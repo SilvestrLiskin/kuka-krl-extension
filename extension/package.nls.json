@@ -19,5 +19,6 @@
   "config.indentWidth.description": "Number of spaces for indentation (3 = KUKA Teach Pendant standard)",
   "config.separateBeforeBlocks.description": "Add empty line before control blocks (FOR, IF, WHILE, LOOP, etc.)",
   "config.separateAfterBlocks.description": "Add empty line after control blocks (ENDFOR, ENDIF, ENDWHILE, etc.)",
-  "config.validateNonAscii.description": "Highlight non-ASCII characters (Cyrillic, special symbols) that may cause errors in KUKA controller"
+  "config.validateNonAscii.description": "Highlight non-ASCII characters (Cyrillic, special symbols) that may cause errors in KUKA controller",
+  "view.krlIO.welcome": "No I/O signals found in the current workspace. Use $IN[n], $OUT[n], etc. in your KRL code to see them here."
 }
