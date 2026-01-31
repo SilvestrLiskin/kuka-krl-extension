@@ -8,13 +8,12 @@ import {
 } from "vscode-languageclient/node";
 import * as path from "path";
 import { t } from "./i18n";
-import { DocGenerator } from "./docGenerator";
+
 import { IOTreeProvider } from "./ioTreeView";
-import { KRCTreeProvider } from "./krcTreeView";
-import { showSystemVariablesPicker } from "./systemVarFinder";
+import { CommandsTreeProvider } from "./commandsTreeView";
+
 import { cleanupUnusedVariables } from "./features/cleanup";
-import { deployToRobot } from "./features/deploy";
-import { ZipFileSystemProvider } from "./features/zipFileSystem";
+
 import { showCalculator } from "./features/calculator";
 import { initErrorLens } from "./features/errorLens";
 
@@ -64,6 +63,8 @@ export function activate(context: vscode.ExtensionContext) {
           false,
         ),
         separateAfterBlocks: config.get<boolean>("separateAfterBlocks", false),
+        indentFolds: config.get<boolean>("indentFolds", true),
+        alignAssignments: config.get<boolean>("alignAssignments", true),
       });
     }
   }
@@ -171,14 +172,6 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
-  // Документация генератор
-  const docGenerator = new DocGenerator();
-  context.subscriptions.push(
-    vscode.commands.registerCommand("krl.generateDocumentation", () => {
-      docGenerator.generateDocumentation();
-    }),
-  );
-
   // =====================
   // Tree Views
   // =====================
@@ -190,23 +183,14 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("krl.refreshIOView", () => {
       ioTreeProvider.refresh();
     }),
-  );
-
-  // KRC Project Tree View
-  const krcTreeProvider = new KRCTreeProvider();
-  vscode.window.registerTreeDataProvider("krlKRC", krcTreeProvider);
-  context.subscriptions.push(
-    vscode.commands.registerCommand("krl.refreshKRCView", () => {
-      krcTreeProvider.refresh();
+    vscode.commands.registerCommand("krl.renameSignal", (item) => {
+      ioTreeProvider.renameSignal(item);
     }),
   );
 
-  // Find System Variables command
-  context.subscriptions.push(
-    vscode.commands.registerCommand("krl.findSystemVariables", () => {
-      showSystemVariablesPicker();
-    }),
-  );
+  // Commands Tree View
+  const commandsTreeProvider = new CommandsTreeProvider();
+  vscode.window.registerTreeDataProvider("krlCommands", commandsTreeProvider);
 
   // Bildirimleri sırala komutu
   context.subscriptions.push(
@@ -307,43 +291,8 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // Deploy command
+  // Calculator
   context.subscriptions.push(
-    vscode.commands.registerCommand("krl.deploy", () => {
-      deployToRobot();
-    }),
-  );
-
-  // Zip Archive Support
-  context.subscriptions.push(
-    vscode.workspace.registerFileSystemProvider(
-      "kuka-zip",
-      new ZipFileSystemProvider(),
-      { isCaseSensitive: true, isReadonly: true },
-    ),
-    vscode.commands.registerCommand("krl.openArchive", async () => {
-      const uris = await vscode.window.showOpenDialog({
-        canSelectFiles: true,
-        canSelectFolders: false,
-        filters: { "KUKA Archives": ["zip"] },
-      });
-      if (uris && uris.length > 0) {
-        const zipUri = uris[0];
-        const zipPath = zipUri.fsPath.replace(/\\/g, "/");
-        // Construct URI: kuka-zip:///path/to/zip/::/
-        // Need to ensure leading slash for path if not present (Windows drive letter)
-        const cleanPath = zipPath.startsWith("/") ? zipPath : "/" + zipPath;
-        const rootUri = vscode.Uri.parse(`kuka-zip://${cleanPath}/::/`);
-
-        vscode.workspace.updateWorkspaceFolders(
-          vscode.workspace.workspaceFolders
-            ? vscode.workspace.workspaceFolders.length
-            : 0,
-          0,
-          { uri: rootUri, name: path.basename(zipPath) },
-        );
-      }
-    }),
     vscode.commands.registerCommand("krl.showCalculator", () => {
       showCalculator(context);
     }),

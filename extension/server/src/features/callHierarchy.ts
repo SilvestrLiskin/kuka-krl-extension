@@ -16,6 +16,9 @@ import {
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { TextDocuments } from "vscode-languageserver/node";
 import { ServerState } from "../types";
+import { getAllSourceFiles } from "../lib/fileSystem";
+import { URI } from "vscode-uri";
+import * as fs from "fs";
 
 export class CallHierarchyProvider {
   /**
@@ -90,11 +93,11 @@ export class CallHierarchyProvider {
   /**
    * Find all incoming calls (who calls this function)
    */
-  incomingCalls(
+  async incomingCalls(
     params: CallHierarchyIncomingCallsParams,
     documents: TextDocuments<TextDocument>,
     state: ServerState,
-  ): CallHierarchyIncomingCall[] {
+  ): Promise<CallHierarchyIncomingCall[]> {
     const item = params.item;
     const funcName = item.name;
     const results: CallHierarchyIncomingCall[] = [];
@@ -105,8 +108,25 @@ export class CallHierarchyProvider {
       "gi",
     );
 
-    for (const doc of documents.all()) {
-      const text = doc.getText();
+    const files = state.workspaceRoot
+      ? await getAllSourceFiles(state.workspaceRoot)
+      : documents.all().map((d) => URI.parse(d.uri).fsPath);
+
+    for (const filePath of files) {
+      const uri = URI.file(filePath).toString();
+      let text: string;
+      const doc = documents.get(uri);
+
+      if (doc) {
+        text = doc.getText();
+      } else {
+        try {
+          text = await fs.promises.readFile(filePath, "utf8");
+        } catch {
+          continue;
+        }
+      }
+
       const lines = text.split(/\r?\n/);
 
       for (let i = 0; i < lines.length; i++) {
@@ -119,7 +139,7 @@ export class CallHierarchyProvider {
         while ((match = callPattern.exec(line)) !== null) {
           // Skip if it's the definition itself
           if (
-            doc.uri === item.uri &&
+            uri === item.uri &&
             i === item.range.start.line &&
             match.index === item.range.start.character
           ) {
@@ -130,6 +150,7 @@ export class CallHierarchyProvider {
           const containingFunc = this.findContainingFunction(lines, i, state);
 
           if (containingFunc) {
+            containingFunc.uri = uri; // Set correct URI
             results.push({
               from: containingFunc,
               fromRanges: [
@@ -147,17 +168,27 @@ export class CallHierarchyProvider {
   /**
    * Find all outgoing calls (what functions does this function call)
    */
-  outgoingCalls(
+  async outgoingCalls(
     params: CallHierarchyOutgoingCallsParams,
     documents: TextDocuments<TextDocument>,
     state: ServerState,
-  ): CallHierarchyOutgoingCall[] {
+  ): Promise<CallHierarchyOutgoingCall[]> {
     const item = params.item;
+    let text: string;
     const document = documents.get(item.uri);
-    if (!document) return [];
+
+    if (document) {
+      text = document.getText();
+    } else {
+      try {
+        const filePath = URI.parse(item.uri).fsPath;
+        text = await fs.promises.readFile(filePath, "utf8");
+      } catch {
+        return [];
+      }
+    }
 
     const results: CallHierarchyOutgoingCall[] = [];
-    const text = document.getText();
     const lines = text.split(/\r?\n/);
 
     // Find the range of this function

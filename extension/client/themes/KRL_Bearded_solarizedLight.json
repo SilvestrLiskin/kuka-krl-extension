@@ -1,0 +1,134 @@
+{
+  "name": "KRL Bearded solarizedLight",
+  "type": "light",
+  "colors": {
+    "editor.background": "#fdf6e3",
+    "editor.foreground": "#000000",
+    "activityBar.background": "#f4edda",
+    "sideBar.background": "#f4edda",
+    "statusBar.background": "#fdf6e3",
+    "editorLineNumber.foreground": "#000000"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#d8ae3c"
+      }
+    },
+    {
+      "scope": [
+        "meta.fold.krl",
+        "comment.line.fold.krl"
+      ],
+      "settings": {
+        "foreground": "#91721d",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "comment.line.todo.krl"
+      ],
+      "settings": {
+        "foreground": "#e8913b",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "string"
+      ],
+      "settings": {
+        "foreground": "#a5b82e"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric"
+      ],
+      "settings": {
+        "foreground": "#e8913b"
+      }
+    },
+    {
+      "scope": [
+        "constant.language",
+        "constant.other"
+      ],
+      "settings": {
+        "foreground": "#f45645"
+      }
+    },
+    {
+      "scope": [
+        "keyword.control.krl"
+      ],
+      "settings": {
+        "foreground": "#df96d9"
+      }
+    },
+    {
+      "scope": [
+        "keyword.function.movement.krl"
+      ],
+      "settings": {
+        "foreground": "#4db0f7",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "keyword.operator"
+      ],
+      "settings": {
+        "foreground": "#000000"
+      }
+    },
+    {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
+      "settings": {
+        "foreground": "#26bbae"
+      }
+    },
+    {
+      "scope": [
+        "variable.language.system.krl"
+      ],
+      "settings": {
+        "foreground": "#e2ae10",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "scope": [
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#4db0f7"
+      }
+    },
+    {
+      "scope": [
+        "punctuation.krl"
+      ],
+      "settings": {
+        "foreground": "#000000"
+      }
+    },
+    {
+      "scope": [
+        "comment punctuation"
+      ],
+      "settings": {
+        "foreground": "#d8ae3c"
+      }
+    }
+  ]
+}

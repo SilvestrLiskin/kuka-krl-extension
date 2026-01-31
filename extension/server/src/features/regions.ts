@@ -20,13 +20,14 @@ export class RegionProvider {
     const lines = document.getText().split(/\r?\n/);
     const ranges: FoldingRange[] = [];
 
-    // FOLD/ENDFOLD yığını
-    const foldStack: number[] = [];
+    // FOLD/ENDFOLD yığını: {line, text}
+    const foldStack: { line: number; text: string }[] = [];
     // DEF/DEFFCT/DEFDAT yığını
     const defStack: number[] = [];
 
     // FOLD ve ENDFOLD için regex (büyük/küçük harf duyarsız, boşluklara izin verir)
-    const foldStartRegex = /;\s*FOLD\b/i;
+    // Capture group 1: Description text
+    const foldStartRegex = /;\s*FOLD\b(.*)/i;
     const foldEndRegex = /;\s*ENDFOLD\b/i;
 
     // DEF/DEFFCT/DEFDAT için regex - kesin eşleşme
@@ -39,15 +40,17 @@ export class RegionProvider {
       const line = lines[i];
 
       // FOLD katlama
-      if (foldStartRegex.test(line)) {
-        foldStack.push(i);
+      const foldMatch = foldStartRegex.exec(line);
+      if (foldMatch) {
+        foldStack.push({ line: i, text: foldMatch[1].trim() });
       } else if (foldEndRegex.test(line)) {
-        const startLine = foldStack.pop();
-        if (startLine !== undefined) {
+        const startInfo = foldStack.pop();
+        if (startInfo !== undefined) {
           ranges.push({
-            startLine: startLine,
+            startLine: startInfo.line,
             endLine: i,
             kind: FoldingRangeKind.Region,
+            collapsedText: startInfo.text || undefined,
           });
         }
       }

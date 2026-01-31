@@ -1,0 +1,101 @@
+{
+  "name": "KRL Bearded Surprising Eggplant",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#1d1426",
+    "editor.foreground": "#d0c1de",
+    "activityBar.background": "#17101f",
+    "sideBar.background": "#17101f",
+    "statusBar.background": "#1d1426",
+    "editorLineNumber.foreground": "#5d4179"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#5d4179"
+      }
+    },
+    {
+      "scope": [
+        "meta.fold.krl",
+        "comment.line.fold.krl"
+      ],
+      "settings": {
+        "foreground": "#76539a",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "comment.line.todo.krl"
+      ],
+      "settings": {
+        "foreground": "#5288BA",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "string"
+      ],
+      "settings": {
+        "foreground": "#a9dc76"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric"
+      ],
+      "settings": {
+        "foreground": "#5288BA"
+      }
+    },
+    {
+      "scope": [
+        "constant.language",
+        "constant.other"
+      ],
+      "settings": {
+        "foreground": "#C13838"
+      }
+    },
+    {
+      "scope": [
+        "keyword.control.krl"
+      ],
+      "settings": {
+        "foreground": "#c47cbf"
+      }
+    },
+    {
+      "scope": [
+        "keyword.function.movement.krl"
+      ],
+      "settings": {
+        "foreground": "#00B3BD",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "keyword.operator"
+      ],
+      "settings": {
+        "foreground": "#d0c1de"
+      }
+    },
+    {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
+      "settings": {
+        "foreground": "#d24e4e"
+      }
+    }
+  ]
+}

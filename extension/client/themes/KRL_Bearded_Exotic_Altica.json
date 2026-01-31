@@ -1,0 +1,101 @@
+{
+  "name": "KRL Bearded Exotic Altica",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#0f1c21",
+    "editor.foreground": "#c2ced1",
+    "activityBar.background": "#0e171c",
+    "sideBar.background": "#0e171c",
+    "statusBar.background": "#0f1c21",
+    "editorLineNumber.foreground": "#45565c"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#45565c"
+      }
+    },
+    {
+      "scope": [
+        "meta.fold.krl",
+        "comment.line.fold.krl"
+      ],
+      "settings": {
+        "foreground": "#5b7179",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "comment.line.todo.krl"
+      ],
+      "settings": {
+        "foreground": "#0187a6",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "string"
+      ],
+      "settings": {
+        "foreground": "#6bc793"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric"
+      ],
+      "settings": {
+        "foreground": "#0187a6"
+      }
+    },
+    {
+      "scope": [
+        "constant.language",
+        "constant.other"
+      ],
+      "settings": {
+        "foreground": "#C13838"
+      }
+    },
+    {
+      "scope": [
+        "keyword.control.krl"
+      ],
+      "settings": {
+        "foreground": "#A8547A"
+      }
+    },
+    {
+      "scope": [
+        "keyword.function.movement.krl"
+      ],
+      "settings": {
+        "foreground": "#10bdc9",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "keyword.operator"
+      ],
+      "settings": {
+        "foreground": "#c2ced1"
+      }
+    },
+    {
+      "scope": [
+        "storage.type",
+        "storage.modifier"
+      ],
+      "settings": {
+        "foreground": "#0187a6"
+      }
+    }
+  ]
+}

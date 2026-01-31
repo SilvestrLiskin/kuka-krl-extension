@@ -1,232 +1,262 @@
 {
-    "Module": {
-        "prefix": [
-            "DEF",
-            "module"
-        ],
+    "DEF": {
+        "prefix": "DEF",
         "body": [
-            "${1:GLOBAL }DEF ${2:name}(${3:params})",
+            "DEF ${1:program_name}(${2:params})",
             "\t$0",
             "END"
         ],
-        "description": "Module definition"
+        "description": "Define a global/local subprogram"
     },
-    "Function": {
-        "prefix": [
-            "DEFFCT",
-            "function"
-        ],
+    "DEFFCT": {
+        "prefix": "DEFFCT",
         "body": [
-            "${1:GLOBAL }DEFFCT ${2:type} ${3:name}(${4:params})",
+            "DEFFCT ${1:type} ${2:function_name}(${3:params})",
+            "\t${4:DECL ${1:type} RET}",
             "\t$0",
+            "\tRETURN ${4:RET}",
             "ENDFCT"
         ],
-        "description": "Function definition"
+        "description": "Define a function"
     },
-    "FOLD Region": {
-        "prefix": [
-            "FOLD",
-            "fold",
-            "region"
-        ],
+    "DEFDAT": {
+        "prefix": "DEFDAT",
         "body": [
-            ";FOLD ${1:RegionName}",
+            "DEFDAT ${1:program_name} PUBLIC",
             "\t$0",
-            ";ENDFOLD"
+            "ENDDAT"
         ],
-        "description": "FOLD/ENDFOLD region for code folding"
+        "description": "Define a data list"
     },
-    "FOLD Region with Parameters": {
-        "prefix": [
-            "FOLDP",
-            "foldparams"
-        ],
+    "IF": {
+        "prefix": "IF",
         "body": [
-            ";FOLD ${1:RegionName} ;%{h}",
-            ";FOLD Parameters ;%{h}",
-            ";Params ${2:parameters}",
-            ";ENDFOLD",
+            "IF ${1:condition} THEN",
             "\t$0",
-            ";ENDFOLD"
+            "ENDIF"
         ],
-        "description": "FOLD region with parameters (hidden)"
+        "description": "If block"
     },
-    "For loop": {
+    "IF-ELSE": {
+        "prefix": "IFELSE",
+        "body": [
+            "IF ${1:condition} THEN",
+            "\t$2",
+            "ELSE",
+            "\t$0",
+            "ENDIF"
+        ],
+        "description": "If-Else block"
+    },
+    "FOR": {
         "prefix": "FOR",
         "body": [
-            "FOR ${1:counter}=${2:start} TO ${3:end}${4: STEP step}",
+            "FOR ${1:i} = ${2:start} TO ${3:end} STEP ${4:1}",
             "\t$0",
             "ENDFOR"
         ],
         "description": "For loop"
     },
-    "Loop": {
+    "WHILE": {
+        "prefix": "WHILE",
+        "body": [
+            "WHILE ${1:condition}",
+            "\t$0",
+            "ENDWHILE"
+        ],
+        "description": "While loop"
+    },
+    "LOOP": {
         "prefix": "LOOP",
         "body": [
             "LOOP",
             "\t$0",
             "ENDLOOP"
         ],
-        "description": "Loop"
+        "description": "Infinite Loop"
     },
-    "While loop": {
-        "prefix": "WHILE",
-        "body": [
-            "WHILE (${1:condition})",
-            "\t$0",
-            "ENDWHILE"
-        ],
-        "description": "While loop"
-    },
-    "Repeat Until": {
+    "REPEAT": {
         "prefix": "REPEAT",
         "body": [
             "REPEAT",
             "\t$0",
-            "UNTIL (${1:condition})"
+            "UNTIL ${1:condition}"
         ],
-        "description": "Repeat until loop"
+        "description": "Repeat-Until loop"
     },
-    "If statement": {
-        "prefix": "IF",
-        "body": [
-            "IF (${1:condition}) THEN",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "If statement"
-    },
-    "If Else statement": {
-        "prefix": "IFELSE",
-        "body": [
-            "IF (${1:condition}) THEN",
-            "\t$2",
-            "ELSE",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "If-Else statement"
-    },
-    "Switch statement": {
+    "SWITCH": {
         "prefix": "SWITCH",
         "body": [
-            "SWITCH (${1:variable})",
-            "CASE ${2:switch}",
-            "\t$0",
-            "DEFAULT",
+            "SWITCH ${1:variable}",
+            "\tCASE ${2:value}",
+            "\t\t$3",
+            "\tDEFAULT",
+            "\t\t$0",
             "ENDSWITCH"
         ],
-        "description": "Switch statement"
+        "description": "Switch-Case block"
     },
-    "Interrupt declaration": {
+    "PTP": {
+        "prefix": "PTP",
+        "body": [
+            ";FOLD PTP ${1:POINT} Vel=${2:100} % ${3:DEFAULT};%{PE}",
+            ";FOLD Parameters ;%{h}",
+            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.old; KukaProvider=KUKA; ProjectPath=...",
+            ";ENDFOLD",
+            "$BWDSTART=FALSE",
+            "PDAT_ACT=P${3:DEFAULT}",
+            "FDAT_ACT=F${1:POINT}",
+            "BAS(#PTP_PARAMS, ${2:100})",
+            "PTP X${1:POINT} ",
+            ";ENDFOLD"
+        ],
+        "description": "Point-to-Point motion (Inline Form)"
+    },
+    "LIN": {
+        "prefix": "LIN",
+        "body": [
+            ";FOLD LIN ${1:POINT} Vel=${2:2.0} m/s ${3:DEFAULT};%{PE}",
+            ";FOLD Parameters ;%{h}",
+            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.old; KukaProvider=KUKA; ProjectPath=...",
+            ";ENDFOLD",
+            "$BWDSTART=FALSE",
+            "LDAT_ACT=L${3:DEFAULT}",
+            "FDAT_ACT=F${1:POINT}",
+            "BAS(#CP_PARAMS, ${2:2.0})",
+            "LIN X${1:POINT} ",
+            ";ENDFOLD"
+        ],
+        "description": "Linear motion (Inline Form)"
+    },
+    "SPTP": {
+        "prefix": "SPTP",
+        "body": [
+            ";FOLD SPTP ${1:POINT} Vel=${2:100} % ${3:DEFAULT};%{PE}",
+            ";FOLD Parameters ;%{h}",
+            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; KukaProvider=KUKA; ProjectPath=...",
+            ";ENDFOLD",
+            "$BWDSTART=FALSE",
+            "PDAT_ACT=P${3:DEFAULT}",
+            "FDAT_ACT=F${1:POINT}",
+            "BAS(#PTP_PARAMS, ${2:100})",
+            "SPTP X${1:POINT} WITH $VEL_AXIS[1]=${2:100}",
+            ";ENDFOLD"
+        ],
+        "description": "Spline PTP motion (Inline Form)"
+    },
+    "SLIN": {
+        "prefix": "SLIN",
+        "body": [
+            ";FOLD SLIN ${1:POINT} Vel=${2:2.0} m/s ${3:DEFAULT};%{PE}",
+            ";FOLD Parameters ;%{h}",
+            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; KukaProvider=KUKA; ProjectPath=...",
+            ";ENDFOLD",
+            "$BWDSTART=FALSE",
+            "LDAT_ACT=L${3:DEFAULT}",
+            "FDAT_ACT=F${1:POINT}",
+            "BAS(#CP_PARAMS, ${2:2.0})",
+            "SLIN X${1:POINT} WITH $VEL.CP=${2:2.0}",
+            ";ENDFOLD"
+        ],
+        "description": "Spline Linear motion (Inline Form)"
+    },
+    "WAIT": {
+        "prefix": "WAIT",
+        "body": [
+            "WAIT SEC ${1:0.0}"
+        ],
+        "description": "Wait seconds"
+    },
+    "WAIT FOR": {
+        "prefix": "WAIT FOR",
+        "body": [
+            "WAIT FOR ${1:condition}"
+        ],
+        "description": "Wait for condition"
+    },
+    "FOLD": {
+        "prefix": "FOLD",
+        "body": [
+            ";FOLD ${1:Name}",
+            "\t$0",
+            ";ENDFOLD"
+        ],
+        "description": "Fold region"
+    },
+    "CMD_PTP": {
+        "prefix": "PTP_SIMPLE",
+        "body": [
+            "PTP ${1:point} C_PTP"
+        ],
+        "description": "Simple PTP motion (Command only)"
+    },
+    "CMD_LIN": {
+        "prefix": "LIN_SIMPLE",
+        "body": [
+            "LIN ${1:point} C_DIS"
+        ],
+        "description": "Simple LIN motion (Command only)"
+    },
+    "MSG": {
+        "prefix": "MSG",
+        "body": [
+            "MsgNotify(\"${1:Message}\", \"${2:Module}\")"
+        ],
+        "description": "Send notification message (requires standard KUKA libs)"
+    },
+    "INTERRUPT DECL": {
         "prefix": "INTERRUPT",
         "body": [
             "${1:GLOBAL }INTERRUPT DECL ${2:priority} WHEN ${3:trigger} DO ${4:event}"
         ],
         "description": "Interrupt declaration"
     },
-    "Trigger when distance": {
+    "TRIGGER WHEN DISTANCE": {
         "prefix": "TRIGGER WHEN DISTANCE",
         "body": [
             "TRIGGER WHEN DISTANCE=${1:position} DELAY=${2:delay} DO ${3:event}${4: PRIO=-1}"
         ],
         "description": "Trigger when distance"
     },
-    "Trigger when path": {
+    "TRIGGER WHEN PATH": {
         "prefix": "TRIGGER WHEN PATH",
         "body": [
             "TRIGGER WHEN PATH=${1:distance} ${2:ONSTART} DELAY=${3:delay} DO ${4:event}${5: PRIO=-1}"
         ],
         "description": "Trigger when path"
     },
-    "Wait": {
-        "prefix": "WAIT",
-        "body": [
-            "WAIT SEC ${1:0.1}"
-        ],
-        "description": "Wait for seconds"
-    },
-    "Wait For": {
-        "prefix": "WAITFOR",
-        "body": [
-            "WAIT FOR (${1:condition})"
-        ],
-        "description": "Wait for condition"
-    },
-    "DECL INT": {
-        "prefix": "DECLINT",
-        "body": [
-            "DECL INT ${1:name}${2: = 0}"
-        ],
-        "description": "Declare INT variable"
-    },
-    "DECL REAL": {
-        "prefix": "DECLREAL",
-        "body": [
-            "DECL REAL ${1:name}${2: = 0.0}"
-        ],
-        "description": "Declare REAL variable"
-    },
-    "DECL BOOL": {
-        "prefix": "DECLBOOL",
-        "body": [
-            "DECL BOOL ${1:name}${2: = FALSE}"
-        ],
-        "description": "Declare BOOL variable"
-    },
-    "DECL E6POS": {
-        "prefix": "DECLE6POS",
-        "body": [
-            "DECL E6POS ${1:name}"
-        ],
-        "description": "Declare E6POS variable"
-    },
-    "DECL E6AXIS": {
-        "prefix": "DECLE6AXIS",
-        "body": [
-            "DECL E6AXIS ${1:name}"
-        ],
-        "description": "Declare E6AXIS variable"
-    },
-    "DECL FRAME": {
-        "prefix": "DECLFRAME",
-        "body": [
-            "DECL FRAME ${1:name}"
-        ],
-        "description": "Declare FRAME variable"
-    },
     "E6AXIS": {
         "prefix": "E6AXIS value",
         "body": [
-            "{A1 ${1:value}, A2 ${2:value}, A3 ${3:value}, A4 ${4:value}, A5 ${5:value}, A6 ${6:value}, E1 ${7:value}, E2 ${8:value}, E3 ${9:value}, E4 ${10:value}, E5 ${11:value}, E6 ${12:value}}"
+            "{A1 ${1:0}, A2 ${2:0}, A3 ${3:0}, A4 ${4:0}, A5 ${5:0}, A6 ${6:0}, E1 ${7:0}, E2 ${8:0}, E3 ${9:0}, E4 ${10:0}, E5 ${11:0}, E6 ${12:0}}"
         ],
         "description": "E6AXIS value assignment"
     },
     "AXIS": {
         "prefix": "AXIS value",
         "body": [
-            "{A1 ${1:value}, A2 ${2:value}, A3 ${3:value}, A4 ${4:value}, A5 ${5:value}, A6 ${6:value}}"
+            "{A1 ${1:0}, A2 ${2:0}, A3 ${3:0}, A4 ${4:0}, A5 ${5:0}, A6 ${6:0}}"
         ],
         "description": "AXIS value assignment"
     },
     "E6POS": {
         "prefix": "E6POS value",
         "body": [
-            "{X ${1:value}, Y ${2:value}, Z ${3:value}, A ${4:value}, B ${5:value}, C ${6:value}, E1 ${7:value}, E2 ${8:value}, E3 ${9:value}, E4 ${10:value}, E5 ${11:value}, E6 ${12:value}, S ${13:value}, T ${14:value}}"
+            "{X ${1:0}, Y ${2:0}, Z ${3:0}, A ${4:0}, B ${5:0}, C ${6:0}, S ${7:0}, T ${8:0}, E1 ${9:0}, E2 ${10:0}, E3 ${11:0}, E4 ${12:0}, E5 ${13:0}, E6 ${14:0}}"
         ],
         "description": "E6POS value assignment"
     },
     "POS": {
         "prefix": "POS value",
         "body": [
-            "{X ${1:value}, Y ${2:value}, Z ${3:value}, A ${4:value}, B ${5:value}, C ${6:value}, S ${7:value}, T ${8:value}}"
+            "{X ${1:0}, Y ${2:0}, Z ${3:0}, A ${4:0}, B ${5:0}, C ${6:0}, S ${7:0}, T ${8:0}}"
         ],
         "description": "POS value assignment"
     },
     "FRAME": {
         "prefix": "FRAME value",
         "body": [
-            "{X ${1:value}, Y ${2:value}, Z ${3:value}, A ${4:value}, B ${5:value}, C ${6:value}}"
+            "{X ${1:0}, Y ${2:0}, Z ${3:0}, A ${4:0}, B ${5:0}, C ${6:0}}"
         ],
         "description": "FRAME value assignment"
     },
@@ -237,787 +267,232 @@
         ],
         "description": "Pulse statement"
     },
-    "Message Notification": {
-        "prefix": "MsgNotify",
+    "EKI_Init": {
+        "prefix": "EKI_Init",
         "body": [
-            ";FOLD MsgNotify",
-            "$MSG_T = {MSG_T: VALID FALSE}",
-            "$MSG_T = {MSG_T: MODUL[] \"${1:User}\", NR ${2:1}, MSG_TXT[] \"${3:Message}\"}",
-            "$MSG_T.VALID = TRUE",
-            "WHILE  $MSG_T.VALID",
-            "\tWAIT SEC 0.05",
-            "ENDWHILE",
-            ";ENDFOLD"
+            "RET = EKI_Init(\"${1:ChannelName}\")"
         ],
-        "description": "Display a notification message using MSG_T"
+        "description": "Initialize EKI channel"
     },
-    "BAS Initialization": {
-        "prefix": "BASINIT",
+    "EKI_Open": {
+        "prefix": "EKI_Open",
         "body": [
-            ";FOLD INI;%{PE}",
-            ";FOLD BASISTECH INI",
-            "GLOBAL INTERRUPT DECL 3 WHEN \\$STOPMESS==TRUE DO IR_STOPM()",
-            "INTERRUPT ON 3",
-            "BAS(#INITMOV, 0)",
-            ";ENDFOLD (BASISTECH INI)",
-            ";FOLD USER INI",
-            ";Make your modifications here",
-            "$0",
-            ";ENDFOLD (USER INI)",
-            ";ENDFOLD (INI)"
+            "RET = EKI_Open(\"${1:ChannelName}\")"
         ],
-        "description": "BAS initialization block"
+        "description": "Open EKI channel"
     },
-    "Motion PTP": {
-        "prefix": "PTP",
+    "EKI_Close": {
+        "prefix": "EKI_Close",
         "body": [
-            ";FOLD PTP ${1:POINT} Vel=${2:100} % PDAT${3:1} Tool[${4:1}] Base[${5:0}];%{PE}",
-            ";FOLD Parameters ;%{h}",
-            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.old; Kuka.IsGlobalPoint=False; Kuka.PointName=${1}; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=PDAT${3}; Kuka.VelocityPtp=${2}; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=PTP",
-            ";ENDFOLD",
-            "$$BWDSTART = FALSE",
-            "PDAT_ACT = PPDAT${3}",
-            "FDAT_ACT = F${1}",
-            "BAS(#PTP_PARAMS, ${2})",
-            "PTP X${1}",
-            ";ENDFOLD"
+            "RET = EKI_Close(\"${1:ChannelName}\")"
         ],
-        "description": "Standard PTP Motion with FOLD"
+        "description": "Close EKI channel"
     },
-    "Motion LIN": {
-        "prefix": "LIN",
+    "EKI_Clear": {
+        "prefix": "EKI_Clear",
         "body": [
-            ";FOLD LIN ${1:POINT} Vel=${2:2} m/s CPDAT${3:1} Tool[${4:1}] Base[${5:0}];%{PE}",
-            ";FOLD Parameters ;%{h}",
-            ";Params IlfProvider=kukaroboter.basistech.inlineforms.movement.old; Kuka.IsGlobalPoint=False; Kuka.PointName=${1}; Kuka.BlendingEnabled=False; Kuka.MoveDataName=CPDAT${3}; Kuka.VelocityPath=${2}; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=LIN",
-            ";ENDFOLD",
-            "$$BWDSTART = FALSE",
-            "LDAT_ACT = LCPDAT${3}",
-            "FDAT_ACT = F${1}",
-            "BAS(#CP_PARAMS, ${2})",
-            "LIN X${1}",
-            ";ENDFOLD"
+            "RET = EKI_Clear(\"${1:ChannelName}\")"
         ],
-        "description": "Standard LIN Motion with FOLD"
+        "description": "Clear EKI channel"
     },
-    "Motion SPTP": {
-        "prefix": "SPTP",
+    "EKI_Send": {
+        "prefix": "EKI_Send",
         "body": [
-            ";FOLD SPTP ${1:POINT} Vel=${2:100} % ${3:PDAT1} Tool[${4:1}] Base[${5:0}];%{PE}",
-            "SPTP X${1} WITH $VEL=${2}",
-            ";ENDFOLD"
+            "RET = EKI_Send(\"${1:ChannelName}\", \"${2:Place}\")"
         ],
-        "description": "Spline PTP Motion"
+        "description": "Send data via EKI"
     },
-    "Motion SLIN": {
-        "prefix": "SLIN",
+    "EKI_GetString": {
+        "prefix": "EKI_GetString",
         "body": [
-            ";FOLD SLIN ${1:POINT} Vel=${2:2} m/s ${3:CPDAT1} Tool[${4:1}] Base[${5:0}];%{PE}",
-            "SLIN X${1} WITH $VEL=${2}",
-            ";ENDFOLD"
+            "RET = EKI_GetString(\"${1:ChannelName}\", \"${2:Path}\", ${3:StringVariable}[])"
         ],
-        "description": "Spline LIN Motion"
+        "description": "Get string from EKI"
     },
-    "TODO Comment": {
-        "prefix": "TODO",
+    "EKI_SetString": {
+        "prefix": "EKI_SetString",
         "body": [
-            ";TODO: ${1:description}"
+            "RET = EKI_SetString(\"${1:ChannelName}\", \"${2:Path}\", \"${3:Value}\")"
         ],
-        "description": "TODO comment"
+        "description": "Set string to EKI"
     },
-    "FIXME Comment": {
-        "prefix": "FIXME",
+    "EKI_Motion_Loop": {
+        "prefix": "EKI_Motion_Loop",
         "body": [
-            ";FIXME: ${1:description}"
-        ],
-        "description": "FIXME comment"
-    },
-    "Header Comment": {
-        "prefix": "HEADER",
-        "body": [
-            ";===========================================================",
-            "; ${1:Module Name}",
-            "; Author: ${2:Author}",
-            "; Date: ${3:Date}",
-            "; Description: ${4:Description}",
-            ";==========================================================="
-        ],
-        "description": "File header comment block"
-    },
-    "File Open Write": {
-        "prefix": [
-            "fopen",
-            "fileopen"
-        ],
-        "body": [
-            "DECL INT ${1:handle}",
-            "DECL BOOL ${2:result}",
-            "${2} = fopen(\"${3:filename.txt}\", \"${4|w,a,r|}\", ${1})",
-            "IF ${2} THEN",
-            "\t$0",
-            "\t${2} = fclose(${1})",
-            "ENDIF"
-        ],
-        "description": "Open file for writing/reading (wonderlibrary)"
-    },
-    "File Print": {
-        "prefix": [
-            "fprintf",
-            "fileprint"
-        ],
-        "body": [
-            "${1:result} = fprintf(${2:handle}, \"${3:text}\")"
-        ],
-        "description": "Print line to file with newline (wonderlibrary)"
-    },
-    "Log Message": {
-        "prefix": [
-            "LOG",
-            "logmsg"
-        ],
-        "body": [
-            "LOG(\"${1:message}\")"
-        ],
-        "description": "Log message to file (wonderlibrary)"
-    },
-    "Log Debug": {
-        "prefix": [
-            "LOGDEBUG",
-            "debug"
-        ],
-        "body": [
-            "LOGDEBUG(\"${1:debug message}\")"
-        ],
-        "description": "Log debug message (wonderlibrary)"
-    },
-    "String to Float": {
-        "prefix": [
-            "STOF",
-            "stringtofloat"
-        ],
-        "body": [
-            "${1:realVar} = STOF(${2:stringVar}[])"
-        ],
-        "description": "Convert string to REAL (wonderlibrary)"
-    },
-    "String to Int": {
-        "prefix": [
-            "STOI",
-            "stringtoint"
-        ],
-        "body": [
-            "${1:intVar} = STOI(${2:stringVar}[])"
-        ],
-        "description": "Convert string to INT (wonderlibrary)"
-    },
-    "Float to String": {
-        "prefix": [
-            "FTOS",
-            "floattostring"
-        ],
-        "body": [
-            "${1:stringVar}[] = FTOS(${2:realValue})"
-        ],
-        "description": "Convert REAL to string (wonderlibrary)"
-    },
-    "Int to String": {
-        "prefix": [
-            "ITOS",
-            "inttostring"
-        ],
-        "body": [
-            "${1:stringVar}[] = ITOS(${2:intValue})"
-        ],
-        "description": "Convert INT to string (wonderlibrary)"
-    },
-    "SPRINTF Format": {
-        "prefix": [
-            "SPRINTF",
-            "format"
-        ],
-        "body": [
-            "${1:result}[] = SPRINTF(\"${2:format %s %s}\", ${3:param1}[], ${4:param2}[], \"\", \"\", \"\", \"\", \"\")"
-        ],
-        "description": "Format string like printf (wonderlibrary)"
-    },
-    "In Range Check": {
-        "prefix": [
-            "INRANGE",
-            "inrange"
-        ],
-        "body": [
-            "IF IN_RANGE(${1:value}, ${2:min}, ${3:max}) THEN",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "Check if value is within range (wonderlibrary)"
-    },
-    "In Tolerance Check": {
-        "prefix": [
-            "INTOLERANCE",
-            "tolerance"
-        ],
-        "body": [
-            "IF IN_TOLERANCE(${1:value}, ${2:reference}, ${3:tolerance}) THEN",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "Check if value is near reference with tolerance (wonderlibrary)"
-    },
-    "Distance Between Points": {
-        "prefix": [
-            "DISTANCE",
-            "pointdistance"
-        ],
-        "body": [
-            "${1:dist} = DISTANCE_POINT_POINT(${2:point1}, ${3:point2})"
-        ],
-        "description": "Calculate 3D distance between two points (wonderlibrary)"
-    },
-    "Plane From 3 Points": {
-        "prefix": [
-            "PLANE3P",
-            "planefrom3points"
-        ],
-        "body": [
-            "DECL STR_PLANE ${1:plane}",
-            "${1} = PLANE_FROM_3p(${2:point1}, ${3:point2}, ${4:point3})"
-        ],
-        "description": "Create plane from 3 points (wonderlibrary)"
-    },
-    "Line2D From 2 Points": {
-        "prefix": [
-            "LINE2D",
-            "line2dfrom2p"
-        ],
-        "body": [
-            "DECL STR_LINE2D ${1:line}",
-            "${1} = LINE2D_FROM_2P(${2:point1}, ${3:point2})"
-        ],
-        "description": "Create 2D line from 2 points (wonderlibrary)"
-    },
-    "Circle From Center Radius": {
-        "prefix": [
-            "CIRCFROMCR",
-            "circlefromcenter"
-        ],
-        "body": [
-            "DECL STR_CIRCUMFERENCE2D ${1:circle}",
-            "${1} = CIRC_FROM_CENTER_RADIUS(${2:center}, ${3:radius})"
-        ],
-        "description": "Create circle from center and radius (wonderlibrary)"
-    },
-    "Bool Choose Int": {
-        "prefix": [
-            "BOOLCHOOSE",
-            "ternaryint"
-        ],
-        "body": [
-            "${1:result} = BOOL_CHOOSEI(${2:condition}, ${3:trueValue}, ${4:falseValue})"
-        ],
-        "description": "Ternary operator for INT (wonderlibrary)"
-    },
-    "Bool Choose Real": {
-        "prefix": [
-            "BOOLCHOOSEF",
-            "ternaryreal"
-        ],
-        "body": [
-            "${1:result} = BOOL_CHOOSEF(${2:condition}, ${3:trueValue}, ${4:falseValue})"
-        ],
-        "description": "Ternary operator for REAL (wonderlibrary)"
-    },
-    "Point to String": {
-        "prefix": [
-            "PTOS",
-            "pointtostring"
-        ],
-        "body": [
-            "${1:str}[] = PTOS(${2:point})"
-        ],
-        "description": "Convert E6POS to string (wonderlibrary)"
-    },
-    "Geometry Lib Structs": {
-        "prefix": [
-            "GEOMSTRUCTS",
-            "geometrystructs"
-        ],
-        "body": [
-            ";Geometry library structures (add to DAT file)",
-            "STRUC STR_LINE2D REAL a, REAL b, REAL c, REAL m, REAL q",
-            "STRUC STR_CIRCUMFERENCE2D REAL a, REAL b, REAL c",
-            "STRUC STR_PLANE REAL a, REAL b, REAL c, REAL d",
-            "STRUC STR_VECTOR3D REAL l, REAL m, REAL n",
-            "STRUC STR_LINE3D STR_PLANE plane1, STR_PLANE plane2, E6POS point, STR_VECTOR3D vec"
-        ],
-        "description": "Geometry library structure declarations (wonderlibrary)"
-    },
-    "Circle From 3 Points": {
-        "prefix": [
-            "CIRC3P",
-            "circlefrom3points"
-        ],
-        "body": [
-            "DECL STR_CIRCUMFERENCE2D ${1:circle}",
-            "DECL BOOL ${2:circError}",
-            "${1} = CIRC_FROM_3POINTS(${3:point1}, ${4:point2}, ${5:point3}, ${2})",
-            "IF NOT ${2} THEN",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "Create circle from 3 points (wonderlibrary)"
-    },
-    "Line2D Intersection": {
-        "prefix": [
-            "LINE2DINT",
-            "lineintersection"
-        ],
-        "body": [
-            "DECL E6POS ${1:intersection}",
-            "${1} = LINE2D_INTERSECTION(${2:line1}, ${3:line2})"
-        ],
-        "description": "Find intersection of two 2D lines (wonderlibrary)"
-    },
-    "Line Circle Intersection": {
-        "prefix": [
-            "LINECIRCINT",
-            "linecircleintersection"
-        ],
-        "body": [
-            "DECL E6POS ${1:point1}, ${2:point2}",
-            "DECL INT ${3:numIntersections}",
-            "${3} = LINE2D_CIRC_INTERSECTION(${4:line}, ${5:circle}, ${1}, ${2})",
-            "IF ${3} > 0 THEN",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "Find intersection of line and circle (wonderlibrary)"
-    },
-    "File EOF Check": {
-        "prefix": [
-            "feof",
-            "fileeof"
-        ],
-        "body": [
-            "DECL BOOL ${1:isEOF}",
-            "${2:result} = feof(${3:handle}, ${1})",
-            "IF NOT ${1} THEN",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "Check if end of file reached (wonderlibrary)"
-    },
-    "File Get String": {
-        "prefix": [
-            "fgets",
-            "filegetstring"
-        ],
-        "body": [
-            "DECL CHAR ${1:buffer}[${2:256}]",
-            "DECL INT ${3:readCount}",
-            "${4:result} = fgets(${5:handle}, ${1}[], ${2}, ${3})"
-        ],
-        "description": "Read line from file (wonderlibrary)"
-    },
-    "File Scan Int": {
-        "prefix": [
-            "fscanfint",
-            "filescanint"
-        ],
-        "body": [
-            "DECL INT ${1:value}",
-            "${2:result} = fscanf_int(${3:handle}, \"'H0D'\", ${1})"
-        ],
-        "description": "Read integer from file (wonderlibrary)"
-    },
-    "File Scan Real": {
-        "prefix": [
-            "fscanfreal",
-            "filescanreal"
-        ],
-        "body": [
-            "DECL REAL ${1:value}",
-            "${2:result} = fscanf_real(${3:handle}, \"'H0D'\", ${1})"
-        ],
-        "description": "Read real number from file (wonderlibrary)"
-    },
-    "Bool Choose E6POS": {
-        "prefix": [
-            "BOOLCHOOSEPOS",
-            "ternarypos"
-        ],
-        "body": [
-            "${1:result} = BOOL_CHOOSE_E6POS(${2:condition}, ${3:truePoint}, ${4:falsePoint})"
-        ],
-        "description": "Ternary operator for E6POS (wonderlibrary)"
-    },
-    "Plane Z Given XY": {
-        "prefix": [
-            "PLANEZ",
-            "planezgivenxy"
-        ],
-        "body": [
-            "${1:z} = PLANE_Z_GivenXY(${2:plane}, ${3:x}, ${4:y})"
-        ],
-        "description": "Calculate Z coordinate on plane given X and Y (wonderlibrary)"
-    },
-    "Plane Y Given XZ": {
-        "prefix": [
-            "PLANEY",
-            "planeygivenxz"
-        ],
-        "body": [
-            "${1:y} = PLANE_Y_GivenXZ(${2:plane}, ${3:x}, ${4:z})"
-        ],
-        "description": "Calculate Y coordinate on plane given X and Z (wonderlibrary)"
-    },
-    "Plane X Given YZ": {
-        "prefix": [
-            "PLANEX",
-            "planexgivenyz"
-        ],
-        "body": [
-            "${1:x} = PLANE_X_GivenYZ(${2:plane}, ${3:y}, ${4:z})"
-        ],
-        "description": "Calculate X coordinate on plane given Y and Z (wonderlibrary)"
-    },
-    "3D Line From Planes": {
-        "prefix": [
-            "LINE3DP",
-            "line3dfromplanes"
-        ],
-        "body": [
-            "DECL STR_LINE3D ${1:line3d}",
-            "${1} = LINE3D_FROM_PLANES(${2:plane1}, ${3:plane2})"
-        ],
-        "description": "Create 3D line from intersection of two planes (wonderlibrary)"
-    },
-    "3D Line Point at Distance": {
-        "prefix": [
-            "LINE3DPOINT",
-            "line3dpointdist"
-        ],
-        "body": [
-            "DECL E6POS ${1:point}",
-            "${1} = LINE3D_POINT_FROM_ORIGIN(${2:line3d}, ${3:distance})"
-        ],
-        "description": "Get point on 3D line at distance from origin (wonderlibrary)"
-    },
-    "Read File Loop": {
-        "prefix": [
-            "READFILELOOP",
-            "filereadloop"
-        ],
-        "body": [
-            "DECL INT ${1:handle}",
-            "DECL BOOL ${2:result}, ${3:isEOF}",
-            "DECL INT ${4:value}",
+            "; EKI Motion Loop Pattern (ROS/Driver style)",
+            "DECL INT CMD_TYPE",
+            "DECL E6AXIS J_POS",
+            "DECL E6POS C_POS",
+            "$ADVANCE = 0",
+            "LOOP",
+            "\t; Get data from EKI (Implement your protocol here)",
+            "\tRET = EKI_GetInt(\"${1:Channel}\", \"Type\", CMD_TYPE)",
+            "\t; RET = EKI_GetAll(\"${1:Channel}\", J_POS)",
             "",
-            "IF fopen(\"${5:filename.txt}\", \"r\", ${1}) THEN",
-            "\tREPEAT",
-            "\t\t${2} = fscanf_int(${1}, \"'H0D'\", ${4})",
-            "\t\tIF ${2} THEN",
-            "\t\t\t;TODO: Process ${4}",
-            "\t\t\t$0",
-            "\t\tENDIF",
-            "\t\t${2} = feof(${1}, ${3})",
-            "\tUNTIL ${3}",
-            "\t${2} = fclose(${1})",
-            "ENDIF"
+            "\tSWITCH CMD_TYPE",
+            "\t\tCASE 1 ; PTP Axis",
+            "\t\t\tPTP J_POS",
+            "\t\tCASE 2 ; PTP Cartesian",
+            "\t\t\tPTP C_POS",
+            "\t\tCASE 3 ; LIN Cartesian",
+            "\t\t\tLIN C_POS",
+            "\t\tDEFAULT",
+            "\t\t\t; Handle unknown command",
+            "\tENDSWITCH",
+            "ENDLOOP"
         ],
-        "description": "Complete file read loop (wonderlibrary)"
+        "description": "Infinite loop for external motion control"
     },
-    "Channel Open": {
-        "prefix": [
-            "COPEN",
-            "chanopen"
-        ],
+    "DEF_STOF": {
+        "prefix": "DEF_STOF",
         "body": [
-            "DECL INT ${1:handle}",
-            "DECL STATE_T ${2:state}",
-            "",
-            "COPEN(:${1}, ${2})",
-            "IF ${2}.RET1 == #CMD_OK THEN",
-            "\t$0",
-            "ENDIF"
-        ],
-        "description": "Open communication channel (KRL Reference Guide)"
-    },
-    "Channel Read": {
-        "prefix": [
-            "CREAD",
-            "chanread"
-        ],
-        "body": [
-            "CREAD(${1:handle}, ${2:state}, ${3:#COND}, ${4:timeout}, ${5:offset}, \"${6:%s}\", ${7:var1})"
-        ],
-        "description": "Read from communication channel (KRL Reference Guide)"
-    },
-    "Channel Write": {
-        "prefix": [
-            "CWRITE",
-            "chanwrite"
-        ],
-        "body": [
-            "CWRITE(${1:handle}, ${2:state}, ${3:#COND}, \"${4:%s}\", ${5:var1})"
-        ],
-        "description": "Write to communication channel (KRL Reference Guide)"
-    },
-    "Channel Close": {
-        "prefix": [
-            "CCLOSE",
-            "chanclose"
-        ],
-        "body": [
-            "CCLOSE(${1:handle}, ${2:state})"
-        ],
-        "description": "Close communication channel (KRL Reference Guide)"
-    },
-    "Channel Full Pattern": {
-        "prefix": [
-            "CHANFULL",
-            "channelfull"
-        ],
-        "body": [
-            ";FOLD Channel Communication",
-            "DECL INT handle",
-            "DECL STATE_T state",
-            "DECL CHAR response[256]",
-            "",
-            ";Open channel",
-            "COPEN(:handle, state)",
-            "IF state.RET1 == #CMD_OK THEN",
-            "\t;Write request",
-            "\tCWRITE(handle, state, #COND, \"%s\", \"${1:command}\")",
-            "\t",
-            "\t;Read response",
-            "\tCREAD(handle, state, #COND, ${2:1000}, 0, \"%s\", response[])",
-            "\tIF state.RET1 == #CMD_OK THEN",
-            "\t\t$0",
+            "; Function: String To Float",
+            "GLOBAL DEFFCT REAL STOF(STRING[]:IN)",
+            "\tDECL CHAR STRING[]",
+            "\tINT OFFSET",
+            "\tREAL VALUE",
+            "\tDECL STATE_T STAT",
+            "\tOFFSET = 0",
+            "\tVALUE = 0.0",
+            "\tON_ERROR_PROCEED",
+            "\tSREAD(STRING[], STAT, OFFSET, \"%f\", VALUE)",
+            "\tIF ($ERR.Number<>0) THEN",
+            "\t\tERR_CLEAR($ERR)",
+            "\t\tVALUE = 0.0",
             "\tENDIF",
-            "\t",
-            "\t;Close channel",
-            "\tCCLOSE(handle, state)",
-            "ENDIF",
-            ";ENDFOLD"
+            "\tRETURN VALUE",
+            "ENDFCT"
         ],
-        "description": "Complete channel open/read/write/close pattern (KRL Reference Guide)"
+        "description": "Helper function: Convert String to Real"
     },
-    "Analog Input": {
-        "prefix": [
-            "ANIN",
-            "analogin"
-        ],
+    "DEF_FTOS": {
+        "prefix": "DEF_FTOS",
         "body": [
-            "ANIN ON ${1:signal} = ${2:1.0} * \\$ANIN[${3:1}] + ${4:0.0}"
+            "; Function: Float To String",
+            "GLOBAL DEFFCT CHAR[128] FTOS(VALUE:IN)",
+            "\tDECL REAL VALUE",
+            "\tCHAR RESSTRING[128]",
+            "\tDECL STATE_T STAT",
+            "\tINT OFFSET",
+            "\tBOOL RES",
+            "\tRES = STRCLEAR(RESSTRING[])",
+            "\tOFFSET = 0",
+            "\tON_ERROR_PROCEED",
+            "\tSWRITE(RESSTRING[], STAT, OFFSET, \"%f\", VALUE)",
+            "\tIF ($ERR.Number<>0) THEN",
+            "\t\tERR_CLEAR($ERR)",
+            "\tENDIF",
+            "\tRETURN RESSTRING[]",
+            "ENDFCT"
         ],
-        "description": "Analog input statement (KRL Reference Guide)"
+        "description": "Helper function: Convert Real to String"
     },
-    "Analog Input Off": {
-        "prefix": [
-            "ANINOFF",
-            "analoginoff"
-        ],
+    "DEF_SPRINTF": {
+        "prefix": "DEF_SPRINTF",
         "body": [
-            "ANIN OFF ${1:signal}"
+            "; Function: String Print Format (Simplified)",
+            "GLOBAL DEFFCT CHAR[256] SPRINTF(FORMAT:IN, P1:IN, P2:IN)",
+            "\tDECL CHAR FORMAT[]",
+            "\tDECL CHAR P1[], P2[]",
+            "\tCHAR RES[256]",
+            "\tDECL STATE_T STAT",
+            "\tINT OFFSET",
+            "\tOFFSET = 0",
+            "\tON_ERROR_PROCEED",
+            "\tSWRITE(RES[], STAT, OFFSET, FORMAT[], P1[], P2[])",
+            "\tIF ($ERR.Number<>0) THEN",
+            "\t\tERR_CLEAR($ERR)",
+            "\tENDIF",
+            "\tRETURN RES[]",
+            "ENDFCT"
         ],
-        "description": "Disable analog input (KRL Reference Guide)"
+        "description": "Helper function: Formatted string printing"
     },
-    "Analog Output": {
-        "prefix": [
-            "ANOUT",
-            "analogout"
-        ],
+    "DEF_DISTANCE": {
+        "prefix": "DEF_DISTANCE",
         "body": [
-            "ANOUT ON \\$ANOUT[${1:1}] = ${2:1.0} * ${3:value} + ${4:0.0}"
+            "; Function: Calculate 3D Distance",
+            "GLOBAL DEFFCT REAL DIST(P1:IN, P2:IN)",
+            "\tDECL E6POS P1, P2",
+            "\tRETURN SQRT((P1.X-P2.X)*(P1.X-P2.X) + (P1.Y-P2.Y)*(P1.Y-P2.Y) + (P1.Z-P2.Z)*(P1.Z-P2.Z))",
+            "ENDFCT"
         ],
-        "description": "Analog output statement (KRL Reference Guide)"
+        "description": "Helper function: 3D Distance between points"
     },
-    "Analog Output Off": {
-        "prefix": [
-            "ANOUTOFF",
-            "analogoutoff"
-        ],
+    "REPEAT_UNTIL": {
+        "prefix": "REPEAT",
         "body": [
-            "ANOUT OFF \\$ANOUT[${1:1}]"
+            "REPEAT",
+            "\t${0:; Statements}",
+            "UNTIL ${1:Expression}"
         ],
-        "description": "Disable analog output (KRL Reference Guide)"
+        "description": "Repeat loop until condition is true"
     },
-    "WAIT SEC": {
-        "prefix": [
-            "WAITSEC",
-            "waitseconds"
-        ],
+    "Interrupt_Lifecycle": {
+        "prefix": "Interrupt_Lifecycle",
         "body": [
-            "WAIT SEC ${1:1.0}"
+            "; Interrupt Setup",
+            "GLOBAL INTERRUPT DECL ${1:10} WHEN ${2:$IN[1]==TRUE} DO ${3:Handle_Event}()",
+            "INTERRUPT ON ${1:10}",
+            "",
+            "; Main Loop",
+            "LOOP",
+            "\t${0:; Do something}",
+            "ENDLOOP",
+            "",
+            "; Cleanup",
+            "INTERRUPT OFF ${1:10}",
+            "",
+            "; Event Handler",
+            "DEF ${3:Handle_Event}()",
+            "\tINTERRUPT OFF ${1:10}",
+            "\tBRAKE",
+            "\t; Handle event",
+            "\tRESUME",
+            "END"
         ],
-        "description": "Wait for specified seconds (KRL Reference Guide)"
+        "description": "Complete Interrupt Pattern (Decl, On, Loop, Handler)"
     },
-    "WAIT FOR": {
-        "prefix": [
-            "WAITFOR",
-            "waitcondition"
-        ],
+    "COPEN": {
+        "prefix": "COPEN",
         "body": [
-            "WAIT FOR ${1:condition}"
+            "COPEN(:${1:channel}, ${2:handle})"
         ],
-        "description": "Wait for condition to be true (KRL Reference Guide)"
+        "description": "Open communication channel"
     },
-    "CONFIRM": {
-        "prefix": [
-            "CONFIRM",
-            "confirmmsg"
-        ],
+    "CCLOSE": {
+        "prefix": "CCLOSE",
         "body": [
-            "CONFIRM ${1:message_number}"
+            "CCLOSE(${1:handle}, ${2:status})"
         ],
-        "description": "Confirm message acknowledgement (KRL Reference Guide)"
+        "description": "Close communication channel"
     },
-    "Velocity Settings": {
-        "prefix": [
-            "VELSET",
-            "velocitysettings"
-        ],
+    "CREAD": {
+        "prefix": "CREAD",
         "body": [
-            "\\$VEL.CP = ${1:0.5}      ;m/s - cartesian velocity",
-            "\\$VEL.ORI1 = ${2:100}    ;%   - swivel velocity",
-            "\\$VEL.ORI2 = ${3:100}    ;%   - rotational velocity",
-            "\\$ACC.CP = ${4:1.0}      ;m/s² - cartesian acceleration",
-            "\\$ACC.ORI1 = ${5:100}    ;%   - swivel acceleration",
-            "\\$ACC.ORI2 = ${6:100}    ;%   - rotational acceleration"
+            "CREAD(${1:handle}, ${2:status}, ${3:mode}, ${4:timeout}, ${5:offset}, \"${6:format}\", ${7:var})"
         ],
-        "description": "Set velocity and acceleration for CP motions (KRL Reference Guide)"
+        "description": "Read from channel"
     },
-    "PTP Velocity Settings": {
-        "prefix": [
-            "VELSETPTP",
-            "ptpvelocity"
-        ],
+    "CWRITE": {
+        "prefix": "CWRITE",
         "body": [
-            "\\$VEL_AXIS[${1:1}] = ${2:100}  ;% axis velocity",
-            "\\$ACC_AXIS[${1}] = ${3:100}   ;% axis acceleration"
+            "CWRITE(${1:handle}, ${2:status}, ${3:mode}, \"${4:format}\", ${5:var})"
         ],
-        "description": "Set velocity and acceleration for PTP motions (KRL Reference Guide)"
-    },
-    "Approximation Settings": {
-        "prefix": [
-            "APOSET",
-            "approximation"
-        ],
-        "body": [
-            "\\$APO.CDIS = ${1:50}    ;mm - distance approximation",
-            "\\$APO.CORI = ${2:50}    ;deg - orientation approximation",
-            "\\$APO.CVEL = ${3:50}    ;% - velocity approximation"
-        ],
-        "description": "Set approximation parameters (KRL Reference Guide)"
+        "description": "Write to channel"
     },
     "E6POS Declaration": {
-        "prefix": [
-            "E6POS",
-            "e6posdecl"
-        ],
+        "prefix": "DECL E6POS",
         "body": [
-            "DECL E6POS ${1:point}",
-            "${1} = {E6POS: X ${2:0}, Y ${3:0}, Z ${4:0}, A ${5:0}, B ${6:0}, C ${7:0}, S ${8:0}, T ${9:0}}"
+            "DECL E6POS ${1:POINT} = {X ${2:0}, Y ${3:0}, Z ${4:0}, A ${5:0}, B ${6:0}, C ${7:0}, S ${8:0}, T ${9:0}}"
         ],
-        "description": "Declare and initialize E6POS (OpenKuka.KRL)"
-    },
-    "E6POS Inline": {
-        "prefix": [
-            "E6POSINLINE",
-            "pospoint"
-        ],
-        "body": [
-            "{E6POS: X ${1:0}, Y ${2:0}, Z ${3:0}, A ${4:0}, B ${5:0}, C ${6:0}, S ${7:0}, T ${8:0}}"
-        ],
-        "description": "Inline E6POS structure (OpenKuka.KRL)"
+        "description": "E6POS variable declaration"
     },
     "E6AXIS Declaration": {
-        "prefix": [
-            "E6AXIS",
-            "e6axisdecl"
-        ],
+        "prefix": "DECL E6AXIS",
         "body": [
-            "DECL E6AXIS ${1:axes}",
-            "${1} = {E6AXIS: A1 ${2:0}, A2 ${3:0}, A3 ${4:0}, A4 ${5:0}, A5 ${6:0}, A6 ${7:0}}"
+            "DECL E6AXIS ${1:POINT} = {A1 ${2:0}, A2 ${3:0}, A3 ${4:0}, A4 ${5:0}, A5 ${6:0}, A6 ${7:0}}"
         ],
-        "description": "Declare and initialize E6AXIS (OpenKuka.KRL)"
-    },
-    "E6AXIS With External": {
-        "prefix": [
-            "E6AXISEXT",
-            "e6axisexternal"
-        ],
-        "body": [
-            "DECL E6AXIS ${1:axes}",
-            "${1} = {E6AXIS: A1 ${2:0}, A2 ${3:0}, A3 ${4:0}, A4 ${5:0}, A5 ${6:0}, A6 ${7:0}, E1 ${8:0}, E2 ${9:0}, E3 ${10:0}, E4 ${11:0}, E5 ${12:0}, E6 ${13:0}}"
-        ],
-        "description": "Declare E6AXIS with external axes (OpenKuka.KRL)"
-    },
-    "FRAME Declaration": {
-        "prefix": [
-            "FRAME",
-            "framedecl"
-        ],
-        "body": [
-            "DECL FRAME ${1:frame}",
-            "${1} = {FRAME: X ${2:0}, Y ${3:0}, Z ${4:0}, A ${5:0}, B ${6:0}, C ${7:0}}"
-        ],
-        "description": "Declare and initialize FRAME (OpenKuka.KRL)"
-    },
-    "STATUS Bits": {
-        "prefix": [
-            "STATUS",
-            "statusbits"
-        ],
-        "body": [
-            ";STATUS (S) Bit meanings:",
-            ";  B0: Wrist root point position (0=basic area, 1=overhead area)",
-            ";  B1: Arm configuration (0=elbow up, 1=elbow down)",
-            ";  B2: Wrist configuration (0=wrist up, 1=wrist down)",
-            ";Example: S = 'B010' or S = 2"
-        ],
-        "description": "STATUS bit documentation (OpenKuka.KRL)"
-    },
-    "TURN Bits": {
-        "prefix": [
-            "TURN",
-            "turnbits"
-        ],
-        "body": [
-            ";TURN (T) Bit meanings for axis angles:",
-            ";  B0: A1 < 0 (true=1)",
-            ";  B1: A2 < 0 (true=1)",
-            ";  B2: A3 < 0 (true=1)",
-            ";  B3: A4 < 0 (true=1)",
-            ";  B4: A5 < 0 (true=1)",
-            ";  B5: A6 < 0 (true=1)",
-            ";Example: T = 'B000001' or T = 1 (A1 negative)"
-        ],
-        "description": "TURN bit documentation (OpenKuka.KRL)"
-    },
-    "Motion Command LIN": {
-        "prefix": [
-            "LINMOVE",
-            "linearmotion"
-        ],
-        "body": [
-            "\\$VEL.CP = ${1:0.5}",
-            "\\$APO.CDIS = ${2:50}",
-            "LIN ${3:point} ${4:C_DIS}"
-        ],
-        "description": "Linear motion with velocity settings (OpenKuka.KRL)"
-    },
-    "Motion Command PTP": {
-        "prefix": [
-            "PTPMOVE",
-            "ptpmotion"
-        ],
-        "body": [
-            "\\$VEL_AXIS[1] = ${1:100}",
-            "\\$ACC_AXIS[1] = ${2:100}",
-            "PTP ${3:point} ${4:C_PTP}"
-        ],
-        "description": "PTP motion with velocity settings (OpenKuka.KRL)"
+        "description": "E6AXIS variable declaration"
     }
 }

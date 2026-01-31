@@ -8,7 +8,6 @@
     "command.removeTrailingWhitespace": "Удалить пробелы в конце строк",
     "command.sortDeclarations": "Сортировать объявления",
     "command.insertFold": "Вставить FOLD-регион",
-    "command.generateDocumentation": "Создать документацию",
     "config.title": "KUKA KRL Extension",
     "config.autoFold.description": "Автоматически сворачивать все регионы при открытии KRL файла",
     "config.formatOnSave.description": "Автоматически форматировать документ при сохранении",

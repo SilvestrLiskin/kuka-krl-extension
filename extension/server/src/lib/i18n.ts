@@ -65,6 +65,11 @@ interface ServerMessages {
   "action.changeToInt": string;
   "action.changeToReal": string;
   "action.wrapWithRound": string;
+
+  // KRL Constraints
+  "diag.invalidCharInName": string;
+  "diag.msgKeyTooLong": string;
+  "diag.msgOriginatorTooLong": string;
 }
 
 // English (default)
@@ -126,6 +131,13 @@ const en: ServerMessages = {
   "action.changeToInt": "Change type to INT",
   "action.changeToReal": "Change type to REAL",
   "action.wrapWithRound": "Wrap with ROUND() for INT conversion",
+
+  "diag.invalidCharInName":
+    'Name contains invalid character "{0}". Only A-Z, 0-9, _, $ allowed.',
+  "diag.msgKeyTooLong":
+    "Message key length ({0}) exceeds KUKA limit (26 characters).",
+  "diag.msgOriginatorTooLong":
+    "Message originator length ({0}) exceeds KUKA limit (24 characters).",
 };
 
 // Russian
@@ -188,6 +200,13 @@ const ru: ServerMessages = {
   "action.changeToInt": "Изменить тип на INT",
   "action.changeToReal": "Изменить тип на REAL",
   "action.wrapWithRound": "Обернуть в ROUND() для преобразования в INT",
+
+  "diag.invalidCharInName":
+    'Имя содержит недопустимый символ "{0}". Разрешены только A-Z, 0-9, _, $.',
+  "diag.msgKeyTooLong":
+    "Длина ключа сообщения ({0}) превышает лимит KUKA (26 символов).",
+  "diag.msgOriginatorTooLong":
+    "Длина отправителя сообщения ({0}) превышает лимит KUKA (24 символа).",
 };
 
 // Turkish
@@ -248,6 +267,13 @@ const tr: ServerMessages = {
   "action.changeToInt": "Tipi INT olarak değiştir",
   "action.changeToReal": "Tipi REAL olarak değiştir",
   "action.wrapWithRound": "INT dönüşümü için ROUND() ile sar",
+
+  "diag.invalidCharInName":
+    'İsim geçersiz karakter "{0}" içeriyor. Sadece A-Z, 0-9, _, $ izin verilir.',
+  "diag.msgKeyTooLong":
+    "Mesaj anahtar uzunluğu ({0}) KUKA sınırını aşıyor (26 karakter).",
+  "diag.msgOriginatorTooLong":
+    "Mesaj gönderici uzunluğu ({0}) KUKA sınırını aşıyor (24 karakter).",
 };
 
 const locales: Record<Locale, ServerMessages> = { en, ru, tr };

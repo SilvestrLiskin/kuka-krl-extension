@@ -1,0 +1,411 @@
+{
+  "name": "beardedtheme",
+  "displayName": "Bearded Theme",
+  "description": "The theme with a long beard.",
+  "publisher": "BeardedBear",
+  "version": "11.0.0",
+  "engines": {
+    "vscode": "^1.69.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "vite-node src/build.ts all",
+    "build:vscode": "vite-node src/generators/vscode/index.ts",
+    "build:zed": "vite-node src/generators/zed/index.ts",
+    "build:ext:vscode": "npm run build:vscode && vsce package --out ./releases/%npm_package_version%.vsix",
+    "build:ext:zed": "npm run build:zed",
+    "publish:zed": "echo 'To publish Zed extension: 1) Push changes to GitHub 2) Open PR to zed-industries/extensions repo'",
+    "zed:dev": "echo 'Install as dev extension: Open Zed > Extensions > Install Dev Extension > Select dist/zed folder'",
+    "build:env": "tsc load-env.ts --esModuleInterop",
+    "dev:vscode": "nodemon --exec \"vite-node src/generators/vscode/index.ts\"",
+    "dev:zed": "nodemon --exec \"vite-node src/generators/zed/index.ts\"",
+    "lint": "eslint src/**/*.{js,ts}",
+    "fix": "eslint src/**/*.{js,ts} --fix",
+    "release": "gh release create v%npm_package_version% --notes-file ./releases/%npm_package_version%.md --generate-notes",
+    "create:release-notes": "vite-node src/create-release-notes.ts",
+    "bump:version": "vite-node src/bump-version.ts",
+    "publish:vscode": "bash -c \"read -p 'Enter your VS Code Marketplace token: ' TOKEN && vsce publish --packagePath ./releases/%npm_package_version%.vsix -p $TOKEN\"",
+    "publish:ovsx": "bash -c \"read -p 'Enter your OVSX token: ' TOKEN && ovsx publish ./releases/%npm_package_version%.vsix -p $TOKEN\"",
+    "publish:all": "npm run build:ext:vscode && npm run publish:vscode && npm run publish:ovsx"
+  },
+  "__metadata": {
+    "id": "dffaf5a1-2219-434b-9d87-cb586fd59260",
+    "publisherDisplayName": "BeardedBear",
+    "publisherId": "a369cd52-d79a-6d36-99c8-5adc9bf1d25d"
+  },
+  "nodemonConfig": {
+    "ext": "ts",
+    "exec": "vite-node src/generators/vscode/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BeardedBear/bearded-theme"
+  },
+  "bugs": {
+    "url": "https://github.com/BeardedBear/bearded-theme/issues",
+    "email": "beardedbearbear@gmail.com"
+  },
+  "homepage": "https://github.com/BeardedBear/bearded-theme",
+  "keywords": [
+    "bearded",
+    "theme",
+    "bear",
+    "dark",
+    "solarized",
+    "arc",
+    "light",
+    "oceanic",
+    "monokai",
+    "milkshake",
+    "colorblind",
+    "oled"
+  ],
+  "sponsor": {
+    "url": "https://github.com/sponsors/BeardedBear"
+  },
+  "icon": "assets/icon.png",
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Bearded Theme Arc",
+        "path": "./dist/vscode/themes/bearded-theme-arc.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Arc EolStorm",
+        "path": "./dist/vscode/themes/bearded-theme-arc-eolstorm.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Arc Blueberry",
+        "path": "./dist/vscode/themes/bearded-theme-arc-blueberry.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Arc Eggplant",
+        "path": "./dist/vscode/themes/bearded-theme-arc-eggplant.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Arc Reversed",
+        "path": "./dist/vscode/themes/bearded-theme-arc-reversed.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Oceanic",
+        "path": "./dist/vscode/themes/bearded-theme-oceanic.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Oceanic Reversed",
+        "path": "./dist/vscode/themes/bearded-theme-oceanic-reversed.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Solarized",
+        "path": "./dist/vscode/themes/bearded-theme-solarized-dark.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Solarized Light",
+        "path": "./dist/vscode/themes/bearded-theme-solarized-light.json",
+        "uiTheme": "vs"
+      },
+      {
+        "label": "Bearded Theme Solarized Reversed",
+        "path": "./dist/vscode/themes/bearded-theme-solarized-reversed.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Amethyst",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-amethyst.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Amethyst Soft",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-amethyst-soft.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Diamond",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-diamond.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Diamond Soft",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-diamond-soft.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Emerald",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-emerald.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Emerald Soft",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-emerald-soft.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Gold",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-gold.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Gold Soft",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-gold-soft.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Ruby",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-ruby.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Black & Ruby Soft",
+        "path": "./dist/vscode/themes/bearded-theme-black-&-ruby-soft.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Stained Purple",
+        "path": "./dist/vscode/themes/bearded-theme-stained-purple.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Stained Blue",
+        "path": "./dist/vscode/themes/bearded-theme-stained-blue.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Vivid Purple",
+        "path": "./dist/vscode/themes/bearded-theme-vivid-purple.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Vivid Black",
+        "path": "./dist/vscode/themes/bearded-theme-vivid-black.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Vivid Light",
+        "path": "./dist/vscode/themes/bearded-theme-vivid-light.json",
+        "uiTheme": "vs"
+      },
+      {
+        "label": "Bearded Theme Monokai Terra",
+        "path": "./dist/vscode/themes/bearded-theme-monokai-terra.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Monokai Metallian",
+        "path": "./dist/vscode/themes/bearded-theme-monokai-metallian.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Monokai Stone",
+        "path": "./dist/vscode/themes/bearded-theme-monokai-stone.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Monokai Black",
+        "path": "./dist/vscode/themes/bearded-theme-monokai-black.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Monokai Reversed",
+        "path": "./dist/vscode/themes/bearded-theme-monokai-reversed.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Earth",
+        "path": "./dist/vscode/themes/bearded-theme-earth.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Coffee",
+        "path": "./dist/vscode/themes/bearded-theme-coffee.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Coffee Reversed",
+        "path": "./dist/vscode/themes/bearded-theme-coffee-reversed.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Coffee Cream",
+        "path": "./dist/vscode/themes/bearded-theme-coffee-cream.json",
+        "uiTheme": "vs"
+      },
+      {
+        "label": "Bearded Theme Void",
+        "path": "./dist/vscode/themes/bearded-theme-void.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Altica",
+        "path": "./dist/vscode/themes/bearded-theme-altica.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme feat. Will",
+        "path": "./dist/vscode/themes/bearded-theme-feat-will.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme feat. Gold D Raynh",
+        "path": "./dist/vscode/themes/bearded-theme-feat-gold-d-raynh.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme feat. Mintshake D Raynh",
+        "path": "./dist/vscode/themes/bearded-theme-feat-gold-d-raynh-light.json",
+        "uiTheme": "vs"
+      },
+      {
+        "label": "Bearded Theme feat. Melle Julie",
+        "path": "./dist/vscode/themes/bearded-theme-feat-mellejulie.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme feat. Melle Julie Light",
+        "path": "./dist/vscode/themes/bearded-theme-feat-mellejulie-light.json",
+        "uiTheme": "vs"
+      },
+      {
+        "label": "Bearded Theme feat. WebDevCody",
+        "path": "./dist/vscode/themes/bearded-theme-feat-webDevCody.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Anthracite",
+        "path": "./dist/vscode/themes/bearded-theme-classics-anthracite.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Light",
+        "path": "./dist/vscode/themes/bearded-theme-classics-light.json",
+        "uiTheme": "vs"
+      },
+      {
+        "label": "Bearded Theme Surprising Eggplant",
+        "path": "./dist/vscode/themes/bearded-theme-surprising-eggplant.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Surprising Blueberry",
+        "path": "./dist/vscode/themes/bearded-theme-surprising-blueberry.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Surprising Watermelon",
+        "path": "./dist/vscode/themes/bearded-theme-surprising-watermelon.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme HC Ebony",
+        "path": "./dist/vscode/themes/bearded-theme-hc-ebony.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme HC Midnight Void",
+        "path": "./dist/vscode/themes/bearded-theme-hc-midnightvoid.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme HC Flurry",
+        "path": "./dist/vscode/themes/bearded-theme-hc-flurry.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme HC Wonderland Wood",
+        "path": "./dist/vscode/themes/bearded-theme-hc-wonderland-wood.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme HC Brewing Storm",
+        "path": "./dist/vscode/themes/bearded-theme-hc-brewing-storm.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme HC Minuit",
+        "path": "./dist/vscode/themes/bearded-theme-hc-minuit.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme HC Chocolate Espresso",
+        "path": "./dist/vscode/themes/bearded-theme-hc-chocolate-espresso.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Milkshake Raspberry",
+        "path": "./dist/vscode/themes/bearded-theme-milkshake-raspberry.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Milkshake Blueberry",
+        "path": "./dist/vscode/themes/bearded-theme-milkshake-blueberry.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Milkshake Mango",
+        "path": "./dist/vscode/themes/bearded-theme-milkshake-mango.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Milkshake Mint",
+        "path": "./dist/vscode/themes/bearded-theme-milkshake-mint.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Milkshake Vanilla Banana",
+        "path": "./dist/vscode/themes/bearded-theme-milkshake-vanilla.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Themanopia (Experimental)",
+        "path": "./dist/vscode/themes/bearded-theme-Themanopia.json",
+        "uiTheme": "hc-black"
+      },
+      {
+        "label": "Bearded Theme Aquarelle Cymbidium",
+        "path": "./dist/vscode/themes/bearded-theme-aquarelle-cymbidium.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Aquarelle Hydrangea",
+        "path": "./dist/vscode/themes/bearded-theme-aquarelle-hydrangea.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme Aquarelle Lilac",
+        "path": "./dist/vscode/themes/bearded-theme-aquarelle-lilac.json",
+        "uiTheme": "vs-dark"
+      },
+      {
+        "label": "Bearded Theme OLED (Experimental)",
+        "path": "./dist/vscode/themes/bearded-theme-oled.json",
+        "uiTheme": "vs-dark"
+      }
+    ]
+  },
+  "dependencies": {
+    "@types/node": "^25.0.6",
+    "@types/vscode": "^1.108.1",
+    "@typescript-eslint/eslint-plugin": "^8.52.0",
+    "@typescript-eslint/parser": "^8.52.0",
+    "@vscode/vsce": "^3.7.1",
+    "colord": "^2.9.3",
+    "eslint": "^9.39.2",
+    "eslint-plugin-perfectionist": "^5.3.1",
+    "ovsx": "^0.10.8",
+    "typescript": "^5.9.3",
+    "vite-node": "^5.2.0"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.7.0",
+    "nodemon": "^3.1.11"
+  }
+}

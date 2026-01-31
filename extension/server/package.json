@@ -11,7 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "vscode-languageserver": "^9.0.1"
+    "vscode-languageserver": "^9.0.1",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",

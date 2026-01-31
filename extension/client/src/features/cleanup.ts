@@ -186,26 +186,70 @@ export async function cleanupUnusedVariables() {
     return;
   }
 
-  // Prompt user
-  const result = await vscode.window.showInformationMessage(
-    `Found ${unusedDecls.length} lines with unused variables. Delete them?`,
-    "Yes",
-    "No",
+  // 1. Preview: Let user select variable lines to clean
+  const items: vscode.QuickPickItem[] = unusedDecls.map((decl) => {
+    const lineContent = lines[decl.lineIndex].trim();
+    return {
+      label: decl.varNames.join(", "),
+      description: `Line ${decl.lineIndex + 1}: ${lineContent}`,
+      detail: "Unused",
+      picked: true, // Select all by default
+      // Store index in 'data' if custom property allowed, but we can index by arrays
+    };
+  });
+
+  const selectedItems = await vscode.window.showQuickPick(items, {
+    placeHolder: `Found ${unusedDecls.length} unused lines. Select items to clean.`,
+    canPickMany: true,
+  });
+
+  if (!selectedItems || selectedItems.length === 0) {
+    return; // Cancelled or cleared
+  }
+
+  // Filter original list based on selection
+  // Matching by description/label is risky if duplicates?
+  // Proper way: map selected items back to indices.
+  const selectedIndices = new Set<number>();
+  selectedItems.forEach((item) => {
+    // Find index in original 'items' array
+    // Since map preserves order:
+    const idx = items.indexOf(item);
+    if (idx !== -1) selectedIndices.add(idx);
+  });
+
+  const finalDecls = unusedDecls.filter((_, idx) => selectedIndices.has(idx));
+
+  // 2. Action: Delete or Comment
+  const action = await vscode.window.showQuickPick(
+    [
+      { label: "$(trash) Delete", description: "Permanently remove lines" },
+      {
+        label: "$(comment) Comment Out",
+        description: "Safe Mode: Comment lines (; DECL ...)",
+      },
+    ],
+    { placeHolder: "Choose cleaning action" },
   );
 
-  if (result === "Yes") {
-    const edit = new vscode.WorkspaceEdit();
+  if (!action) return;
 
-    // Map lines to ranges
-    // Deleting lines: We should probably delete the whole line.
-    for (const decl of unusedDecls) {
-      const line = datDoc.lineAt(decl.lineIndex);
+  const isDelete = action.label.includes("Delete");
+  const edit = new vscode.WorkspaceEdit();
+
+  for (const decl of finalDecls) {
+    const line = datDoc.lineAt(decl.lineIndex);
+    if (isDelete) {
       edit.delete(datDoc.uri, line.rangeIncludingLineBreak);
+    } else {
+      // Comment out: Insert ; at start of line (handling indentation?)
+      // Or just replace text with "; " + text
+      edit.replace(datDoc.uri, line.range, `; ${line.text}`);
     }
-
-    await vscode.workspace.applyEdit(edit);
-    vscode.window.showInformationMessage(
-      `Removed ${unusedDecls.length} lines.`,
-    );
   }
+
+  await vscode.workspace.applyEdit(edit);
+  vscode.window.showInformationMessage(
+    `${isDelete ? "Deleted" : "Commented out"} ${finalDecls.length} lines.`,
+  );
 }

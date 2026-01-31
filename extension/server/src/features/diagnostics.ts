@@ -81,12 +81,21 @@ export class DiagnosticsProvider {
 
       // ASCII olmayan karakterleri kontrol et (validateNonAscii ayarı etkinse)
       if (validateNonAscii) {
-        const nonAsciiMatch = line.match(/[^\x00-\x7F]/g);
+        // Yorum satırlarını veya satır içi yorumları hariç tut
+        const commentIndex = line.indexOf(";");
+        const checkPart =
+          commentIndex >= 0 ? line.substring(0, commentIndex) : line;
+
+        const nonAsciiMatch = checkPart.match(/[^\x00-\x7F]/g);
         if (nonAsciiMatch) {
           // Her bir non-ASCII karakteri bul ve işaretle
-          for (let j = 0; j < line.length; j++) {
-            if (line.charCodeAt(j) > 127) {
-              const char = line[j];
+          for (let j = 0; j < checkPart.length; j++) {
+            const charCode = checkPart.charCodeAt(j);
+            if (charCode > 127) {
+              // BOM (Byte Order Mark) karakterini yoksay (U+FEFF = 65279)
+              if (charCode === 0xfeff) continue;
+
+              const char = checkPart[j];
               diagnostics.push({
                 severity: DiagnosticSeverity.Warning,
                 range: {
@@ -283,6 +292,14 @@ export class DiagnosticsProvider {
           validatedNames.add(v.toUpperCase());
         }
       }
+    }
+
+    // ETIKETLERI BUL (Labels) - GOTO hedefleri için
+    // Örn: "MyLabel:" veya " MyLabel :"
+    const labelRegex = /^\s*([a-zA-Z_]\w*)\s*:/gim;
+    let labelMatch;
+    while ((labelMatch = labelRegex.exec(text)) !== null) {
+      validatedNames.add(labelMatch[1].toUpperCase());
     }
 
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
@@ -942,25 +959,212 @@ export class DiagnosticsProvider {
         // insideSwitch = false;
       }
 
-      // Проверка присваивания дробных чисел INT переменным
-      const assignMatch = codePart.match(/(\w+)\s*=\s*(-?\d+\.\d+)/);
-      if (assignMatch) {
+      // General Assignment Type Check
+      // Matches: Var = Value (ignoring ==)
+      const assignRegex = /\b([a-zA-Z_]\w*)(?:\[.*?\])?\s*=(?!=)\s*([^;]+)/g;
+
+      let assignMatch;
+      while ((assignMatch = assignRegex.exec(codePart)) !== null) {
         const varName = assignMatch[1].toUpperCase();
-        const value = assignMatch[2];
+        const expr = assignMatch[2].trim();
         const varType = varTypeMap.get(varName);
 
+        if (!varType) continue;
+
+        // 1. Check: INT variable assigned a REAL value
         if (varType === "INT") {
-          const matchIndex = codePart.indexOf(assignMatch[0]);
+          // If value looks like a float (digits.digits)
+          if (/^-?\d+\.\d+(?:[eE][+-]?\d+)?/.test(expr)) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Warning,
+              range: {
+                start: { line: i, character: assignMatch.index },
+                end: {
+                  line: i,
+                  character: assignMatch.index + assignMatch[0].length,
+                },
+              },
+              message: t("diag.shouldBeReal", expr, assignMatch[1]),
+              source: "krl-language-support",
+              code: "shouldBeReal",
+              data: { varName: assignMatch[1], value: expr, line: i },
+            });
+            continue;
+          }
+          // If value is boolean
+          if (/^(TRUE|FALSE)$/i.test(expr)) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: i, character: assignMatch.index },
+                end: {
+                  line: i,
+                  character: assignMatch.index + assignMatch[0].length,
+                },
+              },
+              message: t("diag.typeMismatch", "BOOL", "INT", assignMatch[1]),
+              source: "krl-language-support",
+            });
+            continue;
+          }
+        }
+
+        // 2. Check: BOOL variable assigned a Number or String
+        if (varType === "BOOL") {
+          // If number
+          if (/^-?\d+/.test(expr)) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: i, character: assignMatch.index },
+                end: {
+                  line: i,
+                  character: assignMatch.index + assignMatch[0].length,
+                },
+              },
+              message: t("diag.typeMismatch", "NUMBER", "BOOL", assignMatch[1]),
+              source: "krl-language-support",
+            });
+            continue;
+          }
+          // If string
+          if (expr.startsWith('"') || expr.startsWith("'")) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: i, character: assignMatch.index },
+                end: {
+                  line: i,
+                  character: assignMatch.index + assignMatch[0].length,
+                },
+              },
+              message: t("diag.typeMismatch", "STRING", "BOOL", assignMatch[1]),
+              source: "krl-language-support",
+            });
+            continue;
+          }
+        }
+
+        // 3. Check: REAL variable assigned a BOOL
+        if (varType === "REAL") {
+          if (/^(TRUE|FALSE)$/i.test(expr)) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: i, character: assignMatch.index },
+                end: {
+                  line: i,
+                  character: assignMatch.index + assignMatch[0].length,
+                },
+              },
+              message: t("diag.typeMismatch", "BOOL", "REAL", assignMatch[1]),
+              source: "krl-language-support",
+            });
+          }
+        }
+      }
+    }
+
+    return diagnostics;
+  }
+
+  /**
+   * Проверяет строгие ограничения KRL:
+   * 1. Имена переменных/сигналов <= 24 символов.
+   * 2. Имена не содержат недопустимых символов (-, @, !).
+   * 3. Ключи сообщений (KEY[]) <= 26 символов.
+   * 4. Имя отправителя (MODUL[]) <= 24 символов.
+   */
+  public validateKrlConstraints(document: TextDocument): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    const text = document.getText();
+    const lines = text.split(/\r?\n/);
+
+    // Regex для деклараций: DECL TYPE NAME или SIGNAL NAME
+    // Группа 1: Имя переменной
+    const declPattern =
+      /^\s*(?:GLOBAL\s+)?(?:DECL\s+\w+|SIGNAL)\s+([a-zA-Z0-9_$@!-]+)/i;
+
+    // Regex для присваивания сообщений
+    // Группа 1: Поле (KEY или MODUL)
+    // Группа 2: Значение (строка)
+    const msgPattern =
+      /\.?(KEY|MODUL|ORIGINATOR)\[\]\s*=\s*("|')([^"']*)("|')/i;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const commentIdx = line.indexOf(";");
+      const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
+
+      // 1. Проверка имен переменных (Length & Invalid Chars)
+      const declMatch = declPattern.exec(codePart);
+      if (declMatch) {
+        const varName = declMatch[1];
+        const matchIndex = codePart.indexOf(varName);
+
+        // Проверка длины (24 символа)
+        if (varName.length > 24) {
+          diagnostics.push({
+            severity: DiagnosticSeverity.Error,
+            range: {
+              start: { line: i, character: matchIndex },
+              end: { line: i, character: matchIndex + varName.length },
+            },
+            message: t("diag.nameTooLong", varName, varName.length),
+            source: "krl-language-support",
+          });
+        }
+
+        // Проверка недопустимых символов (-, @, !)
+        // KRL разрешает только A-Z, 0-9, _, $
+        const invalidCharMatch = varName.match(/[^a-zA-Z0-9_$]/);
+        if (invalidCharMatch) {
+          diagnostics.push({
+            severity: DiagnosticSeverity.Error,
+            range: {
+              start: { line: i, character: matchIndex },
+              end: { line: i, character: matchIndex + varName.length },
+            },
+            message: t("diag.invalidCharInName", invalidCharMatch[0]),
+            source: "krl-language-support",
+          });
+        }
+      }
+
+      // 2. Проверка сообщений (KEY[] <= 26, MODUL[] <= 24)
+      const msgMatch = msgPattern.exec(codePart);
+      if (msgMatch) {
+        const field = msgMatch[1].toUpperCase(); // KEY, MODUL, ORIGINATOR
+        const content = msgMatch[3]; // Строка внутри кавычек
+        const valueStartIndex =
+          matchStartIndex(codePart, msgMatch[0]) + msgMatch[0].indexOf(content);
+
+        // KEY[] limit: 26 chars
+        if (field === "KEY" && content.length > 26) {
           diagnostics.push({
             severity: DiagnosticSeverity.Warning,
             range: {
-              start: { line: i, character: matchIndex },
-              end: { line: i, character: matchIndex + assignMatch[0].length },
+              start: { line: i, character: valueStartIndex },
+              end: { line: i, character: valueStartIndex + content.length },
             },
-            message: t("diag.shouldBeReal", value, assignMatch[1]),
+            message: t("diag.msgKeyTooLong", content.length), // Требует обновления i18n
             source: "krl-language-support",
-            code: "shouldBeReal",
-            data: { varName: assignMatch[1], value, line: i },
+          });
+        }
+
+        // MODUL[] / ORIGINATOR[] limit: 24 chars
+        if (
+          (field === "MODUL" || field === "ORIGINATOR") &&
+          content.length > 24
+        ) {
+          diagnostics.push({
+            severity: DiagnosticSeverity.Warning,
+            range: {
+              start: { line: i, character: valueStartIndex },
+              end: { line: i, character: valueStartIndex + content.length },
+            },
+            message: t("diag.msgOriginatorTooLong", content.length), // Требует обновления i18n
+            source: "krl-language-support",
           });
         }
       }
@@ -968,4 +1172,9 @@ export class DiagnosticsProvider {
 
     return diagnostics;
   }
+}
+
+// Вспомогательная функция для поиска индекса (если нет в классе)
+function matchStartIndex(text: string, substring: string): number {
+  return text.indexOf(substring);
 }

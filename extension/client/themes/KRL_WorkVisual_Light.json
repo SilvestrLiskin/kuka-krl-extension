@@ -1,0 +1,163 @@
+{
+    "name": "KRL WorkVisual Light",
+    "type": "light",
+    "colors": {
+        "editor.background": "#ffffff",
+        "editor.foreground": "#24292f",
+        "editorCursor.foreground": "#ff5e00",
+        "editor.lineHighlightBackground": "#f6f8fa",
+        "editor.selectionBackground": "#dbedff",
+        "editorIndentGuide.activeBackground": "#ff5e00",
+        "editorIndentGuide.background": "#d0d7de",
+        "activityBar.background": "#ffffff",
+        "activityBar.foreground": "#24292f",
+        "activityBarBadge.background": "#ff5e00",
+        "activityBarBadge.foreground": "#ffffff",
+        "sideBar.background": "#f6f8fa",
+        "sideBar.foreground": "#24292f",
+        "sideBarSectionHeader.background": "#f6f8fa",
+        "sideBarSectionHeader.foreground": "#24292f",
+        "sideBarTitle.foreground": "#24292f",
+        "sideBar.border": "#d0d7de",
+        "statusBar.background": "#ffffff",
+        "statusBar.foreground": "#57606a",
+        "statusBar.debuggingBackground": "#fd8c73",
+        "statusBar.noFolderBackground": "#ffffff",
+        "statusBar.border": "#d0d7de",
+        "titleBar.activeBackground": "#ffffff",
+        "titleBar.activeForeground": "#24292f",
+        "titleBar.inactiveBackground": "#f6f8fa",
+        "titleBar.border": "#d0d7de",
+        "list.activeSelectionBackground": "#dbedff",
+        "list.activeSelectionForeground": "#ff5e00",
+        "list.hoverBackground": "#f6f8fa",
+        "list.inactiveSelectionBackground": "#dbedff",
+        "input.background": "#ffffff",
+        "input.foreground": "#24292f",
+        "input.placeholderForeground": "#57606a",
+        "input.border": "#d0d7de",
+        "button.background": "#ff5e00",
+        "button.foreground": "#ffffff",
+        "progressBar.background": "#ff5e00",
+        "tab.activeBorder": "#ff5e00",
+        "tab.inactiveBackground": "#f6f8fa",
+        "gitDecoration.modifiedResourceForeground": "#d15704",
+        "gitDecoration.deletedResourceForeground": "#cf222e",
+        "scrollbarSlider.background": "#8c959f33",
+        "scrollbarSlider.hoverBackground": "#8c959f80",
+        "scrollbarSlider.activeBackground": "#ff5e0080",
+        "breadcrumb.foreground": "#24292f",
+        "focusBorder": "#ff5e00"
+    },
+    "tokenColors": [
+        {
+            "scope": [
+                "meta.fold.krl",
+                "comment.line.fold.krl"
+            ],
+            "settings": {
+                "foreground": "#d15704",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "scope": "comment",
+            "settings": {
+                "foreground": "#6e7781",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": "keyword.function.movement.krl",
+            "settings": {
+                "foreground": "#d73a49",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "scope": "keyword.control.krl",
+            "settings": {
+                "foreground": "#d73a49"
+            }
+        },
+        {
+            "scope": [
+                "storage.type.krl",
+                "storage.type.interrupt.krl",
+                "storage.type.trigger.krl"
+            ],
+            "settings": {
+                "foreground": "#0550ae",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": [
+                "support.variable.system.krl",
+                "variable.language.system.krl"
+            ],
+            "settings": {
+                "foreground": "#953800",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": "variable.language.axis.krl",
+            "settings": {
+                "foreground": "#0550ae"
+            }
+        },
+        {
+            "scope": "variable.language.data.krl",
+            "settings": {
+                "foreground": "#cf222e"
+            }
+        },
+        {
+            "scope": [
+                "entity.name.function.krl",
+                "support.function.builtin.krl"
+            ],
+            "settings": {
+                "foreground": "#6f42c1"
+            }
+        },
+        {
+            "scope": "variable",
+            "settings": {
+                "foreground": "#24292f"
+            }
+        },
+        {
+            "scope": "string",
+            "settings": {
+                "foreground": "#0a3069"
+            }
+        },
+        {
+            "scope": [
+                "constant.numeric",
+                "constant.language.boolean.krl"
+            ],
+            "settings": {
+                "foreground": "#0550ae"
+            }
+        },
+        {
+            "scope": [
+                "constant.language.enum.krl",
+                "variable.other.enummember.krl",
+                "constant.language.approximation.krl"
+            ],
+            "settings": {
+                "foreground": "#8250df"
+            }
+        },
+        {
+            "scope": "keyword.operator",
+            "settings": {
+                "foreground": "#cf222e"
+            }
+        }
+    ]
+}

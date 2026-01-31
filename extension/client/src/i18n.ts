@@ -33,6 +33,15 @@ interface Messages {
   // Pickers
   "picker.systemVariables": string;
   "picker.selectSystemVariable": string;
+
+  // Command Titles for Tree View
+  "command.calculator": string;
+  "command.cleanup": string;
+  "command.formatDocument": string;
+  "command.sortDeclarations": string;
+  "command.foldAll": string;
+  "command.unfoldAll": string;
+  "command.refreshIOView": string;
 }
 
 // English (default)
@@ -56,6 +65,14 @@ const en: Messages = {
   "info.noSystemVariablesFound": "No system variables found in workspace.",
   "picker.systemVariables": "System Variables",
   "picker.selectSystemVariable": "Select a system variable to find...",
+
+  "command.calculator": "KRL Calculator",
+  "command.cleanup": "Clean Up Variables",
+  "command.formatDocument": "Format Document",
+  "command.sortDeclarations": "Sort Declarations",
+  "command.foldAll": "Fold All",
+  "command.unfoldAll": "Unfold All",
+  "command.refreshIOView": "Refresh I/O",
 };
 
 // Russian
@@ -79,6 +96,14 @@ const ru: Messages = {
     "Системные переменные не найдены в рабочем пространстве.",
   "picker.systemVariables": "Системные переменные",
   "picker.selectSystemVariable": "Выберите системную переменную для поиска...",
+
+  "command.calculator": "KRL Калькулятор",
+  "command.cleanup": "Очистка переменных",
+  "command.formatDocument": "Форматировать документ",
+  "command.sortDeclarations": "Сортировать объявления",
+  "command.foldAll": "Свернуть всё",
+  "command.unfoldAll": "Развернуть всё",
+  "command.refreshIOView": "Обновить I/O",
 };
 
 // Turkish
@@ -103,6 +128,14 @@ const tr: Messages = {
     "Çalışma alanında sistem değişkeni bulunamadı.",
   "picker.systemVariables": "Sistem Değişkenleri",
   "picker.selectSystemVariable": "Aramak için bir sistem değişkeni seçin...",
+
+  "command.calculator": "KRL Hesap Makinesi",
+  "command.cleanup": "Değişkenleri Temizle",
+  "command.formatDocument": "Belgeyi Biçimlendir",
+  "command.sortDeclarations": "Bildirimleri Sırala",
+  "command.foldAll": "Tümünü Katla",
+  "command.unfoldAll": "Tümünü Aç",
+  "command.refreshIOView": "I/O Listesini Yenile",
 };
 
 const locales: Record<Locale, Messages> = { en, ru, tr };

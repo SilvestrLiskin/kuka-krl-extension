@@ -3,28 +3,71 @@
     "lineComment": ";"
   },
   "brackets": [
-    ["{", "}"],
-    ["[", "]"],
-    ["(", ")"]
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ]
   ],
   "autoClosingPairs": [
-    ["{", "}"],
-    ["[", "]"],
-    ["(", ")"],
-    ["\"", "\""],
-    ["'", "'"]
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ],
+    [
+      "\"",
+      "\""
+    ],
+    [
+      "'",
+      "'"
+    ]
   ],
   "surroundingPairs": [
-    ["{", "}"],
-    ["[", "]"],
-    ["(", ")"],
-    ["\"", "\""],
-    ["'", "'"]
+    [
+      "{",
+      "}"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "(",
+      ")"
+    ],
+    [
+      "\"",
+      "\""
+    ],
+    [
+      "'",
+      "'"
+    ]
   ],
   "folding": {
     "markers": {
       "start": "^\\s*;FOLD",
       "end": "^\\s*;ENDFOLD"
     }
+  },
+  "indentationRules": {
+    "increaseIndentPattern": "^\\s*(FOR|IF|ELSE|LOOP|REPEAT|WHILE|SWITCH|CASE|DEFAULT).*",
+    "decreaseIndentPattern": "^\\s*(ENDFOR|ELSE|ENDIF|ENDLOOP|UNTIL|ENDWHILE|ENDSWITCH|CASE|DEFAULT).*"
   }
 }

@@ -1,0 +1,1483 @@
+{
+  "systemVariables": {
+    "$MODE_OP": {
+      "name": "$MODE_OP",
+      "type": "MODE_OP",
+      "description": "Current operating mode of the robot controller (T1, T2, AUT, EX)",
+      "readOnly": true
+    },
+    "C_SPL": {
+      "name": "C_SPL",
+      "type": "KEYWORD",
+      "description": "Approximation for Spline Motions (SLIN, SPTP, SCIRC). Uses $APO.CPTP/CDIS/CVEL/CORI settings or parameters.",
+      "readOnly": true
+    },
+    "C_DIS": {
+      "name": "C_DIS",
+      "type": "KEYWORD",
+      "description": "Distance approximation. Robot approximates the point by distance.",
+      "readOnly": true
+    },
+    "C_PTP": {
+      "name": "C_PTP",
+      "type": "KEYWORD",
+      "description": "PTP approximation. Robot approximates the point by percentage of max axis angle.",
+      "readOnly": true
+    },
+    "C_VEL": {
+      "name": "C_VEL",
+      "type": "KEYWORD",
+      "description": "Velocity approximation. Robot approximates the point by maintaining velocity.",
+      "readOnly": true
+    },
+    "$PRO_STATE": {
+      "name": "$PRO_STATE",
+      "type": "PRO_STATE",
+      "description": "Process state dependent on `<xref:$INTERPRETER>`",
+      "readOnly": true
+    },
+    "$PRO_MODE": {
+      "name": "$PRO_MODE",
+      "type": "PRO_MODE",
+      "description": "Program run mode dependent on `<xref:$INTERPRETER>`",
+      "readOnly": false
+    },
+    "$POS_ACT": {
+      "name": "$POS_ACT",
+      "type": "E6POS",
+      "description": "Actual Cartesian position of the robot TCP in the current coordinate system",
+      "readOnly": true
+    },
+    "$AXIS_ACT": {
+      "name": "$AXIS_ACT",
+      "type": "E6AXIS",
+      "description": "Current axis-specific robot position",
+      "readOnly": true
+    },
+    "$BASE": {
+      "name": "$BASE",
+      "type": "FRAME",
+      "description": "Base coordinate system in relation to the world coordinate system in the `ADVANCE` run.",
+      "readOnly": false
+    },
+    "$TOOL": {
+      "name": "$TOOL",
+      "type": "FRAME",
+      "description": "Current tool coordinate system (TCP definition)",
+      "readOnly": false
+    },
+    "$ROBROOT": {
+      "name": "$ROBROOT",
+      "type": "FRAME",
+      "description": "Robot root position relative to WORLD coordinate system",
+      "readOnly": false
+    },
+    "$WORLD": {
+      "name": "$WORLD",
+      "type": "FRAME",
+      "description": "World coordinate system (reference for all other frames)",
+      "readOnly": false
+    },
+    "$VEL": {
+      "name": "$VEL",
+      "type": "STRUC",
+      "description": "Current velocity settings: CP (Cartesian path velocity mm/s), ORI1, ORI2 (orientation velocities)",
+      "readOnly": false
+    },
+    "$ACC": {
+      "name": "$ACC",
+      "type": "STRUC",
+      "description": "Accelerations in the `ADVANCE` run\nUnit: m/s^2^",
+      "readOnly": false
+    },
+    "$OV_PRO": {
+      "name": "$OV_PRO",
+      "type": "INT",
+      "description": "Program override\nConstraint: [0, 100]\nUnit: %",
+      "readOnly": false
+    },
+    "$NULLFRAME": {
+      "name": "$NULLFRAME",
+      "type": "FRAME",
+      "description": "Zero frame constant {X 0, Y 0, Z 0, A 0, B 0, C 0}",
+      "readOnly": true
+    },
+    "$IN": {
+      "name": "$IN[]",
+      "type": "BOOL",
+      "description": "Digital input signals array. $IN[n] reads input n (1-4096)",
+      "readOnly": true
+    },
+    "$OUT": {
+      "name": "$OUT[]",
+      "type": "BOOL",
+      "description": "Digital output signals array. $OUT[n] reads/writes output n (1-4096)",
+      "readOnly": false
+    },
+    "$ANIN": {
+      "name": "$ANIN[]",
+      "type": "REAL",
+      "description": "Analog inputs `$ANIN[1]..$ANIN[8]`\nConstraint: [-1.0, 1.0]",
+      "readOnly": true
+    },
+    "$ANOUT": {
+      "name": "$ANOUT[]",
+      "type": "REAL",
+      "description": "Analog outputs `$ANIN[1]..$ANIN[16]`\nConstraint: [-1.0, 1.0]",
+      "readOnly": false
+    },
+    "$TIMER": {
+      "name": "$TIMER[]",
+      "type": "INT",
+      "description": "Timer array (1-32). Values in milliseconds. Use $TIMER_STOP[] to control",
+      "readOnly": false
+    },
+    "$TIMER_STOP": {
+      "name": "$TIMER_STOP[]",
+      "type": "BOOL",
+      "description": "Timer stop flags. TRUE = timer stopped, FALSE = timer running",
+      "readOnly": false
+    },
+    "$STOPMESS": {
+      "name": "$STOPMESS",
+      "type": "BOOL",
+      "description": "TRUE if a stop message is active (error or interrupt)",
+      "readOnly": true
+    },
+    "$BWDSTART": {
+      "name": "$BWDSTART",
+      "type": "BOOL",
+      "description": "TRUE if backward motion (BCO run) is starting",
+      "readOnly": true
+    },
+    "$ASYNC_STATE": {
+      "name": "$ASYNC_STATE",
+      "type": "ASYNC_STATE",
+      "description": "Current asynchronous motion execution state",
+      "readOnly": true
+    },
+    "$IPO_MODE": {
+      "name": "$IPO_MODE",
+      "type": "IPO_MODE",
+      "description": "Current interpolation mode (BASE or TCP)",
+      "readOnly": false
+    },
+    "$CIRC_TYPE": {
+      "name": "$CIRC_TYPE",
+      "type": "CIRC_TYPE",
+      "description": "Orientation control with CIRC blocks in the `ADVANCE` run",
+      "readOnly": false
+    },
+    "$ORI_TYPE": {
+      "name": "$ORI_TYPE",
+      "type": "ORI_TYPE",
+      "description": "Current orientation interpolation type (VAR, CONSTANT, JOINT)",
+      "readOnly": false
+    },
+    "$ADVANCE": {
+      "name": "$ADVANCE",
+      "type": "INT",
+      "description": "Specification of the `ADVANCE` run.\nConstraint: [0,5]\nUnit: motion blocks",
+      "readOnly": false
+    },
+    "$A4PAR": {
+      "name": "$A4PAR",
+      "type": "INT",
+      "description": "Set axis 4 parallel to the last rotational main axis\nConstraint: `0` when unset. `1` when set",
+      "readOnly": false
+    },
+    "$ABS_ACCUR": {
+      "name": "$ABS_ACCUR",
+      "type": "BOOL",
+      "description": "Switch absolutely accurate robot model on/off\nConstraint: `true` when switched `on`. `false` when switched `off`",
+      "readOnly": false
+    },
+    "$ABS_CONVERT": {
+      "name": "$ABS_CONVERT",
+      "type": "BOOL",
+      "description": "Conversion of point coordinates into absolutely accurate robot model",
+      "readOnly": false
+    },
+    "$ABS_RELOAD": {
+      "name": "$ABS_RELOAD",
+      "type": "BOOL",
+      "description": "Reload absolutely accurate robot model",
+      "readOnly": false
+    },
+    "$ACC_ACT_MA": {
+      "name": "$ACC_ACT_MA",
+      "type": "INT",
+      "description": "Limit value of axial command acceleration\nConstraint: [0,100]\nUnit: %",
+      "readOnly": false
+    },
+    "$ACC_AXIS[]": {
+      "name": "$ACC_AXIS[]",
+      "type": "INT[6]",
+      "description": "Acceleration of the axes `A1..A6` in the `ADVANCE` run\nConstraint: [0,100]\nUnit: %",
+      "readOnly": false
+    },
+    "$ACC_AXIS_C[]": {
+      "name": "$ACC_AXIS_C[]",
+      "type": "INT[6]",
+      "description": "Acceleration of the axes `A1..A6` in the `MAIN` run\nConstraint: [0,100]\nUnit: %",
+      "readOnly": false
+    },
+    "$ACC_C": {
+      "name": "$ACC_C",
+      "type": "STRUC",
+      "description": "Accelerations in the `MAIN` run\nConstraint: \\> 0\nUnit: m/s^2^",
+      "readOnly": false
+    },
+    "$ACC_CAR_ACT": {
+      "name": "$ACC_CAR_ACT",
+      "type": "STRUC",
+      "description": "The current values of the acceleration components and the total acceleration\nConstraint: \\>= 0\nUnit: m/s^2^",
+      "readOnly": true
+    },
+    "$ACC_CAR_LIMIT": {
+      "name": "$ACC_CAR_LIMIT",
+      "type": "STRUC",
+      "description": "Maximum permissible value for the acceleration components and the total acceleration\nConstraint: \\>= 0\nUnit: m/s^2^",
+      "readOnly": true
+    },
+    "$ACC_CAR_MAX": {
+      "name": "$ACC_CAR_MAX",
+      "type": "STRUC",
+      "description": "Saves the greatest absolute values of `<xref:$ACC_CAR_ACT>`",
+      "readOnly": true
+    },
+    "$ACC_CAR_STOP": {
+      "name": "$ACC_CAR_STOP",
+      "type": "BOOL",
+      "description": "Activates/Deactivates stop reaction when the value specified in `<xref:$ACC_CAR_LIMIT>` is exceeded.\nConstraint: `true` when stop reaction is `activated`. `false` stop reaction is `deactivated`.",
+      "readOnly": true
+    },
+    "$ACC_CAR_TOOL": {
+      "name": "$ACC_CAR_TOOL",
+      "type": "STRUC",
+      "description": "A point on the tool mounted on the robot at which the current effective acceleration is measured",
+      "readOnly": true
+    },
+    "$ACC_EXTAX[]": {
+      "name": "$ACC_EXTAX[]",
+      "type": "INT[6]",
+      "description": "Acceleration of the external axes `E1..E7` in the `ADVANCE` run\nConstraint: [0,100]\nUnit: %",
+      "readOnly": false
+    },
+    "$ACC_EXTAX_C[]": {
+      "name": "$ACC_EXTAX_C[]",
+      "type": "INT[6]",
+      "description": "Acceleration of the external axes `E1..E7` in the `MAIN` run\nConstraint: [0,100]\nUnit: %",
+      "readOnly": false
+    },
+    "$ACC_MA": {
+      "name": "$ACC_MA",
+      "type": "STRUC",
+      "description": "Maximum values for path, swivel and rotational accelerations\nUnit: m/s^2^",
+      "readOnly": false
+    },
+    "$ACC_OV": {
+      "name": "$ACC_OV",
+      "type": "STRUC",
+      "description": "Data for acceleration with changes of override\nUnit: m/s^2^",
+      "readOnly": false
+    },
+    "$ACT_BASE": {
+      "name": "$ACT_BASE",
+      "type": "INT",
+      "description": "Number of the current BASE system\nUnit: index",
+      "readOnly": false
+    },
+    "$ACT_EX_AX": {
+      "name": "$ACT_EX_AX",
+      "type": "INT",
+      "description": "Number of the current external base kinematic system\nUnit: index",
+      "readOnly": false
+    },
+    "$ACT_TOOL": {
+      "name": "$ACT_TOOL",
+      "type": "INT",
+      "description": "Number of the current tool coordinate system\nUnit: index",
+      "readOnly": false
+    },
+    "$ACT_VAL_DIF": {
+      "name": "$ACT_VAL_DIF",
+      "type": "INT",
+      "description": "Maximum permissible difference of encoder actual values when switching on system.\nUnit: increments",
+      "readOnly": false
+    },
+    "$ADAP_ACC": {
+      "name": "$ADAP_ACC",
+      "type": "ENUM",
+      "description": "Activation of acceleration adaptation.",
+      "readOnly": false
+    },
+    "$ALARM_STOP": {
+      "name": "$ALARM_STOP",
+      "type": "SIGNAL",
+      "description": "Specification of the `ADVANCE` run.\nConstraint: [0,5]\nUnit: motion blocks",
+      "readOnly": false
+    },
+    "$ANA_DEL_FLT": {
+      "name": "$ANA_DEL_FLT",
+      "type": "ENUM",
+      "description": "Analog output filter",
+      "readOnly": false
+    },
+    "$APO_DIS_PTP[]": {
+      "name": "$APO_DIS_PTP[]",
+      "type": "REAL[12]",
+      "description": "Maximum approximation distance for `PTP` motions.\nUnit: `mm` or `°`",
+      "readOnly": false
+    },
+    "$ASYNC_AX": {
+      "name": "$ASYNC_AX",
+      "type": "SIGNAL",
+      "description": "Motion input for asynchronous external axes `E1..E6`, `negative` or `positive` direction.",
+      "readOnly": false
+    },
+    "$ASYNC_AXi_M": {
+      "name": "$ASYNC_AXi_M",
+      "type": "SIGNAL",
+      "description": "Motion input for asynchronous external axes `E1..E6`, `negative` direction",
+      "readOnly": false
+    },
+    "$ASYNC_AXi_P": {
+      "name": "$ASYNC_AXi_P",
+      "type": "SIGNAL",
+      "description": "Motion input for asynchronous external axes `E1..E6`, `positive` direction",
+      "readOnly": false
+    },
+    "$ASYNC_AXIS": {
+      "name": "$ASYNC_AXIS",
+      "type": "INT",
+      "description": "Bit arrays to switch external axes to asynchronous mode\nConstraint: |",
+      "readOnly": false
+    },
+    "$ASYNC_FLT": {
+      "name": "$ASYNC_FLT",
+      "type": "INT",
+      "description": "Filter for asynchronous external axes\nConstraint: [0,16]\nUnit: ms",
+      "readOnly": false
+    },
+    "$ASYNC_MODE": {
+      "name": "$ASYNC_MODE",
+      "type": "INT",
+      "description": "Mode for asynchronous external axes\nConstraint: [0,16]\nUnit: ms",
+      "readOnly": false
+    },
+    "$ASYNC_OPT": {
+      "name": "$ASYNC_OPT",
+      "type": "BOOL",
+      "description": "Option flag for *asynchronous axes are possible*",
+      "readOnly": false
+    },
+    "$ASYNC_T1_FAST": {
+      "name": "$ASYNC_T1_FAST",
+      "type": "INT",
+      "description": "Control of the velocity reduction factor in `Test 1` mode\nConstraint: [0,1]",
+      "readOnly": false
+    },
+    "$ASYS": {
+      "name": "$ASYS",
+      "type": "ENUM",
+      "description": "Assignment of the jog keys",
+      "readOnly": false
+    },
+    "$AUT": {
+      "name": "$AUT",
+      "type": "SIGNAL",
+      "description": "Signal declaration `Automatic` mode",
+      "readOnly": false
+    },
+    "$AUX_POWER": {
+      "name": "$AUX_POWER",
+      "type": "SIGNAL",
+      "description": "Signal declaration for external power supply",
+      "readOnly": false
+    },
+    "$AXIS_ACTMOD": {
+      "name": "$AXIS_ACTMOD",
+      "type": "STRUC",
+      "description": "Display of axis angle modulo 180°",
+      "readOnly": false
+    },
+    "$AXIS_BACK": {
+      "name": "$AXIS_BACK",
+      "type": "STRUC",
+      "description": "Start position of the current motion block, axis-specific",
+      "readOnly": false
+    },
+    "$AXIS_CAL": {
+      "name": "$AXIS_CAL",
+      "type": "STRUC",
+      "description": "Display whether axis is referenced",
+      "readOnly": false
+    },
+    "$AXIS_DIR[]": {
+      "name": "$AXIS_DIR[]",
+      "type": "INT[12]",
+      "description": "Direction of rotation for axis `A1..A6` and external axis `E1..E6`\nConstraint: {-1; 1}",
+      "readOnly": false
+    },
+    "$AXIS_FOR": {
+      "name": "$AXIS_FOR",
+      "type": "STRUC",
+      "description": "Target position of the current motion block, axis-specific",
+      "readOnly": false
+    },
+    "$AXIS_HOME[]": {
+      "name": "$AXIS_HOME[]",
+      "type": "STRUC",
+      "description": "Definition of the various home positions",
+      "readOnly": false
+    },
+    "$AXIS_INC": {
+      "name": "$AXIS_INC",
+      "type": "STRUC",
+      "description": "Incremental actual values of the axes\nUnit: increment",
+      "readOnly": false
+    },
+    "$AXIS_INT": {
+      "name": "$AXIS_INT",
+      "type": "STRUC",
+      "description": "Robot position at the time of an interrupt",
+      "readOnly": false
+    },
+    "$AXIS_JUS": {
+      "name": "$AXIS_JUS",
+      "type": "STRUC",
+      "description": "Display whether axis is mastered",
+      "readOnly": false
+    },
+    "$AXIS_RESO[]": {
+      "name": "$AXIS_RESO[]",
+      "type": "INT[12]",
+      "description": "Resolution of the position sensing system\nUnit: increments / revolution",
+      "readOnly": false
+    },
+    "$AXIS_RET": {
+      "name": "$AXIS_RET",
+      "type": "STRUC",
+      "description": "Axis positions when leaving the programmed path, axis-specific",
+      "readOnly": false
+    },
+    "$AXIS_SEQ[]": {
+      "name": "$AXIS_SEQ[]",
+      "type": "INT[12]",
+      "description": "Change in sequence of axis ... to axis ...",
+      "readOnly": false
+    },
+    "$AXIS_TYPE[]": {
+      "name": "$AXIS_TYPE[]",
+      "type": "INT[12]",
+      "description": "Axis type identification\nConstraint: [1,5]",
+      "readOnly": false
+    },
+    "$AXWORKSPACE[]": {
+      "name": "$AXWORKSPACE[]",
+      "type": "STRUC",
+      "description": "Definition of axis-specific workspace monitoring\nConstraint: [1,8]",
+      "readOnly": false
+    },
+    "$BASE_C": {
+      "name": "$BASE_C",
+      "type": "STRUC",
+      "description": "Base coordinate system in relation to the world coordinate system in the `MAIN` run",
+      "readOnly": false
+    },
+    "$BASE_KIN[]": {
+      "name": "$BASE_KIN[]",
+      "type": "CHAR[29]",
+      "description": "External kinematic / axes in base",
+      "readOnly": false
+    },
+    "$BOUNCE_TIME": {
+      "name": "$BOUNCE_TIME",
+      "type": "INT",
+      "description": "Bounce time for EMT signals\nUnit: ms",
+      "readOnly": false
+    },
+    "$BRAKE_SIG": {
+      "name": "$BRAKE_SIG",
+      "type": "INT",
+      "description": "Bit array for axis `A1..A6` and external axis `E1..E6` brakes\nConstraint: {0,1}",
+      "readOnly": false
+    },
+    "$BRK_DEL_COM": {
+      "name": "$BRK_DEL_COM",
+      "type": "INT",
+      "description": "Time after which the axis brakes are closed on completion of positioning during jogging\nUnit: ms",
+      "readOnly": false
+    },
+    "$BRK_DEL_EX": {
+      "name": "$BRK_DEL_EX",
+      "type": "INT",
+      "description": "Brake delay time for external axes\nUnit: ms",
+      "readOnly": false
+    },
+    "$BRK_DEL_PRO": {
+      "name": "$BRK_DEL_PRO",
+      "type": "INT",
+      "description": "Time after which the axis brakes are closed on completion of posi- tioning in the program\nUnit: ms",
+      "readOnly": false
+    },
+    "$BRK_MAX_TM": {
+      "name": "$BRK_MAX_TM",
+      "type": "INT",
+      "description": "Maximum deceleration time for path-maintaining Emergency Stop\nUnit: ms",
+      "readOnly": false
+    },
+    "$BRK_MODE": {
+      "name": "$BRK_MODE",
+      "type": "INT",
+      "description": "Brake control mode\nConstraint: Bbbbb\nUnit: bit array",
+      "readOnly": false
+    },
+    "$BRK_OPENTM": {
+      "name": "$BRK_OPENTM",
+      "type": "INT",
+      "description": "Time delay of command value output after axis brakes have been opened\nUnit: ms",
+      "readOnly": false
+    },
+    "$BUS_PAR": {
+      "name": "$BUS_PAR",
+      "type": "STRUC",
+      "description": "L2 bus interface (KRC32)",
+      "readOnly": false
+    },
+    "$CABLE2_MON": {
+      "name": "$CABLE2_MON",
+      "type": "BOOL",
+      "description": "Additional motor cable monitoring",
+      "readOnly": false
+    },
+    "$CAL_DIFF": {
+      "name": "$CAL_DIFF",
+      "type": "INT",
+      "description": "Mastering difference for EMT mastering with check run",
+      "readOnly": false
+    },
+    "$CALP": {
+      "name": "$CALP",
+      "type": "STRUC",
+      "description": "Reference point offset between mathematical zero point and encoder zero point",
+      "readOnly": false
+    },
+    "$CIRC_TYPE_C": {
+      "name": "$CIRC_TYPE_C",
+      "type": "ENUM",
+      "description": "Orientation control with CIRC blocks in the `MAIN` run",
+      "readOnly": false
+    },
+    "$CMD": {
+      "name": "$CMD",
+      "type": "INT",
+      "description": "Display assignment number (handle) for command channel",
+      "readOnly": false
+    },
+    "$COM_NAME": {
+      "name": "$COM_NAME",
+      "type": "CHAR[486]",
+      "description": "Command which is to be processed after next start",
+      "readOnly": false
+    },
+    "$COM_VAL_MI[]": {
+      "name": "$COM_VAL_MI[]",
+      "type": "REAL[12]",
+      "description": "Limitation of command speed for axis `A1..A6` and external axis `E1..E6`",
+      "readOnly": false
+    },
+    "$CONF_MESS": {
+      "name": "$CONF_MESS",
+      "type": "SIGNAL",
+      "description": "Signal declaration for `reset acknowledgement messages`.",
+      "readOnly": false
+    },
+    "$COSYS": {
+      "name": "$COSYS",
+      "type": "ENUM",
+      "description": "Coordinate system for jogging",
+      "readOnly": false
+    },
+    "$COUNT_I[]": {
+      "name": "$COUNT_I[]",
+      "type": "INT[32]",
+      "description": "Freely usable integer variables",
+      "readOnly": false
+    },
+    "$COUP_COMP[,]": {
+      "name": "$COUP_COMP[,]",
+      "type": "STRUC",
+      "description": "Axis coupling factors",
+      "readOnly": false
+    },
+    "$CP_VEL_TYPE": {
+      "name": "$CP_VEL_TYPE",
+      "type": "ENUM",
+      "description": "Reduction of the CP path velocity",
+      "readOnly": false
+    },
+    "$CPVELREDMELD": {
+      "name": "$CPVELREDMELD",
+      "type": "INT",
+      "description": "Generation of message if path velocity reduced",
+      "readOnly": false
+    },
+    "$CURR_ACT[]": {
+      "name": "$CURR_ACT[]",
+      "type": "REAL[12]",
+      "description": "Actual current of axes\nConstraint: [-100,100]\nUnit: %",
+      "readOnly": false
+    },
+    "$CURR_CAL[]": {
+      "name": "$CURR_CAL[]",
+      "type": "REAL[12]",
+      "description": "Current calibration of axis in the power module",
+      "readOnly": false
+    },
+    "$CURR_COM_EX[]": {
+      "name": "$CURR_COM_EX[]",
+      "type": "REAL[6]",
+      "description": "Current limitation for external axes in jog mode",
+      "readOnly": false
+    },
+    "$CURR_LIM[]": {
+      "name": "$CURR_LIM[]",
+      "type": "INT[12]",
+      "description": "Current limitation\nConstraint: [0,100]\nUnit: %",
+      "readOnly": false
+    },
+    "$CURR_MAX[]": {
+      "name": "$CURR_MAX[]",
+      "type": "REAL[12]",
+      "description": "Maximum effective current on power module output\nUnit: A",
+      "readOnly": false
+    },
+    "$CURR_MON[]": {
+      "name": "$CURR_MON[]",
+      "type": "REAL[12]",
+      "description": "Permissible rated current",
+      "readOnly": false
+    },
+    "$CURR_RED[,]": {
+      "name": "$CURR_RED[,]",
+      "type": "REAL[12,2]",
+      "description": "Current limitation for axes in `%` of the maximum current",
+      "readOnly": false
+    },
+    "$CYC_DEFi[]": {
+      "name": "$CYC_DEFi[]",
+      "type": "CHAR[470]",
+      "description": "Input text for the corresponding cyclical flag",
+      "readOnly": false
+    },
+    "$CYCFLAG[]": {
+      "name": "$CYCFLAG[]",
+      "type": "BOOL[32]",
+      "description": "Cyclical flags",
+      "readOnly": false
+    },
+    "$PRO_MODE0": {
+      "name": "$PRO_MODE0",
+      "type": "ENUM",
+      "description": "Program run mode of the `SUBMIT` interpreter",
+      "readOnly": false
+    },
+    "$PRO_MODE1": {
+      "name": "$PRO_MODE1",
+      "type": "ENUM",
+      "description": "Program run mode of the `ROBOT` interpreter",
+      "readOnly": false
+    },
+    "$PRO_STATE0": {
+      "name": "$PRO_STATE0",
+      "type": "ENUM",
+      "description": "Process state of the `SUBMIT` interpreter",
+      "readOnly": false
+    },
+    "$PRO_STATE1": {
+      "name": "$PRO_STATE1",
+      "type": "ENUM",
+      "description": "Process state of the `ROBOT` interpreter",
+      "readOnly": false
+    },
+    "$PRO_NAME[]": {
+      "name": "$PRO_NAME[]",
+      "type": "CHAR[24]",
+      "description": "Process name dependent on `<xref:$INTERPRETER>`",
+      "readOnly": false
+    },
+    "$PRO_NAME0[]": {
+      "name": "$PRO_NAME0[]",
+      "type": "CHAR[24]",
+      "description": "Process name of the `SUBMIT` interpreter",
+      "readOnly": false
+    },
+    "$PRO_NAME1[]": {
+      "name": "$PRO_NAME1[]",
+      "type": "CHAR[24]",
+      "description": "Process name of the `ROBOT` interpreter",
+      "readOnly": false
+    }
+  },
+  "types": {
+    "AXIS": {
+      "name": "AXIS",
+      "description": "Axis structure for 6-axis robots. Contains joint angles for axes A1-A6.",
+      "fields": {
+        "A1": "Joint angle for axis 1 in degrees",
+        "A2": "Joint angle for axis 2 in degrees",
+        "A3": "Joint angle for axis 3 in degrees",
+        "A4": "Joint angle for axis 4 in degrees",
+        "A5": "Joint angle for axis 5 in degrees",
+        "A6": "Joint angle for axis 6 in degrees"
+      },
+      "example": "{AXIS: A1 0, A2 -90, A3 90, A4 0, A5 0, A6 0}"
+    },
+    "E6AXIS": {
+      "name": "E6AXIS",
+      "description": "Extended axis structure for 6-axis robots with external axes. Contains A1-A6 for robot joints and E1-E6 for external axes.",
+      "fields": {
+        "A1": "Joint angle for axis 1 in degrees",
+        "A2": "Joint angle for axis 2 in degrees",
+        "A3": "Joint angle for axis 3 in degrees",
+        "A4": "Joint angle for axis 4 in degrees",
+        "A5": "Joint angle for axis 5 in degrees",
+        "A6": "Joint angle for axis 6 in degrees",
+        "E1": "External axis 1 position (linear in mm or rotary in degrees)",
+        "E2": "External axis 2 position",
+        "E3": "External axis 3 position",
+        "E4": "External axis 4 position",
+        "E5": "External axis 5 position",
+        "E6": "External axis 6 position"
+      },
+      "example": "{E6AXIS: A1 0, A2 -90, A3 90, A4 0, A5 0, A6 0, E1 1000}"
+    },
+    "FRAME": {
+      "name": "FRAME",
+      "description": "Geometric frame structure defining a coordinate system. Contains Cartesian position (X, Y, Z) and orientation angles (A, B, C).",
+      "fields": {
+        "X": "X coordinate in mm",
+        "Y": "Y coordinate in mm",
+        "Z": "Z coordinate in mm",
+        "A": "Rotation about Z-axis in degrees (yaw)",
+        "B": "Rotation about Y-axis in degrees (pitch)",
+        "C": "Rotation about X-axis in degrees (roll)"
+      },
+      "example": "{FRAME: X 100, Y 200, Z 300, A 0, B 90, C 0}"
+    },
+    "POS": {
+      "name": "POS",
+      "description": "Position structure with Cartesian coordinates, orientation, and robot configuration. Adds Status (S) and Turn (T) to FRAME.",
+      "fields": {
+        "X": "X coordinate in mm",
+        "Y": "Y coordinate in mm",
+        "Z": "Z coordinate in mm",
+        "A": "Rotation about Z-axis in degrees (yaw)",
+        "B": "Rotation about Y-axis in degrees (pitch)",
+        "C": "Rotation about X-axis in degrees (roll)",
+        "S": "Status byte - defines arm configuration (bit 0: basic/overhead, bit 1: arm config, bit 2: wrist config)",
+        "T": "Turn byte - defines axis rotation direction (bit n: axis n+1 angle < 0)"
+      },
+      "example": "{POS: X 100, Y 200, Z 300, A 0, B 90, C 0, S 2, T 35}"
+    },
+    "E6POS": {
+      "name": "E6POS",
+      "description": "Extended position structure with Cartesian coordinates, orientation, robot configuration, and external axes. Most commonly used position type.",
+      "fields": {
+        "X": "X coordinate in mm",
+        "Y": "Y coordinate in mm",
+        "Z": "Z coordinate in mm",
+        "A": "Rotation about Z-axis in degrees (yaw)",
+        "B": "Rotation about Y-axis in degrees (pitch)",
+        "C": "Rotation about X-axis in degrees (roll)",
+        "S": "Status byte - defines arm configuration (bit 0: basic/overhead, bit 1: arm config, bit 2: wrist config)",
+        "T": "Turn byte - defines axis rotation direction (bit n: axis n+1 angle < 0)",
+        "E1": "External axis 1 position (linear in mm or rotary in degrees)",
+        "E2": "External axis 2 position",
+        "E3": "External axis 3 position",
+        "E4": "External axis 4 position",
+        "E5": "External axis 5 position",
+        "E6": "External axis 6 position"
+      },
+      "example": "{E6POS: X 100, Y 200, Z 300, A 0, B 90, C 0, S 2, T 35, E1 1000}"
+    },
+    "STATUS": {
+      "name": "STATUS",
+      "description": "Robot arm configuration status (S parameter in POS/E6POS). 3-bit value defining the robot pose.",
+      "bits": {
+        "Bit 0": "Position of wrist root point (0 = basic area, 1 = overhead area)",
+        "Bit 1": "Arm configuration (0 = elbow up, 1 = elbow down)",
+        "Bit 2": "Wrist configuration (0 = wrist not flipped, 1 = wrist flipped)"
+      },
+      "values": "0-7 (integer) or 'Bxxx' (binary notation, e.g., 'B010' = 2)"
+    },
+    "TURN": {
+      "name": "TURN",
+      "description": "Axis rotation direction indicator (T parameter in POS/E6POS). 6-bit value indicating which axes have negative angles.",
+      "bits": {
+        "Bit 0": "1 if angle of A1 < 0",
+        "Bit 1": "1 if angle of A2 < 0",
+        "Bit 2": "1 if angle of A3 < 0",
+        "Bit 3": "1 if angle of A4 < 0",
+        "Bit 4": "1 if angle of A5 < 0",
+        "Bit 5": "1 if angle of A6 < 0"
+      },
+      "values": "0-63 (integer) or 'Bxxxxxx' (binary notation)"
+    },
+    "AXBOX": {
+      "name": "AXBOX",
+      "description": "Axis-specific state data structure",
+      "fields": {}
+    },
+    "AXIS_CAL": {
+      "name": "AXIS_CAL",
+      "description": "Axis-specific state data structure",
+      "fields": {}
+    },
+    "AXIS_INC": {
+      "name": "AXIS_INC",
+      "description": "Axis-specific increments data structure",
+      "fields": {}
+    },
+    "BUS": {
+      "name": "BUS",
+      "description": "L2 bus interface data structure.",
+      "fields": {}
+    },
+    "FRA": {
+      "name": "FRA",
+      "description": "Fraction data structure.",
+      "fields": {}
+    },
+    "SIGINF": {
+      "name": "SIGINF",
+      "description": "Signal info data structure.",
+      "fields": {}
+    },
+    "SIGNAL": {
+      "name": "SIGNAL",
+      "description": "A signal defines and alias to one or several IN/OUT",
+      "fields": {}
+    },
+    "ACC_CAR": {
+      "name": "ACC_CAR",
+      "description": "Frame data structure with an additional magnitude field.",
+      "fields": {}
+    },
+    "CP": {
+      "name": "CP",
+      "description": "Speed/Acceleration data structure",
+      "fields": {}
+    },
+    "PRO_IP": {
+      "name": "PRO_IP",
+      "description": "Process pointer data structure",
+      "fields": {}
+    },
+    "KrlMsg_T": {
+      "name": "KrlMsg_T",
+      "description": "Message data structure",
+      "fields": {}
+    },
+    "KrlMsgDlgSK_T": {
+      "name": "KrlMsgDlgSK_T",
+      "description": "Softkey data structure for dialog message",
+      "fields": {}
+    },
+    "KrlMsgOpt_T": {
+      "name": "KrlMsgOpt_T",
+      "description": "Message options data structure",
+      "fields": {}
+    },
+    "KrlMsgPar_T": {
+      "name": "KrlMsgPar_T",
+      "description": "Message parameter data structure",
+      "fields": {}
+    },
+    "MsgBuf_T": {
+      "name": "MsgBuf_T",
+      "description": "Message buffer data structure",
+      "fields": {}
+    }
+  },
+  "enums": {
+    "MODE_OP": {
+      "name": "MODE_OP",
+      "description": "Operating mode of the robot controller",
+      "values": {
+        "T1": "Test mode 1 - Manual reduced velocity (max 250 mm/s)",
+        "T2": "Test mode 2 - Manual at programmed velocity (100%)",
+        "AUT": "Automatic mode - Automatic program execution",
+        "EX": "Automatic External mode - Controlled by PLC/external system"
+      }
+    },
+    "PRO_STATE": {
+      "name": "PRO_STATE",
+      "description": "Program execution state",
+      "values": {
+        "P_FREE": "Program not selected",
+        "P_RESET": "Program reset (at start position)",
+        "P_ACTIVE": "Program active (running)",
+        "P_STOP": "Program stopped",
+        "P_END": "End of program reached"
+      }
+    },
+    "PRO_MODE": {
+      "name": "PRO_MODE",
+      "description": "Program execution mode (step modes)",
+      "values": {
+        "ISTEP": "Incremental Step - Block-by-block processing with stop after each instruction (no advance run)",
+        "PSTEP": "Program Step - Complete processing of subprograms (no advance run)",
+        "MSTEP": "Motion Step - Step-by-step with stop after each motion instruction (no advance run)",
+        "CSTEP": "Continuous Step - Step-by-step with stop after each motion (with advance run)",
+        "GO": "Continuous execution to the end of the program",
+        "BSTEP": "Backward Step - Continuous execution backwards to program start"
+      }
+    },
+    "ASYNC_STATE": {
+      "name": "ASYNC_STATE",
+      "description": "State of asynchronous motions",
+      "values": {
+        "BUSY": "Asynchronous motions active, stopped or temporarily stored",
+        "IDLE": "No asynchronous motions active (queue empty); last motion completed normally",
+        "CANCELLED": "No asynchronous motions active (queue empty); last motion was canceled",
+        "PEND": "Asynchronous motion is planned but not currently executing"
+      }
+    },
+    "AXBOX": {
+      "name": "AXBOX",
+      "description": "Work envelope monitoring mode for axis-based workspace surveillance",
+      "values": {
+        "OFF": "Work envelope monitoring deactivated",
+        "INSIDE": "Output set if TCP is inside the work envelope",
+        "OUTSIDE": "Output set if TCP is outside the work envelope",
+        "INSIDE_STOP": "Output set AND robot stopped if TCP is inside the work envelope",
+        "OUTSIDE_STOP": "Output set AND robot stopped if TCP is outside the work envelope"
+      }
+    },
+    "SIG_STATE": {
+      "name": "SIG_STATE",
+      "description": "State of the enabling switch (deadman switch)",
+      "values": {
+        "RELEASED": "No enabling switch pressed (default) or fully pressed (panic position)",
+        "PRESSED": "One or more enabling switches pressed (enabling position)"
+      }
+    },
+    "CIRC_TYPE": {
+      "name": "CIRC_TYPE",
+      "description": "Orientation control type for circular motions (CIRC/SCIRC)",
+      "values": {
+        "BASE": "Space-related orientation control - orientation relative to BASE coordinate system",
+        "PATH": "Path-related orientation control - orientation relative to circular path"
+      }
+    },
+    "ORI_TYPE": {
+      "name": "ORI_TYPE",
+      "description": "Orientation interpolation type during CP motions",
+      "values": {
+        "VAR": "Variable orientation with possible reduction of velocity and acceleration",
+        "CONSTANT": "Constant orientation - tool orientation remains unchanged during motion",
+        "JOINT": "Variable orientation without reduction of velocity and acceleration"
+      }
+    },
+    "IPO_MODE": {
+      "name": "IPO_MODE",
+      "description": "Interpolation reference coordinate system",
+      "values": {
+        "BASE": "Interpolation in BASE coordinate system",
+        "TCP": "Interpolation in TCP (Tool Center Point) coordinate system"
+      }
+    },
+    "DIRECTION": {
+      "name": "DIRECTION",
+      "description": "Motion execution direction",
+      "values": {
+        "FORWARD": "Forward execution (normal direction)",
+        "BACKWARD": "Backward execution (reverse direction)"
+      }
+    },
+    "TARGET_STATUS": {
+      "name": "TARGET_STATUS",
+      "description": "Status calculation mode for target point",
+      "values": {
+        "SOURCE": "Use Status of the start point",
+        "BEST": "Calculate all eight Status combinations; select shortest path in axis space"
+      }
+    },
+    "TRANSSYS": {
+      "name": "TRANSSYS",
+      "description": "Transformation coordinate system",
+      "values": {
+        "WORLD": "World coordinate system",
+        "BASE": "Base coordinate system",
+        "ROBROOT": "Robot root (flange) coordinate system",
+        "TCP": "Tool Center Point coordinate system"
+      }
+    },
+    "ADAP_ACC": {
+      "name": "ADAP_ACC",
+      "description": "Acceleration adaptation modes",
+      "values": {}
+    },
+    "ASYS": {
+      "name": "ASYS",
+      "description": "",
+      "values": {}
+    },
+    "AXWMODE": {
+      "name": "AXWMODE",
+      "description": "Functional principles for axis-specific workspace monitoring",
+      "values": {}
+    },
+    "COSYS": {
+      "name": "COSYS",
+      "description": "Orientation control modes for CIRC blocks",
+      "values": {}
+    },
+    "CP_VEL_TYPE": {
+      "name": "CP_VEL_TYPE",
+      "description": "Reduction modes for CP path velocity",
+      "values": {}
+    },
+    "SW_ONOFF": {
+      "name": "SW_ONOFF",
+      "description": "Generic ON/OFF switch",
+      "values": {}
+    },
+    "Mode": {
+      "name": "Mode",
+      "description": "Functional principle of the axis-specific workspace monitoring function",
+      "values": {}
+    },
+    "Typ": {
+      "name": "Typ",
+      "description": "|",
+      "values": {}
+    },
+    "DTyp": {
+      "name": "DTyp",
+      "description": "|",
+      "values": {}
+    },
+    "EKrlMsgType": {
+      "name": "EKrlMsgType",
+      "description": "Message types",
+      "values": {}
+    },
+    "KrlMsgParType_T": {
+      "name": "KrlMsgParType_T",
+      "description": "Message parameter types",
+      "values": {}
+    },
+    "MsgBufMsgType_T": {
+      "name": "MsgBufMsgType_T",
+      "description": "Message parameter types",
+      "values": {}
+    }
+  },
+  "functions": {
+    "StrCopy": {
+      "name": "StrCopy",
+      "description": "Copy the contents of a string variable to another string variable.",
+      "parameters": [
+        {
+          "name": "strDest[]",
+          "pass": "IN",
+          "type": "CHAR[]",
+          "description": "The character string is copied to this string variable.\nSince `strDest[]` is an array of type `CHAR`, individual characters and constants are not permissible.\n"
+        },
+        {
+          "name": "strSource[]",
+          "pass": "IN",
+          "type": "CHAR[]",
+          "description": "The contents of this string variable are copied."
+        }
+      ],
+      "return-type": "BOOL",
+      "return-description": "Returns `true` if the copy was successfull. Returns `false` otherwise.",
+      "comments": "The function `StrCopy()` can be used to copy the contents of a string variable to another string variable.\n",
+      "code-sample": {
+        "krl": "DECL CHAR A[25], B[25]\nDECL BOOL C\nA[] = \"\"\nB[] = \"Example\"\nC   = StrCopy(A[], B[])\n",
+        "output": "A[] = \"Example\" \nand C = true\n"
+      }
+    },
+    "StrClear": {
+      "name": "StrClear",
+      "description": "Delete the content of a string variable.",
+      "parameters": [
+        {
+          "name": "strVar[]",
+          "pass": "IN",
+          "type": "CHAR[]",
+          "description": "Variable, whose content should be deleted\n"
+        }
+      ],
+      "return-type": "BOOL",
+      "return-description": "Return value is always TRUE.",
+      "comments": "The function `StrClear()` can be used to delete the content of a string variable.\n",
+      "code-sample": {
+        "krl": "DECL CHAR string[25]\nDECL BOOL ret\n\nstring[] = \"KUKAROBOTS\"\nret   = StrClear(string[])\n",
+        "output": "string[] = \"\" \nand C = true\n"
+      }
+    }
+  },
+  "messages": {},
+  "commands": {
+    "PTP": {
+      "name": "PTP",
+      "description": "Point-to-Point motion. Moves the robot to a point using the fastest path.",
+      "syntax": "PTP {Point} [C_PTP] [C_DIS]"
+    },
+    "LIN": {
+      "name": "LIN",
+      "description": "Linear motion. Moves the robot in a straight line to the target point.",
+      "syntax": "LIN {Point} [C_DIS] [C_VEL]"
+    },
+    "CIRC": {
+      "name": "CIRC",
+      "description": "Circular motion. Moves along a circular path via an auxiliary point.",
+      "syntax": "CIRC {AuxPoint}, {TargetPoint} [C_DIS]"
+    },
+    "SPTP": {
+      "name": "SPTP",
+      "description": "Spline PTP motion. Smoother, more precise PTP motion (KSS 8.3+).",
+      "syntax": "SPTP {Point} [WITH $APO_FAC=...] [C_SPL] [C_DIS]"
+    },
+    "SLIN": {
+      "name": "SLIN",
+      "description": "Spline Linear motion. Smoother, more precise Linear motion (KSS 8.3+).",
+      "syntax": "SLIN {Point} [WITH $APO_FAC=...] [C_SPL] [C_DIS]"
+    },
+    "SCIRC": {
+      "name": "SCIRC",
+      "description": "Spline Circular motion.",
+      "syntax": "SCIRC {AuxPoint}, {TargetPoint} [WITH $APO_FAC=...] [C_SPL] [C_DIS]"
+    },
+    "BRAKE": {
+      "name": "BRAKE",
+      "description": "Stops robot motion inside an Interrupt."
+    },
+    "HALT": {
+      "name": "HALT",
+      "description": "Stops the program execution. Requires Start key to resume."
+    },
+    "IF": {
+      "name": "IF",
+      "description": "Conditional branching. Executes a block if the condition is TRUE.",
+      "syntax": "IF {Condition} THEN\n  {Statements}\n[ELSE]\n  {Statements}\nENDIF"
+    },
+    "THEN": {
+      "name": "THEN",
+      "description": "Start of the IF block execution branch."
+    },
+    "ELSE": {
+      "name": "ELSE",
+      "description": "Alternative branch in an IF block."
+    },
+    "ENDIF": {
+      "name": "ENDIF",
+      "description": "End of an IF block."
+    },
+    "FOR": {
+      "name": "FOR",
+      "description": "Loop with a counter variable.",
+      "syntax": "FOR {Var} = {Start} TO {End} [STEP {Incr}]\n  {Statements}\nENDFOR"
+    },
+    "TO": {
+      "name": "TO",
+      "description": "Defines the end value in a FOR loop."
+    },
+    "STEP": {
+      "name": "STEP",
+      "description": "Defines the increment step in a FOR loop (default 1)."
+    },
+    "ENDFOR": {
+      "name": "ENDFOR",
+      "description": "End of a FOR loop."
+    },
+    "WHILE": {
+      "name": "WHILE",
+      "description": "Loop that repeats as long as the condition is TRUE.",
+      "syntax": "WHILE {Condition}\n  {Statements}\nENDWHILE"
+    },
+    "ENDWHILE": {
+      "name": "ENDWHILE",
+      "description": "End of a WHILE loop."
+    },
+    "LOOP": {
+      "name": "LOOP",
+      "description": "Infinite loop. Must be exited with EXIT or GOTO.",
+      "syntax": "LOOP\n  {Statements}\nENDLOOP"
+    },
+    "ENDLOOP": {
+      "name": "ENDLOOP",
+      "description": "End of a LOOP block."
+    },
+    "REPEAT": {
+      "name": "REPEAT",
+      "description": "Loop that executes at least once and repeats until condition is TRUE.",
+      "syntax": "REPEAT\n  {Statements}\nUNTIL {Condition}"
+    },
+    "UNTIL": {
+      "name": "UNTIL",
+      "description": "Condition check for REPEAT loop."
+    },
+    "SWITCH": {
+      "name": "SWITCH",
+      "description": "Selects a block based on the value of a variable.",
+      "syntax": "SWITCH {Variable}\n  CASE {Value}\n    {Statements}\n  [DEFAULT]\n    {Statements}\nENDSWITCH"
+    },
+    "CASE": {
+      "name": "CASE",
+      "description": "Defines a value branch in a SWITCH block."
+    },
+    "DEFAULT": {
+      "name": "DEFAULT",
+      "description": "Default branch in a SWITCH block if no CASE matches."
+    },
+    "ENDSWITCH": {
+      "name": "ENDSWITCH",
+      "description": "End of a SWITCH block."
+    },
+    "GOTO": {
+      "name": "GOTO",
+      "description": "Jumps to a defined Label.",
+      "syntax": "GOTO {LabelName}"
+    },
+    "EXIT": {
+      "name": "EXIT",
+      "description": "Exits a loop (FOR, WHILE, LOOP, REPEAT) prematurely."
+    },
+    "DECL": {
+      "name": "DECL",
+      "description": "Declares a variable, array, or structure.",
+      "syntax": "DECL {Type} {Name}[{ArraySize}]"
+    },
+    "GLOBAL": {
+      "name": "GLOBAL",
+      "description": "Scope modifier: Makes the variable or subprogram accessible from other files."
+    },
+    "PUBLIC": {
+      "name": "PUBLIC",
+      "description": "Scope modifier: Makes the data list (DEFDAT) accessible."
+    },
+    "CONST": {
+      "name": "CONST",
+      "description": "Declares a constant value. Must be initialized at declaration.",
+      "syntax": "DECL CONST {Type} {Name} = {Value}"
+    },
+    "INT": {
+      "name": "INT",
+      "description": "Integer data type (32-bit signed). Range: -2^31 to 2^31-1."
+    },
+    "REAL": {
+      "name": "REAL",
+      "description": "Floating point number (32-bit). Approx 7 digits precision."
+    },
+    "BOOL": {
+      "name": "BOOL",
+      "description": "Boolean data type. Values: TRUE, FALSE."
+    },
+    "CHAR": {
+      "name": "CHAR",
+      "description": "Character data type. Also used for Strings (Array of CHAR)."
+    },
+    "FRAME": {
+      "name": "FRAME",
+      "description": "Geometric structure (X, Y, Z, A, B, C)."
+    },
+    "POS": {
+      "name": "POS",
+      "description": "Position structure (X, Y, Z, A, B, C, S, T)."
+    },
+    "E6POS": {
+      "name": "E6POS",
+      "description": "Extended Position structure (POS + E1-E6)."
+    },
+    "E6AXIS": {
+      "name": "E6AXIS",
+      "description": "Extended Axis structure (A1-A6 + E1-E6)."
+    },
+    "STRUC": {
+      "name": "STRUC",
+      "description": "Defines a custom structure type.",
+      "syntax": "STRUC {TypeName} {Field1}, {Field2}, ..."
+    },
+    "ENUM": {
+      "name": "ENUM",
+      "description": "Defines an enumeration type.",
+      "syntax": "ENUM {TypeName} {Value1}, {Value2}, ..."
+    },
+    "DEF": {
+      "name": "DEF",
+      "description": "Start of a subprogram definition.",
+      "syntax": "DEF {Name}({Params})"
+    },
+    "DEFFCT": {
+      "name": "DEFFCT",
+      "description": "Start of a function definition. Must return a value.",
+      "syntax": "DEFFCT {Type} {Name}({Params})"
+    },
+    "DEFDAT": {
+      "name": "DEFDAT",
+      "description": "Start of a data list definition.",
+      "syntax": "DEFDAT {Name} [PUBLIC]"
+    },
+    "END": {
+      "name": "END",
+      "description": "End of a program (DEF) or data list (DEFDAT)."
+    },
+    "ENDFCT": {
+      "name": "ENDFCT",
+      "description": "End of a function (DEFFCT)."
+    },
+    "ENDDAT": {
+      "name": "ENDDAT",
+      "description": "End of a data list (DEFDAT)."
+    },
+    "RETURN": {
+      "name": "RETURN",
+      "description": "Returns from a function, optionally with a value.",
+      "syntax": "RETURN [{Value}]"
+    },
+    "WAIT": {
+      "name": "WAIT",
+      "description": "Waits for a specific time or condition.",
+      "syntax": "WAIT SEC {Seconds}\nor\nWAIT FOR {Condition}"
+    },
+    "CONTINUE": {
+      "name": "CONTINUE",
+      "description": "Prevents the advance run pointer from stopping at the next instruction. Use before I/O or logic."
+    },
+    "TRIGGER": {
+      "name": "TRIGGER",
+      "description": "Path-triggered logic. Executes a statement at a specific point on the path.",
+      "syntax": "TRIGGER WHEN DISTANCE={Dist} DELAY={Time} DO {Statement}"
+    },
+    "INTERRUPT": {
+      "name": "INTERRUPT",
+      "description": "Defines an interrupt service routine.",
+      "syntax": "INTERRUPT DECL {Priority} WHEN {Condition} DO {Subprogram}"
+    },
+    "RESUME": {
+      "name": "RESUME",
+      "description": "Aborts the current motion and stack, resuming execution at the level where the interrupt was declared."
+    },
+    "SIGNAL": {
+      "name": "SIGNAL",
+      "description": "Defines a name for an I/O signal or group of signals.",
+      "syntax": "SIGNAL {Name} $IN[{Number}]  TO $IN[{End}]"
+    },
+    "ANIN": {
+      "name": "ANIN",
+      "description": "Start analog input reading.",
+      "syntax": "ANIN ON {Variable} = {SignalFactor} * {SignalName} + {Offset}"
+    },
+    "ANOUT": {
+      "name": "ANOUT",
+      "description": "Set analog output.",
+      "syntax": "ANOUT ON {SignalName} = {Factor} * {ControlVar} + {Offset}"
+    },
+    "PULSE": {
+      "name": "PULSE",
+      "description": "Sets an output for a specific duration.",
+      "syntax": "PULSE({Output}, {State}, {Duration})"
+    },
+    "&ACCESS": {
+      "name": "&ACCESS",
+      "description": "Defines access rights for the file.",
+      "syntax": "&ACCESS {RVO|RVP}"
+    },
+    "&REL": {
+      "name": "&REL",
+      "description": "Defines usage of global symbols/variables.",
+      "syntax": "&REL {Number}"
+    },
+    "&PARAM": {
+      "name": "&PARAM",
+      "description": "Defines file parameters (Template, Diskpath, etc.).",
+      "syntax": "&PARAM {Key} = {Value}"
+    },
+    "&COMMENT": {
+      "name": "&COMMENT",
+      "description": "Header comment for the file."
+    },
+    "BAS": {
+      "name": "BAS",
+      "description": "Basis Technical package initialization and parameter setting.",
+      "syntax": "BAS ({Command}, {Value})"
+    },
+    "SET_CD_PARAMS": {
+      "name": "SET_CD_PARAMS",
+      "description": "Sets collision detection parameters.",
+      "syntax": "SET_CD_PARAMS ({Index})"
+    },
+    "SVEL_JOINT": {
+      "name": "SVEL_JOINT",
+      "description": "Spline velocity for joint movements.",
+      "syntax": "SVEL_JOINT({Value})"
+    },
+    "STOOL2": {
+      "name": "STOOL2",
+      "description": "Spline tool definition.",
+      "syntax": "STOOL2({Frame})"
+    },
+    "SBASE": {
+      "name": "SBASE",
+      "description": "Spline base definition.",
+      "syntax": "SBASE({BaseNo})"
+    },
+    "SIPO_MODE": {
+      "name": "SIPO_MODE",
+      "description": "Spline interpolation mode.",
+      "syntax": "SIPO_MODE({Mode})"
+    },
+    "SLOAD": {
+      "name": "SLOAD",
+      "description": "Spline load data.",
+      "syntax": "SLOAD({ToolNo})"
+    },
+    "SACC_JOINT": {
+      "name": "SACC_JOINT",
+      "description": "Spline acceleration for joint movements.",
+      "syntax": "SACC_JOINT({Value})"
+    },
+    "SAPO_PTP": {
+      "name": "SAPO_PTP",
+      "description": "Spline approximation for PTP.",
+      "syntax": "SAPO_PTP({Value})"
+    },
+    "SGEAR_JERK": {
+      "name": "SGEAR_JERK",
+      "description": "Spline jerk setting.",
+      "syntax": "SGEAR_JERK({Value})"
+    },
+    "USE_CM_PRO_VALUES": {
+      "name": "USE_CM_PRO_VALUES",
+      "description": "Collision monitoring profile values.",
+      "syntax": "USE_CM_PRO_VALUES({Value})"
+    },
+    "$STOPMESS": {
+      "name": "$STOPMESS",
+      "description": "System variable indicating a stop message is active (Boolean)."
+    },
+    "$BWDSTART": {
+      "name": "$BWDSTART",
+      "description": "Flag to indicate backward motion start."
+    },
+    "PDAT_ACT": {
+      "name": "PDAT_ACT",
+      "description": "Active PTP point data structure (Velocity, Accel, Approx)."
+    },
+    "FDAT_ACT": {
+      "name": "FDAT_ACT",
+      "description": "Active Frame data structure (Tool, Base, IPO)."
+    },
+    "LDAT_ACT": {
+      "name": "LDAT_ACT",
+      "description": "Active LIN/CIRC dat structure (Vel, Acc, Approx)."
+    }
+  }
+}

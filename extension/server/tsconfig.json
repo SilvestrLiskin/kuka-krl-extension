@@ -4,9 +4,14 @@
     "target": "es6",
     "outDir": "out",
     "rootDir": "src",
-    "lib": ["es6"],
+    "lib": [
+      "es6"
+    ],
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "resolveJsonModule": true
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

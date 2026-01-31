@@ -275,6 +275,39 @@ export class DocumentSymbolsProvider {
           symbols.push(enumSymbol);
         }
       }
+
+      // Labels (GOTO targets)
+      // Matches "Label:" or "Label :" at start of line
+      const labelMatch = line.match(/^\s*([a-zA-Z0-9_]+)\s*:/);
+      if (labelMatch) {
+        const name = labelMatch[1];
+        // Filter out logical keywords that might look like labels if mistakenly written?
+        // KRL labels cannot be keywords perfectly, but let's be safe.
+        if (!/^(DEFAULT|CASE)$/i.test(name)) {
+          const startPos = line.indexOf(name);
+          const labelSymbol: DocumentSymbol = {
+            name: name,
+            detail: "LABEL",
+            kind: SymbolKind.Key, // Use Key icon for labels
+            range: Range.create(
+              Position.create(i, 0),
+              Position.create(i, line.length),
+            ),
+            selectionRange: Range.create(
+              Position.create(i, startPos),
+              Position.create(i, startPos + name.length),
+            ),
+          };
+
+          if (symbolStack.length > 0) {
+            symbolStack[symbolStack.length - 1].symbol.children!.push(
+              labelSymbol,
+            );
+          } else {
+            symbols.push(labelSymbol);
+          }
+        }
+      }
     }
 
     // Add any unclosed symbols (shouldn't happen in well-formed code)

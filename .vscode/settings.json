@@ -1,3 +1,6 @@
 {
-    "diffEditor.codeLens": true
+    "diffEditor.codeLens": true,
+    "terminal.integrated.shellIntegration.enabled": false,
+    "terminal.integrated.gpuAcceleration": "off",
+    "terminal.integrated.rendererType": "dom"
 }

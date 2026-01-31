@@ -409,6 +409,7 @@ documents.onDidChangeContent(async (change) => {
         ...diagnostics.validateEmptyBlocks(currentDoc),
         ...diagnostics.validateDangerousStatements(currentDoc),
         ...diagnostics.validateTypeUsage(currentDoc, state.mergedVariables),
+        ...diagnostics.validateKrlConstraints(currentDoc),
       );
     }
 

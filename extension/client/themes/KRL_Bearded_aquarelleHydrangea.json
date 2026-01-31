@@ -1,0 +1,97 @@
+{
+    "name": "KRL Bearded Aquarelle Hydrangea",
+    "type": "dark",
+    "colors": {
+        "editor.background": "#22273c",
+        "editor.foreground": "#d9dcea",
+        "editorCursor.foreground": "#afd9ec",
+        "editorIndentGuide.activeBackground": "#515d8c",
+        "activityBar.background": "#1e2235",
+        "activityBarBadge.background": "#afd9ec",
+        "activityBarBadge.foreground": "#22273c",
+        "sideBar.background": "#22273c",
+        "sideBar.border": "#171a28",
+        "list.activeSelectionForeground": "#afd9ec",
+        "list.activeSelectionBackground": "#2b324c",
+        "list.hoverBackground": "#202539",
+        "statusBar.background": "#1e2235",
+        "statusBar.foreground": "#d9dcea",
+        "tab.activeBorder": "#afd9ec",
+        "tab.activeBackground": "#22273c",
+        "titleBar.activeBackground": "#1e2235"
+    },
+    "tokenColors": [
+        {
+            "scope": [
+                "comment",
+                "punctuation.definition.comment",
+                "punctuation.definition.comment.krl"
+            ],
+            "settings": {
+                "foreground": "#515d8c",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": [
+                "meta.fold.krl",
+                "comment.line.fold.krl"
+            ],
+            "settings": {
+                "foreground": "#1f3071",
+                "fontStyle": "italic bold"
+            }
+        },
+        {
+            "scope": "keyword.function.movement.krl",
+            "settings": {
+                "foreground": "#afd9ec",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "scope": "keyword.control.krl",
+            "settings": {
+                "foreground": "#bcb1f1"
+            }
+        },
+        {
+            "scope": "storage.type.krl",
+            "settings": {
+                "foreground": "#f3e1ac",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": "support.variable.system.krl",
+            "settings": {
+                "foreground": "#eca099",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": "string",
+            "settings": {
+                "foreground": "#c3e5a1"
+            }
+        },
+        {
+            "scope": "constant.numeric",
+            "settings": {
+                "foreground": "#f0bba2"
+            }
+        },
+        {
+            "scope": "variable.language.data.krl",
+            "settings": {
+                "foreground": "#a9edd9"
+            }
+        },
+        {
+            "scope": "entity.name.function.krl",
+            "settings": {
+                "foreground": "#edc1ea"
+            }
+        }
+    ]
+}

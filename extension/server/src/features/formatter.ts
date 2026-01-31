@@ -28,12 +28,16 @@ const BLOCK_END = /^\s*(ENDFOR|ENDIF|ENDWHILE|ENDLOOP|UNTIL|ENDSWITCH)\b/i;
 interface FormattingSettings {
   separateBeforeBlocks: boolean;
   separateAfterBlocks: boolean;
+  indentFolds: boolean;
+  alignAssignments: boolean;
 }
 
 // Хранилище настроек
 let formattingSettings: FormattingSettings = {
   separateBeforeBlocks: false,
   separateAfterBlocks: false,
+  indentFolds: true,
+  alignAssignments: true,
 };
 
 /**
@@ -95,6 +99,11 @@ export class KrlFormatter {
         indentLevel = Math.max(0, indentLevel - 1);
       }
 
+      // FOLD Logic
+      if (formattingSettings.indentFolds && /^\s*;?ENDFOLD\b/i.test(codePart)) {
+        indentLevel = Math.max(0, indentLevel - 1);
+      }
+
       // Добавить пустую строку перед блоком (если включено)
       if (
         formattingSettings.separateBeforeBlocks &&
@@ -132,6 +141,16 @@ export class KrlFormatter {
           indentLevel++;
         }
       }
+
+      // FOLD Logic
+      if (formattingSettings.indentFolds && /^\s*;?FOLD\b/i.test(codePart)) {
+        indentLevel++;
+      }
+    }
+
+    // Align assignments if enabled
+    if (formattingSettings.alignAssignments) {
+      this.alignAssignments(resultLines);
     }
 
     // Формируем единый TextEdit для всего документа
@@ -151,6 +170,58 @@ export class KrlFormatter {
     }
 
     return edits;
+  }
+
+  /**
+   * Aligns consecutive variable assignments.
+   */
+  private alignAssignments(lines: string[]): void {
+    const assignmentRegex = /^(\s*)([\w\[\]\.\$]+)\s*=(?!=)\s*(.+)$/;
+
+    let i = 0;
+    while (i < lines.length) {
+      const group: {
+        index: number;
+        indent: string;
+        lhs: string;
+        rhs: string;
+      }[] = [];
+
+      while (i < lines.length) {
+        const line = lines[i];
+        // Skip empty lines? No, empty lines break the group.
+        // Also check for FOLDs or comments that are not assignments
+        const match = assignmentRegex.exec(line);
+
+        if (match) {
+          // If group is not empty, check indentation match
+          if (group.length > 0 && group[0].indent !== match[1]) {
+            break; // Indentation changed
+          }
+          group.push({
+            index: i,
+            indent: match[1],
+            lhs: match[2].trim(),
+            rhs: match[3].trim(),
+          });
+          i++;
+        } else {
+          break; // Not an assignment
+        }
+      }
+
+      // Process group
+      if (group.length > 1) {
+        const maxLhs = Math.max(...group.map((g) => g.lhs.length));
+
+        for (const item of group) {
+          lines[item.index] =
+            `${item.indent}${item.lhs.padEnd(maxLhs)} = ${item.rhs}`;
+        }
+      }
+
+      if (group.length === 0) i++;
+    }
   }
 
   /**

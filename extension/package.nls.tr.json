@@ -8,7 +8,6 @@
     "command.removeTrailingWhitespace": "Sondaki Boşlukları Kaldır",
     "command.sortDeclarations": "Bildirimleri Sırala",
     "command.insertFold": "FOLD Bölgesi Ekle",
-    "command.generateDocumentation": "Belgeleme Oluştur",
     "config.title": "KUKA KRL Uzantısı",
     "config.autoFold.description": "KRL dosyası açıldığında tüm bölgeleri otomatik olarak katla",
     "config.formatOnSave.description": "Kaydetme sırasında belgeyi otomatik olarak biçimlendir",

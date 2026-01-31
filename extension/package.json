@@ -2,7 +2,7 @@
   "name": "kuka-krl-extension",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "icon": "logo.png",
   "publisher": "LiskinLabs",
   "author": {
@@ -23,8 +23,7 @@
     "Programming Languages",
     "Formatters",
     "Linters",
-    "Themes",
-    "Snippets"
+    "Themes"
   ],
   "keywords": [
     "kuka",
@@ -95,39 +94,269 @@
     ],
     "themes": [
       {
-        "label": "KRL WorkVisual",
+        "label": "KRL Bearded Aquarelle Cymbidium",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_aquarelleCymbidium.json"
+      },
+      {
+        "label": "KRL Bearded Aquarelle Hydrangea",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_aquarelleHydrangea.json"
+      },
+      {
+        "label": "KRL Bearded Aquarelle Lilac",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_aquarelleLilac.json"
+      },
+      {
+        "label": "KRL Bearded Arc",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_arc.json"
+      },
+      {
+        "label": "KRL Bearded Arc Eolstorm",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_arcEolstorm.json"
+      },
+      {
+        "label": "KRL Bearded Arc Blue Berry",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_arcBlueBerry.json"
+      },
+      {
+        "label": "KRL Bearded Arc Eggplant",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_arcEggplant.json"
+      },
+      {
+        "label": "KRL Bearded Arc Reversed",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_arcReversed.json"
+      },
+      {
+        "label": "KRL Bearded Black And Gold",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndGold.json"
+      },
+      {
+        "label": "KRL Bearded Black And Gold Soft",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndGoldSoft.json"
+      },
+      {
+        "label": "KRL Bearded Black And Ruby",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndRuby.json"
+      },
+      {
+        "label": "KRL Bearded Black And Ruby Soft",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndRubySoft.json"
+      },
+      {
+        "label": "KRL Bearded Black And Emerald",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndEmerald.json"
+      },
+      {
+        "label": "KRL Bearded Black And Emerald Soft",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndEmeraldSoft.json"
+      },
+      {
+        "label": "KRL Bearded Black And Diamond",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndDiamond.json"
+      },
+      {
+        "label": "KRL Bearded Black And Diamond Soft",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndDiamondSoft.json"
+      },
+      {
+        "label": "KRL Bearded Black And Amethyst",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndAmethyst.json"
+      },
+      {
+        "label": "KRL Bearded Black And Amethyst Soft",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_blackAndAmethystSoft.json"
+      },
+      {
+        "label": "KRL Bearded Anthracite",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_anthracite.json"
+      },
+      {
+        "label": "KRL Bearded Light",
         "uiTheme": "vs",
-        "path": "./client/themes/WorkVisual-theme.json"
+        "path": "./client/themes/KRL_Bearded_light.json"
       },
       {
-        "label": "KRL WorkVisual Dark",
+        "label": "KRL Bearded Will",
         "uiTheme": "vs-dark",
-        "path": "./client/themes/WorkVisual-dark-theme.json"
+        "path": "./client/themes/KRL_Bearded_will.json"
       },
       {
-        "label": "KRL Modern Dark",
+        "label": "KRL Bearded Gold D Raynh Light",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_goldDRaynhLight.json"
+      },
+      {
+        "label": "KRL Bearded Melle Julie",
         "uiTheme": "vs-dark",
-        "path": "./client/themes/krl-modern-dark-theme.json"
+        "path": "./client/themes/KRL_Bearded_melleJulie.json"
       },
       {
-        "label": "KRL High Contrast",
-        "uiTheme": "hc-light",
-        "path": "./client/themes/krl-high-contrast-theme.json"
+        "label": "KRL Bearded Melle Julie Light",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_melleJulieLight.json"
       },
       {
-        "label": "KRL Monokai",
+        "label": "KRL Bearded Web Dev Cody",
         "uiTheme": "vs-dark",
-        "path": "./client/themes/krl-monokai-theme.json"
+        "path": "./client/themes/KRL_Bearded_webDevCody.json"
       },
       {
-        "label": "KRL Tao",
+        "label": "KRL Bearded H C Ebony",
         "uiTheme": "vs-dark",
-        "path": "./client/themes/krl-tao-theme.json"
+        "path": "./client/themes/KRL_Bearded_HCEbony.json"
       },
       {
-        "label": "KRL Tao Dark",
+        "label": "KRL Bearded H C Midnight Void",
         "uiTheme": "vs-dark",
-        "path": "./client/themes/krl-tao-darker-theme.json"
+        "path": "./client/themes/KRL_Bearded_HCMidnightVoid.json"
+      },
+      {
+        "label": "KRL Bearded H C Wonderland Wood",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_HCWonderlandWood.json"
+      },
+      {
+        "label": "KRL Bearded H C Brewing Storm",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_HCBrewingStorm.json"
+      },
+      {
+        "label": "KRL Bearded H C Flurry",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_HCFlurry.json"
+      },
+      {
+        "label": "KRL Bearded Chocolate Espresso",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_ChocolateEspresso.json"
+      },
+      {
+        "label": "KRL Bearded Milkshake Raspberry",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_milkshakeRaspberry.json"
+      },
+      {
+        "label": "KRL Bearded Milkshake Blueberry",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_milkshakeBlueberry.json"
+      },
+      {
+        "label": "KRL Bearded Milkshake Mango",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_milkshakeMango.json"
+      },
+      {
+        "label": "KRL Bearded Milkshake Mint",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_milkshakeMint.json"
+      },
+      {
+        "label": "KRL Bearded Milkshake Vanilla",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_milkshakeVanilla.json"
+      },
+      {
+        "label": "KRL Bearded Monokai Terra",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_monokaiTerra.json"
+      },
+      {
+        "label": "KRL Bearded Monokai Metallian",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_monokaiMetallian.json"
+      },
+      {
+        "label": "KRL Bearded Monokai Stone",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_monokaiStone.json"
+      },
+      {
+        "label": "KRL Bearded Monokai Black",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_monokaiBlack.json"
+      },
+      {
+        "label": "KRL Bearded Monokai Reversed",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_monokaiReversed.json"
+      },
+      {
+        "label": "KRL Bearded Solarized Dark",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_solarizedDark.json"
+      },
+      {
+        "label": "KRL Bearded Solarized Reversed",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_solarizedReversed.json"
+      },
+      {
+        "label": "KRL Bearded Solarized Light",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_solarizedLight.json"
+      },
+      {
+        "label": "KRL Bearded Oceanic",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_oceanic.json"
+      },
+      {
+        "label": "KRL Bearded Oceanic Reverded",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_oceanicReverded.json"
+      },
+      {
+        "label": "KRL Bearded Stained Purple",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_stainedPurple.json"
+      },
+      {
+        "label": "KRL Bearded Stained Blue",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_stainedBlue.json"
+      },
+      {
+        "label": "KRL Bearded Vivid Purple",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_vividPurple.json"
+      },
+      {
+        "label": "KRL Bearded Vivid Black",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_vividBlack.json"
+      },
+      {
+        "label": "KRL Bearded Vivid Light",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_vividLight.json"
+      },
+      {
+        "label": "KRL WorkVisual Dark (Standard)",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_WorkVisual_Dark.json"
+      },
+      {
+        "label": "KRL WorkVisual Light (Standard)",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_WorkVisual_Light.json"
       }
     ],
     "iconThemes": [
@@ -181,26 +410,8 @@
         "icon": "$(symbol-namespace)"
       },
       {
-        "command": "krl.generateDocumentation",
-        "title": "%command.generateDocumentation%",
-        "category": "KRL",
-        "icon": "$(book)"
-      },
-      {
-        "command": "krl.findSystemVariables",
-        "title": "%command.findSystemVariables%",
-        "category": "KRL",
-        "icon": "$(search)"
-      },
-      {
         "command": "krl.refreshIOView",
         "title": "%command.refreshIOView%",
-        "category": "KRL",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "krl.refreshKRCView",
-        "title": "%command.refreshKRCView%",
         "category": "KRL",
         "icon": "$(refresh)"
       },
@@ -211,22 +422,16 @@
         "icon": "$(trash)"
       },
       {
-        "command": "krl.deploy",
-        "title": "Deploy to Robot (FTP)",
-        "category": "KRL",
-        "icon": "$(cloud-upload)"
-      },
-      {
-        "command": "krl.openArchive",
-        "title": "Open KUKA Archive (ZIP)",
-        "category": "KRL",
-        "icon": "$(archive)"
-      },
-      {
         "command": "krl.showCalculator",
         "title": "KRL Frame Calculator",
         "category": "KRL",
         "icon": "$(calculator)"
+      },
+      {
+        "command": "krl.renameSignal",
+        "title": "Rename Signal (Set Alias)",
+        "category": "KRL",
+        "icon": "$(edit)"
       }
     ],
     "views": {
@@ -237,8 +442,8 @@
           "when": "workbenchState != empty"
         },
         {
-          "id": "krlKRC",
-          "name": "KRC Project",
+          "id": "krlCommands",
+          "name": "KUKA Commands",
           "when": "workbenchState != empty"
         }
       ]
@@ -339,30 +544,20 @@
           "default": true,
           "description": "%config.validateNonAscii.description%"
         },
-        "krl.deploy.ip": {
-          "type": "string",
-          "default": "172.31.1.147",
-          "description": "Robot IP address for FTP deployment"
-        },
-        "krl.deploy.user": {
-          "type": "string",
-          "default": "kukauser",
-          "description": "FTP User"
-        },
-        "krl.deploy.password": {
-          "type": "string",
-          "default": "kukauser",
-          "description": "FTP Password"
-        },
-        "krl.deploy.targetPath": {
-          "type": "string",
-          "default": "/R1/Program",
-          "description": "Remote target path"
-        },
         "krl.errorLens.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Show diagnostic messages inline at the end of lines"
+        },
+        "krl.indentFolds": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indent content inside ;FOLD blocks"
+        },
+        "krl.alignAssignments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Align assignment operators (=) in consecutive lines"
         }
       }
     }
@@ -383,9 +578,6 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@types/adm-zip": "^0.5.7",
-    "adm-zip": "^0.5.16",
-    "basic-ftp": "^5.1.0",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12",
     "vscode-uri": "^3.1.0"

@@ -1,7 +1,6 @@
 {
     "name": "KRL",
     "scopeName": "source.krl",
-    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "patterns": [
         {
             "include": "#comment"
@@ -51,13 +50,21 @@
             "patterns": [
                 {
                     "comment": "FOLD region markers - special highlighting",
-                    "match": ";FOLD\\b.*$",
-                    "name": "meta.fold.krl comment.line.fold.krl"
+                    "match": "^\\s*(;FOLD)\\b.*$",
+                    "captures": {
+                        "1": {
+                            "name": "meta.fold.krl comment.line.fold.krl keyword.control.fold.krl"
+                        }
+                    }
                 },
                 {
                     "comment": "ENDFOLD region markers - special highlighting",
-                    "match": ";ENDFOLD\\b.*$",
-                    "name": "meta.fold.krl comment.line.fold.krl"
+                    "match": "^\\s*(;ENDFOLD)\\b.*$",
+                    "captures": {
+                        "1": {
+                            "name": "meta.fold.krl comment.line.fold.krl keyword.control.fold.krl"
+                        }
+                    }
                 },
                 {
                     "comment": "TODO comments",
@@ -85,8 +92,7 @@
                     "name": "comment.line.note.krl"
                 },
                 {
-                    "begin": ";",
-                    "end": "(?=\\n)",
+                    "match": ";.*$",
                     "name": "comment.line.semicolon.krl"
                 },
                 {
@@ -202,7 +208,7 @@
                     "name": "keyword.function.movement.krl"
                 },
                 {
-                    "match": "(?i)\\b(C_DIS|C_PTP|C_VEL|C_ORI)\\b",
+                    "match": "(?i)\\b(C_DIS|C_PTP|C_VEL|C_ORI|C_SPL)\\b",
                     "name": "constant.language.approximation.krl"
                 }
             ]
@@ -243,7 +249,7 @@
             "patterns": [
                 {
                     "comment": "System variables with $ prefix",
-                    "match": "(?i)(\\$)(BASE_DATA|TOOL_DATA|LOAD_DATA|ADVANCE|TOOL|BASE|LOAD|AXIS_ACT|POS_ACT|ACT_EX_AX|EX_AX_DATA|INITMOV|BWDSTART|VEL_PTP|ACC_PTP|ANOUT|OUT|IN|ANIN|ACC|VEL|APO|TIMER_STOP|TIMER_FLAG|TIMER|VEL\\.CP|ACT_BASE|ACT_TOOL|APO\\.CPTP|APO\\.CDIS|APO\\.CVEL|APO\\.CORI|VEL\\.ORI1|VEL\\.ORI2|ACC\\.ORI1|ACC\\.ORI2|OV_PRO|OV_JOG|MODE_OP|NULLFRAME|WORLD|ROOT|MSG_T|BRAKE_SIG|MOVE_ENABLE|DRIVES_ON|DRIVES_OFF|ALARM_STOP|T1|T2|AUT|EXT|PRO_ACT|PRO_IP|PRO_STATE0|PRO_STATE1|PRO_MOVE|CYCFLAG|FLAG|DATE|ROB_TIMER|STOPMESS|POWER_FAIL|IN_HOME|IN_HOME1|IN_HOME2|IN_HOME3|IN_HOME4|IN_HOME5|LINE_SEL_OK|MASTERINGTEST_REQ_INT|H_POS|GEAR_JERK|COLLMON_TOL_PRO|ERR|ERR\\.NUMBER|BRAKETEST_REQ_EX|BRAKETEST_REQ_INT|BRAKES_OK|BRAKETEST_WARN|EXT_START|LOOP_MSG|ACC_MA|ACC_AXIS|VEL_AXIS|DATA_SER1|DATA_SER2|DISTANCE|ASYNC_AXIS|POS_INT|POS_FOR|POS_BACK|TORQUE_AXIS|CURR_ACT|IBUS|IPO_MODE|OPERATING_MODE|TOOL_REF|BASE_REF|OV_MAX|PROG_NAME|NUM_AX)\\b",
+                    "match": "(?i)(\\$)(BASE_DATA|TOOL_DATA|LOAD_DATA|ADVANCE|TOOL|BASE|LOAD|AXIS_ACT|POS_ACT|ACT_EX_AX|EX_AX_DATA|INITMOV|BWDSTART|VEL_PTP|ACC_PTP|ANOUT|OUT|IN|ANIN|ACC|VEL|APO|TIMER_STOP|TIMER_FLAG|TIMER|VEL\\.CP|ACT_BASE|ACT_TOOL|APO\\.CPTP|APO\\.CDIS|APO\\.CVEL|APO\\.CORI|VEL\\.ORI1|VEL\\.ORI2|ACC\\.ORI1|ACC\\.ORI2|OV_PRO|OV_JOG|MODE_OP|NULLFRAME|WORLD|ROOT|MSG_T|BRAKE_SIG|MOVE_ENABLE|DRIVES_ON|DRIVES_OFF|ALARM_STOP|T1|T2|AUT|EXT|PRO_ACT|PRO_IP|PRO_STATE0|PRO_STATE1|PRO_MOVE|CYCFLAG|FLAG|DATE|ROB_TIMER|STOPMESS|POWER_FAIL|IN_HOME|IN_HOME1|IN_HOME2|IN_HOME3|IN_HOME4|IN_HOME5|LINE_SEL_OK|MASTERINGTEST_REQ_INT|H_POS|GEAR_JERK|COLLMON_TOL_PRO|ERR|ERR\\.NUMBER|BRAKETEST_REQ_EX|BRAKETEST_REQ_INT|BRAKES_OK|BRAKETEST_WARN|EXT_START|LOOP_MSG|ACC_MA|ACC_AXIS|VEL_AXIS|DATA_SER1|DATA_SER2|DISTANCE|ASYNC_AXIS|POS_INT|POS_FOR|POS_BACK|TORQUE_AXIS|CURR_ACT|IBUS|IPO_MODE|OPERATING_MODE|TOOL_REF|BASE_REF|OV_MAX|PROG_NAME|NUM_AX|DSEC|SEROUT|SERIN|CURR_RED|PRO_I_P|T_PROG|T_STOP|T_WAIT|W_POS|W_AXIS|SR_SER1|SR_SER2|OUT_RET|ON_ERR_PROG|ERR_C)\\b",
                     "captures": {
                         "1": {
                             "name": "punctuation.definition.variable.krl"
@@ -255,7 +261,7 @@
                 },
                 {
                     "comment": "Enum constants with # prefix",
-                    "match": "(?i)(#)(INITMOV|BASE|TOOL|CP_PARAMS|PTP_PARAMS|SPLINE_INIT|T1|T2|AUT|EX|P_FREE|P_RESET|P_ACTIVE|P_STOP|P_END|ISTEP|PSTEP|MSTEP|CSTEP|GO|BSTEP|BUSY|IDLE|CANCELLED|PEND|PATH|FORWARD|BACKWARD|TCP|VAR|CONSTANT|JOINT|SOURCE|BEST|WORLD|ROBROOT|OFF|INSIDE|OUTSIDE|INSIDE_STOP|OUTSIDE_STOP|RELEASED|PRESSED|CMD_OK|CMD_ABORT|CMD_STAT|CMD_SYN|FMT_ERR|DATA_ERR|DATA_OK|COND|ABS|SYNC|ASYNC)\\b",
+                    "match": "(?i)(#)(INITMOV|BASE|TOOL|CP_PARAMS|PTP_PARAMS|SPLINE_INIT|T1|T2|AUT|EX|P_FREE|P_RESET|P_ACTIVE|P_STOP|P_END|ISTEP|PSTEP|MSTEP|CSTEP|GO|BSTEP|BUSY|IDLE|CANCELLED|PEND|PATH|FORWARD|BACKWARD|TCP|VAR|CONSTANT|JOINT|SOURCE|BEST|WORLD|ROBROOT|OFF|INSIDE|OUTSIDE|INSIDE_STOP|OUTSIDE_STOP|RELEASED|PRESSED|CMD_OK|CMD_ABORT|CMD_STAT|CMD_SYN|FMT_ERR|DATA_ERR|DATA_OK|COND|ABS|SYNC|ASYNC|NOTHING|WORKING|FINISHED|ERROR|ABORTED|READY|WAITING|RUNNING|SUSPENDED|TERMINATED)\\b",
                     "captures": {
                         "1": {
                             "name": "punctuation.definition.enum.krl"

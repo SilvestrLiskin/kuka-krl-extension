@@ -182,6 +182,8 @@ export const CODE_KEYWORDS = [
   "C_LIN",
   "C_VEL",
   "C_DIS",
+  "C_ORI",
+  "C_SPL",
   // SPLINE parametreleri (SPTP, SLIN, SCIRC için)
   "SVEL",
   "SVEL_JOINT",
