@@ -1,0 +1,218 @@
+{
+    "$schema": "vscode://schemas/color-theme",
+    "name": "KRL Bearded Surprising Eggplant",
+    "type": "dark",
+    "colors": {
+        "editor.background": "#0D1117",
+        "editor.foreground": "#C9D1D9",
+        "editor.selectionBackground": "#3B5998",
+        "editor.lineHighlightBackground": "#161B2280",
+        "editor.inactiveSelectionBackground": "#21262D",
+        "editorCursor.foreground": "#58A6FF",
+        "editorWhitespace.foreground": "#484F58",
+        "editorLineNumber.foreground": "#6E7681",
+        "editorLineNumber.activeForeground": "#C9D1D9",
+        "editorIndentGuide.background1": "#21262D",
+        "editorIndentGuide.activeBackground1": "#3B434B",
+        "editorBracketMatch.background": "#3B5998",
+        "editorBracketMatch.border": "#58A6FF",
+        "editor.foldBackground": "#1F6FEB20",
+        "sideBar.background": "#010409",
+        "sideBar.foreground": "#C9D1D9",
+        "activityBar.background": "#0D1117",
+        "activityBar.foreground": "#C9D1D9",
+        "statusBar.background": "#FF6600",
+        "statusBar.foreground": "#FFFFFF",
+        "titleBar.activeBackground": "#161B22",
+        "titleBar.activeForeground": "#C9D1D9",
+        "tab.activeBackground": "#0D1117",
+        "tab.inactiveBackground": "#010409",
+        "tab.activeBorder": "#FF6600",
+        "focusBorder": "#1F6FEB"
+    },
+    "tokenColors": [
+        {
+            "name": "Comments",
+            "scope": [
+                "comment",
+                "comment.line",
+                "comment.block"
+            ],
+            "settings": {
+                "foreground": "#8B949E",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "FOLD regions",
+            "scope": [
+                "meta.fold.krl",
+                "comment.line.fold.krl"
+            ],
+            "settings": {
+                "foreground": "#6E7681",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "Keywords",
+            "scope": [
+                "keyword",
+                "keyword.control",
+                "keyword.control.krl",
+                "keyword.other.krl"
+            ],
+            "settings": {
+                "foreground": "#FF7B72"
+            }
+        },
+        {
+            "name": "Storage types",
+            "scope": [
+                "storage.type",
+                "storage.type.krl",
+                "storage.modifier",
+                "storage.type.interrupt.krl",
+                "storage.type.trigger.krl"
+            ],
+            "settings": {
+                "foreground": "#FF7B72"
+            }
+        },
+        {
+            "name": "Movement commands",
+            "scope": [
+                "keyword.function.movement.krl"
+            ],
+            "settings": {
+                "foreground": "#FF6600",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Approximation modes",
+            "scope": [
+                "constant.language.approximation.krl"
+            ],
+            "settings": {
+                "foreground": "#FFA657"
+            }
+        },
+        {
+            "name": "Strings",
+            "scope": [
+                "string",
+                "string.quoted",
+                "string.quoted.double.krl"
+            ],
+            "settings": {
+                "foreground": "#A5D6FF"
+            }
+        },
+        {
+            "name": "Numbers",
+            "scope": [
+                "constant.numeric",
+                "constant.numeric.krl",
+                "constant.numeric.hex.krl",
+                "constant.numeric.binary.krl"
+            ],
+            "settings": {
+                "foreground": "#79C0FF"
+            }
+        },
+        {
+            "name": "Boolean constants",
+            "scope": [
+                "constant.language",
+                "constant.language.boolean.krl"
+            ],
+            "settings": {
+                "foreground": "#79C0FF"
+            }
+        },
+        {
+            "name": "Enum values",
+            "scope": [
+                "variable.other.enummember.krl",
+                "constant.language.enum.krl"
+            ],
+            "settings": {
+                "foreground": "#7EE787"
+            }
+        },
+        {
+            "name": "System variables ($)",
+            "scope": [
+                "variable.language.system.krl",
+                "punctuation.definition.variable.krl"
+            ],
+            "settings": {
+                "foreground": "#FFA657",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "Axis components",
+            "scope": [
+                "variable.language.axis.krl"
+            ],
+            "settings": {
+                "foreground": "#D2A8FF"
+            }
+        },
+        {
+            "name": "Data arrays",
+            "scope": [
+                "variable.language.data.krl"
+            ],
+            "settings": {
+                "foreground": "#7EE787"
+            }
+        },
+        {
+            "name": "Functions",
+            "scope": [
+                "entity.name.function",
+                "support.function",
+                "support.function.builtin.krl"
+            ],
+            "settings": {
+                "foreground": "#D2A8FF"
+            }
+        },
+        {
+            "name": "Operators",
+            "scope": [
+                "keyword.operator",
+                "keyword.operator.comparison.krl",
+                "keyword.operator.arithmetic.krl",
+                "keyword.operator.logical.krl",
+                "keyword.operator.bitwise.krl"
+            ],
+            "settings": {
+                "foreground": "#FF7B72"
+            }
+        },
+        {
+            "name": "Punctuation",
+            "scope": [
+                "punctuation.krl",
+                "punctuation.definition.enum.krl"
+            ],
+            "settings": {
+                "foreground": "#C9D1D9"
+            }
+        },
+        {
+            "name": "Invalid identifiers",
+            "scope": [
+                "invalid.illegal"
+            ],
+            "settings": {
+                "foreground": "#FF6600",
+                "fontStyle": "underline strikethrough"
+            }
+        }
+    ]
+}

@@ -130,7 +130,7 @@ Hierarchical view of your KUKA project:
 
 ### 🎨 Color Themes
 
-7 included themes:
+67 included themes, featuring the full **Bearded Theme** collection:
 
 - **KUKA WorkVisual** — light theme matching WorkVisual IDE
 - **KUKA WorkVisual Dark** — dark version with orange accents
