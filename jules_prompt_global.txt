@@ -1,0 +1,29 @@
+Task: Global Optimization & Technical Debt Audit for KUKA KRL Extension
+
+Role: Lead DevOps Engineer & Performance Specialist.
+
+Objective: Perform a deep audit and optimization of the entire codebase to improve performance, maintainability, and ensure 100% theme consistency.
+
+Technical Requirements:
+1. Performance Optimization (Server):
+   - Analyze `extension/server/src/features/diagnostics.ts` and related files.
+   - Pre-compile all Regular Expressions used for pattern matching and diagnostics.
+   - Optimize workspace root loading to be fully asynchronous and non-blocking.
+2. Code Quality & Consistency:
+   - Audit all 67 JSON theme files in `extension/client/themes/`.
+   - Ensure a unified set of KRL token scopes is supported in every theme (e.g., `meta.fold.krl`, `variable.language.system.krl`, `keyword.function.movement.krl`).
+   - Standardize `uiTheme` assignments (vs/vs-dark/hc-black).
+3. Technical Debt Cleanup:
+   - Resolve all warnings in `extension/package.json` (missing icons, metadata gaps).
+   - Identify and remove any dead code or unused assets in the `client` and `server` folders.
+4. Testing & Verification:
+   - Expand the test suite in `extension/tests/` to include theme validation and performance benchmarks.
+   - Ensure the project compiles flawlessly (`npm run compile`).
+
+Deliverables:
+- A detailed "Summary of Changes".
+- Verification report (compile and test results).
+- Mandatory "Prevention" section: Explain how to avoid code debt and performance regression in the future.
+
+Report the Session ID once the work is pushed to a branch.
+Do not ask for plan approval if you are confident; proceed to execution to demonstrate autonomy.

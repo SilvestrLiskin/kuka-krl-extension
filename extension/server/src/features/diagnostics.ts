@@ -8,10 +8,51 @@ import { CODE_KEYWORDS } from "../lib/parser";
 import { VariableInfo } from "../types";
 import { t } from "../lib/i18n";
 
+// =============================================================================
+// Pre-compiled Regular Expressions for Performance
+// =============================================================================
+
+const REGEX_INVISIBLE_CHARS = /[\u200B-\u200F\uFEFF\u00AD\u2060]/g;
+const REGEX_NON_ASCII = /[^\x00-\x7F]/g;
+const REGEX_DEFDAT_START = /^DEFDAT\s+(\w+)(?:\s+PUBLIC)?/i;
+const REGEX_PUBLIC = /PUBLIC/i;
+const REGEX_ENDDAT = /^ENDDAT\b/i;
+const REGEX_IS_DECL_LINE = /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+\w+/i;
+const REGEX_SIGNAL = /^SIGNAL\b/i;
+const REGEX_STRUC = /^STRUC\b/i;
+const REGEX_GLOBAL = /\bGLOBAL\b/i;
+const REGEX_DECL_SIGNAL_STRUC = /^(?:DECL|SIGNAL|STRUC)\b/i;
+const REGEX_VAR_NAME_DECL = /^(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?\w+\s+(\w+)/i;
+const REGEX_STARTS_WITH_DIGIT = /^\d/;
+
+const REGEX_VARIABLE = /\b([a-zA-Z_]\w*)\b/g;
+const REGEX_LOCAL_DECL = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
+const REGEX_ARRAY_BRACKETS = /\[.*?\]/g;
+const REGEX_VALID_VAR_NAME = /^[a-zA-Z_]\w*$/;
+const REGEX_SKIP_DECL_STRUC_SIGNAL = /^\s*(?:GLOBAL\s+)?(?:DECL|STRUC|SIGNAL)\b/i;
+const REGEX_SKIP_DEF = /^\s*(?:GLOBAL\s+)?(?:DEF|DEFFCT)\b/i;
+const REGEX_STRING_CONTENT = /"[^"]*"/g;
+const REGEX_SCIENTIFIC_NOTATION = /\d+\.?\d*[eE][+-]?\d+/g;
+
+const REGEX_VEL_CP = /\$VEL\.CP\s*=\s*(\d+(?:\.\d+)?)/gi;
+const REGEX_VEL_PTP = /\$VEL_PTP\s*=\s*(\d+(?:\.\d+)?)/gi;
+
+const REGEX_TOOL_INIT = /\$TOOL\s*=|BAS\s*\(\s*#INITMOV/i;
+const REGEX_BASE_INIT = /\$BASE\s*=|BAS\s*\(\s*#INITMOV/i;
+const REGEX_MOVEMENT = /^\s*(?:PTP|LIN|CIRC|SPTP|SLIN|SCIRC)\s+/i;
+const REGEX_DEF_RESET = /^\s*(?:DEF|DEFFCT)\s+/i;
+
+const REGEX_FUNC_DEF = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
+
+const REGEX_LABEL = /^\w+\s*:\s*$/i;
+const REGEX_BLOCK_END = /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i;
+const REGEX_EXIT_KEYWORDS = ["RETURN", "EXIT", "HALT"];
+
+
 /**
- * Görünmez Unicode karakterlerini kaldırır.
- * Bu karakterler bazen web sayfalarından veya belgelerden kopyalama sırasında eklenir
- * ve kelimeleri parçaladıkları için hatalara neden olabilir (örn: "WAIT" -> "W", "it").
+ * Удаляет невидимые Unicode-символы.
+ * Эти символы могут появляться при копировании из веб-страниц или документов
+ * и вызывают ошибки, разрывая ключевые слова (например, "WAIT" превращается в "W" и "it").
  */
 function stripInvisibleChars(text: string): string {
   // Zero-width characters ve diğer görünmez karakterleri kaldır
@@ -23,7 +64,7 @@ function stripInvisibleChars(text: string): string {
   // U+FEFF (Byte Order Mark / Zero Width No-Break Space)
   // U+00AD (Soft Hyphen)
   // U+2060 (Word Joiner)
-  return text.replace(/[\u200B-\u200F\uFEFF\u00AD\u2060]/g, "");
+  return text.replace(REGEX_INVISIBLE_CHARS, "");
 }
 
 // Önbellek - fonksiyon isimleri için hızlı arama
@@ -51,8 +92,8 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * .dat dosyasını doğrular - GLOBAL/PUBLIC tutarlılığını kontrol eder.
-   * Ayrıca ASCII olmayan karakterleri ve kapatılmamış stringleri kontrol eder.
+   * Проверяет .dat файл на соответствие правилам GLOBAL/PUBLIC.
+   * Также ищет символы вне ASCII и незакрытые кавычки в строках.
    */
   public async validateDatFile(
     document: TextDocument,
@@ -86,7 +127,7 @@ export class DiagnosticsProvider {
         const checkPart =
           commentIndex >= 0 ? line.substring(0, commentIndex) : line;
 
-        const nonAsciiMatch = checkPart.match(/[^\x00-\x7F]/g);
+        const nonAsciiMatch = checkPart.match(REGEX_NON_ASCII);
         if (nonAsciiMatch) {
           // Her bir non-ASCII karakteri bul ve işaretle
           for (let j = 0; j < checkPart.length; j++) {
@@ -148,15 +189,15 @@ export class DiagnosticsProvider {
       }
 
       // DEFDAT başlangıcını algıla
-      const defdatMatch = trimmedLine.match(/^DEFDAT\s+(\w+)(?:\s+PUBLIC)?/i);
+      const defdatMatch = trimmedLine.match(REGEX_DEFDAT_START);
       if (defdatMatch) {
         insideDefdat = true;
-        insidePublicDefdat = /PUBLIC/i.test(trimmedLine);
+        insidePublicDefdat = REGEX_PUBLIC.test(trimmedLine);
         continue;
       }
 
       // DEFDAT sonunu algıla
-      if (/^ENDDAT\b/i.test(trimmedLine)) {
+      if (REGEX_ENDDAT.test(trimmedLine)) {
         insideDefdat = false;
         insidePublicDefdat = false;
         continue;
@@ -165,20 +206,18 @@ export class DiagnosticsProvider {
       if (insideDefdat) {
         // Bildirim satırı mı kontrol et
         const isDeclLine =
-          /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+\w+/i.test(
-            trimmedLine,
-          ) ||
-          /^SIGNAL\b/i.test(trimmedLine) ||
-          /^STRUC\b/i.test(trimmedLine);
+          REGEX_IS_DECL_LINE.test(trimmedLine) ||
+          REGEX_SIGNAL.test(trimmedLine) ||
+          REGEX_STRUC.test(trimmedLine);
 
         if (!isDeclLine) continue;
 
         // GLOBAL anahtar kelimesi var mı?
-        const hasGlobal = /\bGLOBAL\b/i.test(trimmedLine);
+        const hasGlobal = REGEX_GLOBAL.test(trimmedLine);
 
         if (insidePublicDefdat) {
           // PUBLIC DEFDAT içinde GLOBAL olmalı
-          if (!hasGlobal && /^(?:DECL|SIGNAL|STRUC)\b/i.test(trimmedLine)) {
+          if (!hasGlobal && REGEX_DECL_SIGNAL_STRUC.test(trimmedLine)) {
             const newDiagnostic: Diagnostic = {
               severity: DiagnosticSeverity.Warning,
               range: {
@@ -207,9 +246,7 @@ export class DiagnosticsProvider {
         }
 
         // KUKA 24-karakter değişken isim limitini kontrol et
-        const declMatch = trimmedLine.match(
-          /^(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?\w+\s+(\w+)/i,
-        );
+        const declMatch = trimmedLine.match(REGEX_VAR_NAME_DECL);
         if (declMatch) {
           const varName = declMatch[1];
           // 24-karakter limiti
@@ -228,7 +265,7 @@ export class DiagnosticsProvider {
             });
           }
           // Rakamla başlayan isimler
-          if (/^\d/.test(varName)) {
+          if (REGEX_STARTS_WITH_DIGIT.test(varName)) {
             diagnostics.push({
               severity: DiagnosticSeverity.Error,
               range: {
@@ -259,7 +296,7 @@ export class DiagnosticsProvider {
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
     const lines = text.split(/\r?\n/);
-    const variableRegex = /\b([a-zA-Z_]\w*)\b/g;
+    const variableRegex = REGEX_VARIABLE;
 
     // MAKİNA DAT DOSYALARINI VE SİSTEM KONFİGÜRASYONUNU ATLA
     const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
@@ -279,16 +316,15 @@ export class DiagnosticsProvider {
     );
 
     // Mevcut belgeden YEREL değişkenleri de çıkar
-    const localDeclRegex =
-      /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
+    const localDeclRegex = REGEX_LOCAL_DECL;
     let localMatch;
     while ((localMatch = localDeclRegex.exec(text)) !== null) {
       const varList = localMatch[1];
       const vars = varList
         .split(",")
-        .map((v) => v.replace(/\[.*?\]/g, "").trim());
+        .map((v) => v.replace(REGEX_ARRAY_BRACKETS, "").trim());
       for (const v of vars) {
-        if (/^[a-zA-Z_]\w*$/.test(v)) {
+        if (REGEX_VALID_VAR_NAME.test(v)) {
           validatedNames.add(v.toUpperCase());
         }
       }
@@ -306,19 +342,19 @@ export class DiagnosticsProvider {
       const line = lines[lineIndex];
 
       // Bildirim veya struct veya sinyal satırlarını atla
-      if (/^\s*(?:GLOBAL\s+)?(?:DECL|STRUC|SIGNAL)\b/i.test(line)) {
+      if (REGEX_SKIP_DECL_STRUC_SIGNAL.test(line)) {
         continue;
       }
 
       // DEF/DEFFCT satırlarını atla
-      if (/^\s*(?:GLOBAL\s+)?(?:DEF|DEFFCT)\b/i.test(line)) {
+      if (REGEX_SKIP_DEF.test(line)) {
         continue;
       }
 
       // Tırnak içindeki stringleri gizle
-      let processedLine = line.replace(/"[^"]*"/g, '""');
+      let processedLine = line.replace(REGEX_STRING_CONTENT, '""');
       // Bilimsel gösterimi gizle (örn: 1.0E+02)
-      processedLine = processedLine.replace(/\d+\.?\d*[eE][+-]?\d+/g, "0");
+      processedLine = processedLine.replace(REGEX_SCIENTIFIC_NOTATION, "0");
       // Görünmez Unicode karakterlerini kaldır (zero-width space vb.)
       processedLine = stripInvisibleChars(processedLine);
 
@@ -399,10 +435,8 @@ export class DiagnosticsProvider {
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    // Regex для $VEL.CP = значение
-    const velCpRegex = /\$VEL\.CP\s*=\s*(\d+(?:\.\d+)?)/gi;
-    // Regex для $VEL_PTP = значение
-    const velPtpRegex = /\$VEL_PTP\s*=\s*(\d+(?:\.\d+)?)/gi;
+    const velCpRegex = REGEX_VEL_CP;
+    const velPtpRegex = REGEX_VEL_PTP;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -463,10 +497,9 @@ export class DiagnosticsProvider {
     let baseInitialized = false;
 
     // Паттерны инициализации
-    const toolInitPattern = /\$TOOL\s*=|BAS\s*\(\s*#INITMOV/i;
-    const baseInitPattern = /\$BASE\s*=|BAS\s*\(\s*#INITMOV/i;
-    // Паттерны движения
-    const movementPattern = /^\s*(?:PTP|LIN|CIRC|SPTP|SLIN|SCIRC)\s+/i;
+    const toolInitPattern = REGEX_TOOL_INIT;
+    const baseInitPattern = REGEX_BASE_INIT;
+    const movementPattern = REGEX_MOVEMENT;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -518,7 +551,7 @@ export class DiagnosticsProvider {
       }
 
       // Сброс при новом DEF
-      if (/^\s*(?:DEF|DEFFCT)\s+/i.test(codePart)) {
+      if (REGEX_DEF_RESET.test(codePart)) {
         toolInitialized = false;
         baseInitialized = false;
       }
@@ -648,7 +681,7 @@ export class DiagnosticsProvider {
     const foundNames = new Map<string, { type: string; line: number }>();
 
     // Регулярки
-    const funcRegex = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
+    const funcRegex = REGEX_FUNC_DEF;
     // const varRegex = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(\w+)\s+(\w+)/i; // Reserved for future use
 
     for (let i = 0; i < lines.length; i++) {
@@ -698,7 +731,7 @@ export class DiagnosticsProvider {
     const lines = text.split(/\r?\n/);
 
     // Не включаем GOTO в exit keywords, т.к. код после GOTO может быть достижим через метки
-    const exitKeywords = ["RETURN", "EXIT", "HALT"];
+    const exitKeywords = REGEX_EXIT_KEYWORDS;
     let skipUntilBlockEnd = false;
     let lastExitKeyword = "";
 
@@ -713,17 +746,13 @@ export class DiagnosticsProvider {
       if (trimmed === "") continue;
 
       // Проверка метки (label:) - метка делает код достижимым через GOTO
-      if (/^\w+\s*:\s*$/i.test(trimmed)) {
+      if (REGEX_LABEL.test(trimmed)) {
         skipUntilBlockEnd = false;
         continue;
       }
 
       // Проверка конца блока - снимаем флаг
-      if (
-        /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i.test(
-          upperTrimmed,
-        )
-      ) {
+      if (REGEX_BLOCK_END.test(upperTrimmed)) {
         skipUntilBlockEnd = false;
         continue;
       }

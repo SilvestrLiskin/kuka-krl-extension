@@ -52,3 +52,19 @@ extension/
 - **Batch Operations**: Use `jules_batch_create` for tasks affecting >3 files.
 - **Verification**: Always run `npm run lint` and `npm run compile` to verify sessions.
 - **Reporting**: Provide reports in Russian as requested by the Lead Engineer.
+
+### Windows & PowerShell Protocol
+>
+> [!IMPORTANT]
+> **Anti-Hanging & Encoding Rules**
+> To prevent CLI freezes and encoding issues (e.g., `?????` instead of Cyrillic) on Windows:
+>
+> 1. **Prompt via File**: ALWAYS write long prompts to a text file (e.g., `prompt.txt`) instead of passing them as arguments.
+> 2. **Force UTF-8**: Set PowerShell encoding before piping:
+>
+>    ```powershell
+>    $OutputEncoding = [System.Console]::InputEncoding = [System.Console]::OutputEncoding = New-Object System.Text.UTF8Encoding;
+>    Get-Content prompt.txt | jules new --repo <owner>/<repo>
+>    ```
+>
+> 3. **Explicit Repo**: ALWAYS use the `--repo` flag if running outside the exact git root or if detection fails.

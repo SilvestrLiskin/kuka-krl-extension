@@ -1,2 +1,0 @@
-"Bearded Theme Arc"  
-"KRL_Bearded_Arc.json" 

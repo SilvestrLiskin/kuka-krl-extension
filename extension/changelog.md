@@ -5,6 +5,28 @@ All notable changes to this extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.2] - 2026-01-31
+
+### Added
+
+- **Full Bearded Theme Integration**: Completed the registration of all 65 professional Bearded themes.
+- **Total of 67 Professional Themes**: Unified collection of premium KRL themes including WorkVisual standards.
+
+### Fixed
+
+- **Theme Registration Sync**: Fixed 14 missing theme registrations in `package.json`.
+- **KRL Syntax Overrides**: Verified and ensured all integrated themes preserve KRL-specific syntax highlighting.
+
+---
+
+## [1.7.1] - 2026-01-30
+
+### Changed
+
+- Internal refactoring and stability improvements.
+
+---
+
 ## [1.7.0] - 2026-01-17
 
 ### Added

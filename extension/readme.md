@@ -23,9 +23,9 @@ This extension transforms VS Code into a **full-IDE experience** for KUKA robots
 
 ## ✨ Key Features
 
-### 🎨 18 Professional Themes
+### 🎨 67 Professional Themes
 
-Forget the boring default colors. We included **18 hand-crafted themes** specifically tuned for KRL syntax visibility.
+Forget the boring default colors. We included **67 hand-crafted themes**, incorporating the full **Bearded Theme collection**, specifically tuned for KRL syntax visibility.
 
 * **Classic**: `KRL Monokai`, `KRL High Contrast`
 * **Modern**: `KRL Dracula`, `KRL Nord`, `KRL One Dark Pro`

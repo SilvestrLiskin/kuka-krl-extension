@@ -349,6 +349,76 @@
         "path": "./client/themes/KRL_Bearded_vividLight.json"
       },
       {
+        "label": "KRL Bearded Exotic Altica",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Exotic_Altica.json"
+      },
+      {
+        "label": "KRL Bearded Exotic Coffee",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Exotic_Coffee.json"
+      },
+      {
+        "label": "KRL Bearded Exotic Coffee Cream",
+        "uiTheme": "vs",
+        "path": "./client/themes/KRL_Bearded_Exotic_Coffee_Cream.json"
+      },
+      {
+        "label": "KRL Bearded Exotic Coffee Reversed",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Exotic_Coffee_Reversed.json"
+      },
+      {
+        "label": "KRL Bearded Exotic Earth",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Exotic_Earth.json"
+      },
+      {
+        "label": "KRL Bearded Exotic Void",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Exotic_Void.json"
+      },
+      {
+        "label": "KRL Bearded Gold D Raynh Dark",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Gold_D_Raynh_Dark.json"
+      },
+      {
+        "label": "KRL Bearded Monokai",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Monokai.json"
+      },
+      {
+        "label": "KRL Bearded OLED",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_OLED.json"
+      },
+      {
+        "label": "KRL Bearded Solarized",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Solarized.json"
+      },
+      {
+        "label": "KRL Bearded Surprising Blueberry",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Surprising_Blueberry.json"
+      },
+      {
+        "label": "KRL Bearded Surprising Eggplant",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Surprising_Eggplant.json"
+      },
+      {
+        "label": "KRL Bearded Surprising Watermelon",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Surprising_Watermelon.json"
+      },
+      {
+        "label": "KRL Bearded Themanopia",
+        "uiTheme": "vs-dark",
+        "path": "./client/themes/KRL_Bearded_Themanopia.json"
+      },
+      {
         "label": "KRL WorkVisual Dark (Standard)",
         "uiTheme": "vs-dark",
         "path": "./client/themes/KRL_WorkVisual_Dark.json"

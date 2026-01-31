@@ -51,7 +51,7 @@ export function setFormattingSettings(
 
 export class KrlFormatter {
   /**
-   * Belge biçimlendirmesi sağlar - girinti ve anahtar kelime büyük harfleştirme.
+   * Выполняет форматирование документа: выравнивание отступов и приведение ключевых слов к верхнему регистру.
    */
   provideFormatting(
     params: DocumentFormattingParams,
