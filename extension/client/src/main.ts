@@ -18,8 +18,6 @@ import { ZipFileSystemProvider } from "./features/zipFileSystem";
 import { showCalculator } from "./features/calculator";
 import { initErrorLens } from "./features/errorLens";
 
-// KRL tanılama koleksiyonu
-const krlDiagnostics = vscode.languages.createDiagnosticCollection("krl");
 let lsClient: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -402,7 +400,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.workspace.onDidOpenTextDocument((doc) => {
       if (doc.languageId === "krl") {
-        runSyntaxCheck(doc);
         handleAutoFold();
       }
     }),
@@ -411,7 +408,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument((e) => {
       if (e.document.languageId === "krl") {
-        runSyntaxCheck(e.document);
         if (lsClient.state === State.Running) {
           lsClient.sendNotification("custom/validateFile", {
             uri: e.document.uri.toString(),
@@ -456,57 +452,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Отправляем настройки на сервер после запуска
     sendSettingsToServer();
-
-    vscode.workspace.textDocuments.forEach((doc) => {
-      if (doc.languageId === "krl") {
-        runSyntaxCheck(doc);
-      }
-    });
   });
-
-  context.subscriptions.push(krlDiagnostics);
 }
 
 export function deactivate(): Thenable<void> | undefined {
-  krlDiagnostics.clear();
-  krlDiagnostics.dispose();
   if (!lsClient) {
     return undefined;
   }
   return lsClient.stop();
-}
-
-/**
- * İstemci tarafında hafif sözdizimi kontrolü.
- */
-function runSyntaxCheck(document: vscode.TextDocument): void {
-  const issues: vscode.Diagnostic[] = [];
-
-  for (let i = 0; i < document.lineCount; i++) {
-    const line = document.lineAt(i);
-    const text = line.text.split(";")[0].trim();
-
-    if (!text) continue;
-
-    // GLOBAL kullanımını kontrol et
-    if (/\bGLOBAL\b/i.test(text)) {
-      const validContext =
-        /\b(DECL|DEF|DEFFCT|STRUC|SIGNAL|ENUM)\b/i.test(text) ||
-        /\b(INT|REAL|FRAME|CHAR|BOOL|STRING|E6AXIS|E6POS|AXIS|LOAD|POS)\b/i.test(
-          text,
-        );
-      if (!validContext) {
-        const idx = line.text.toUpperCase().indexOf("GLOBAL");
-        issues.push(
-          new vscode.Diagnostic(
-            new vscode.Range(i, idx, i, idx + 6),
-            t("warning.invalidGlobalUsage"),
-            vscode.DiagnosticSeverity.Warning,
-          ),
-        );
-      }
-    }
-  }
-
-  krlDiagnostics.set(document.uri, issues);
 }

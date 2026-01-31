@@ -21,7 +21,6 @@ interface Messages {
 
   // Warning messages
   "warning.noActiveKrlFile": string;
-  "warning.invalidGlobalUsage": string;
 
   // Error messages
   "error.serverNotRunning": string;
@@ -46,7 +45,6 @@ const en: Messages = {
   "info.noDeclarationsToSort": "KRL: No declarations to sort.",
 
   "warning.noActiveKrlFile": "No active KRL file.",
-  "warning.invalidGlobalUsage": "Invalid 'GLOBAL' modifier usage.",
 
   "error.serverNotRunning": "KRL Server is not running.",
 
@@ -68,7 +66,6 @@ const ru: Messages = {
   "info.noDeclarationsToSort": "KRL: Нет объявлений для сортировки.",
 
   "warning.noActiveKrlFile": "Нет активного KRL файла.",
-  "warning.invalidGlobalUsage": "Неверное использование модификатора 'GLOBAL'.",
 
   "error.serverNotRunning": "KRL сервер не запущен.",
 
@@ -92,7 +89,6 @@ const tr: Messages = {
   "info.noDeclarationsToSort": "KRL: Sıralanacak bildirim bulunamadı.",
 
   "warning.noActiveKrlFile": "Aktif bir KRL dosyası yok.",
-  "warning.invalidGlobalUsage": "Geçersiz 'GLOBAL' değiştirici kullanımı.",
 
   "error.serverNotRunning": "KRL Sunucusu çalışmıyor.",
 

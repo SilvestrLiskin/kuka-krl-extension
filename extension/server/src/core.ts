@@ -349,8 +349,6 @@ documents.onDidChangeContent(async (change) => {
   }
 
   if (document.uri.endsWith(".dat")) {
-    diagnostics.validateDatFile(document);
-
     // Struct tanımlarını güncelle
     const structs = extractStrucVariables(document.getText());
     Object.assign(state.structDefinitions, structs);
@@ -388,8 +386,18 @@ documents.onDidChangeContent(async (change) => {
     // Обновляем mergedVariables перед валидацией (могут быть загружены новые переменные)
     state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
 
-    // Kullanım doğrulaması - только если workspace полностью загружен
-    // Это предотвращает ложные ошибки "переменная не определена" при открытии файлов
+    // Genel GLOBAL kullanım doğrulaması
+    allDiagnostics.push(...diagnostics.validateGlobalUsage(currentDoc));
+
+    // .dat dosyaları için doğrulama
+    if (currentDoc.uri.toLowerCase().endsWith(".dat")) {
+      allDiagnostics.push(
+        ...diagnostics.validateDatFile(currentDoc, serverConfig.validateNonAscii),
+      );
+    }
+
+    // Kullanım doğrulaması - sadece çalışma alanı tamamen yüklendiyse
+    // Bu, dosya açılışında yanlış "değişken tanımlanmamış" hatalarını önler
     if (workspaceInitialized) {
       const varDiags = diagnostics.validateVariablesUsage(
         currentDoc,
@@ -474,11 +482,23 @@ connection.onNotification("custom/validateWorkspace", async () => {
 
       // Teşhis için TextDocument oluştur
       const doc = TextDocument.create(uri, "krl", 1, content);
+      const fileDiagnostics: import("vscode-languageserver/node").Diagnostic[] =
+        [];
 
       if (doc.uri.endsWith(".dat")) {
-        diagnostics.validateDatFile(doc);
+        fileDiagnostics.push(...diagnostics.validateDatFile(doc));
       }
-      diagnostics.validateVariablesUsage(doc, state.mergedVariables);
+      fileDiagnostics.push(
+        ...diagnostics.validateVariablesUsage(doc, state.mergedVariables),
+      );
+      fileDiagnostics.push(...diagnostics.validateGlobalUsage(doc));
+
+      if (fileDiagnostics.length > 0) {
+        connection.sendDiagnostics({
+          uri: doc.uri,
+          diagnostics: fileDiagnostics,
+        });
+      }
     } catch (e) {
       log(`Doğrulama hatası ${filePath}: ${e}`);
     }

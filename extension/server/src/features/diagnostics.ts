@@ -54,10 +54,10 @@ export class DiagnosticsProvider {
    * .dat dosyasını doğrular - GLOBAL/PUBLIC tutarlılığını kontrol eder.
    * Ayrıca ASCII olmayan karakterleri ve kapatılmamış stringleri kontrol eder.
    */
-  public async validateDatFile(
+  public validateDatFile(
     document: TextDocument,
     validateNonAscii: boolean = true,
-  ) {
+  ): Diagnostic[] {
     // SİSTEM DOSYALARINI ATLA (büyük/küçük harf duyarsız)
     const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
     if (
@@ -65,8 +65,7 @@ export class DiagnosticsProvider {
       lowerUri.includes("/system/") ||
       lowerUri.includes("/tp/")
     ) {
-      this.connection.sendDiagnostics({ uri: document.uri, diagnostics: [] });
-      return;
+      return [];
     }
 
     const diagnostics: Diagnostic[] = [];
@@ -236,7 +235,46 @@ export class DiagnosticsProvider {
         }
       }
     }
-    this.connection.sendDiagnostics({ uri: document.uri, diagnostics });
+    return diagnostics;
+  }
+
+  /**
+   * Doğrudan 'GLOBAL' kullanımını kontrol eder (Client'tan taşındı).
+   */
+  public validateGlobalUsage(document: TextDocument): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    const text = document.getText();
+    const lines = text.split(/\r?\n/);
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const commentIdx = line.indexOf(";");
+      const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
+
+      if (!/\bGLOBAL\b/i.test(codePart)) continue;
+
+      const validContext =
+        /\b(DECL|DEF|DEFFCT|STRUC|SIGNAL|ENUM)\b/i.test(codePart) ||
+        /\b(INT|REAL|FRAME|CHAR|BOOL|STRING|E6AXIS|E6POS|AXIS|LOAD|POS)\b/i.test(
+          codePart,
+        );
+
+      if (!validContext) {
+        const match = codePart.match(/\bGLOBAL\b/i);
+        if (match && match.index !== undefined) {
+          diagnostics.push({
+            severity: DiagnosticSeverity.Warning,
+            range: {
+              start: { line: i, character: match.index },
+              end: { line: i, character: match.index + 6 },
+            },
+            message: t("diag.invalidGlobalUsage"),
+            source: "krl-language-support",
+          });
+        }
+      }
+    }
+    return diagnostics;
   }
 
   /**

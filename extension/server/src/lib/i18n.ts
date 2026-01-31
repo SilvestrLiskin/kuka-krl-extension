@@ -65,10 +65,12 @@ interface ServerMessages {
   "action.changeToInt": string;
   "action.changeToReal": string;
   "action.wrapWithRound": string;
+  "diag.invalidGlobalUsage": string;
 }
 
 // English (default)
 const en: ServerMessages = {
+  "diag.invalidGlobalUsage": "Invalid 'GLOBAL' modifier usage.",
   "diag.notGlobalButPublic": "Declaration is not GLOBAL but DEFDAT is PUBLIC.",
   "diag.globalButNotPublic": "Declaration is GLOBAL but DEFDAT is not PUBLIC.",
   "diag.variableNotDefined": 'Variable "{0}" is not defined.',
@@ -130,6 +132,7 @@ const en: ServerMessages = {
 
 // Russian
 const ru: ServerMessages = {
+  "diag.invalidGlobalUsage": "Неверное использование модификатора 'GLOBAL'.",
   "diag.notGlobalButPublic": "Объявление не GLOBAL, но DEFDAT является PUBLIC.",
   "diag.globalButNotPublic": "Объявление GLOBAL, но DEFDAT не является PUBLIC.",
   "diag.variableNotDefined": 'Переменная "{0}" не определена.',
@@ -192,6 +195,7 @@ const ru: ServerMessages = {
 
 // Turkish
 const tr: ServerMessages = {
+  "diag.invalidGlobalUsage": "Geçersiz 'GLOBAL' değiştirici kullanımı.",
   "diag.notGlobalButPublic": "Bildirim GLOBAL değil ama DEFDAT PUBLIC.",
   "diag.globalButNotPublic": "Bildirim GLOBAL ama DEFDAT PUBLIC değil.",
   "diag.variableNotDefined": '"{0}" değişkeni tanımlı değil.',
