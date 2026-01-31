@@ -37,6 +37,7 @@ import { CodeLensProvider } from "./features/codeLens";
 import { CallHierarchyProvider } from "./features/callHierarchy";
 import { SymbolExtractor, extractStrucVariables } from "./lib/collector";
 import { getAllDatFiles, getAllSourceFiles } from "./lib/fileSystem";
+import { findWorkspaceRoot } from "./lib/workspaceResolver";
 import { setLocale } from "./lib/i18n";
 import * as fs from "fs";
 import * as path from "path";
@@ -302,26 +303,15 @@ documents.onDidChangeContent(async (change) => {
 
   // Örtülü Çalışma Alanı Çıkarımı
   if (!state.workspaceRoot) {
-    let currentDir = path.dirname(URI.parse(document.uri).fsPath);
+    const currentDir = path.dirname(URI.parse(document.uri).fsPath);
     // Kök bulmak için yukarı doğru ara
-    while (currentDir.length > 1) {
-      if (
-        fs.existsSync(path.join(currentDir, "KRC")) ||
-        fs.existsSync(path.join(currentDir, "R1")) ||
-        path.basename(currentDir).toUpperCase() === "KRC"
-      ) {
-        break;
-      }
-      const parent = path.dirname(currentDir);
-      if (parent === currentDir) break; // Köke ulaşıldı
-      currentDir = parent;
-    }
-    state.workspaceRoot = currentDir;
+    const root = await findWorkspaceRoot(currentDir);
+    state.workspaceRoot = root;
     log(`[ÖrtülüKök] Çıkarılan kök: ${state.workspaceRoot}`);
     diagnostics.setWorkspaceRoot(state.workspaceRoot);
 
     // onInitialized atlandığı için ilk tarama
-    const datFiles = await getAllDatFiles(state.workspaceRoot);
+    const datFiles = await getAllDatFiles(root);
     for (const filePath of datFiles) {
       try {
         const content = await fs.promises.readFile(filePath, "utf8");
@@ -338,7 +328,7 @@ documents.onDidChangeContent(async (change) => {
     }
 
     // Fonksiyonları da yükle
-    await extractFunctionsFromWorkspace(state.workspaceRoot);
+    await extractFunctionsFromWorkspace(root);
     state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
 
     // Fonksiyon önbelleğini güncelle
