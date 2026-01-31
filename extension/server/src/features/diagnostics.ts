@@ -29,6 +29,37 @@ function stripInvisibleChars(text: string): string {
 // Önbellek - fonksiyon isimleri için hızlı arama
 let functionNamesCache: Set<string> = new Set();
 
+const blockPairs: Record<string, string> = {
+  IF: "ENDIF",
+  FOR: "ENDFOR",
+  WHILE: "ENDWHILE",
+  LOOP: "ENDLOOP",
+  REPEAT: "UNTIL",
+  SWITCH: "ENDSWITCH",
+  DEF: "END",
+  DEFFCT: "ENDFCT",
+  DEFDAT: "ENDDAT",
+};
+
+// Обратный маппинг
+const closeToOpen: Record<string, string> = {};
+for (const [open, close] of Object.entries(blockPairs)) {
+  closeToOpen[close] = open;
+}
+
+// Pre-compiled regexes
+const openBlockRegexes = new Map<string, RegExp>();
+for (const key of Object.keys(blockPairs)) {
+  openBlockRegexes.set(key, new RegExp(`\\b${key}\\b`, "i"));
+}
+
+const closeBlockRegexes = new Map<string, RegExp>();
+for (const key of Object.keys(closeToOpen)) {
+  closeBlockRegexes.set(key, new RegExp(`\\b${key}\\b`, "i"));
+}
+
+const waitForRegex = /\bWAIT\s*$/i;
+
 export class DiagnosticsProvider {
   private connection: Connection;
   private workspaceRoot: string | null = null;
@@ -527,25 +558,6 @@ export class DiagnosticsProvider {
 
     const blockStack: BlockInfo[] = [];
 
-    // Маппинг открывающих на закрывающие
-    const blockPairs: Record<string, string> = {
-      IF: "ENDIF",
-      FOR: "ENDFOR",
-      WHILE: "ENDWHILE",
-      LOOP: "ENDLOOP",
-      REPEAT: "UNTIL",
-      SWITCH: "ENDSWITCH",
-      DEF: "END",
-      DEFFCT: "ENDFCT",
-      DEFDAT: "ENDDAT",
-    };
-
-    // Обратный маппинг
-    const closeToOpen: Record<string, string> = {};
-    for (const [open, close] of Object.entries(blockPairs)) {
-      closeToOpen[close] = open;
-    }
-
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
@@ -554,13 +566,13 @@ export class DiagnosticsProvider {
 
       // Проверка открывающих блоков
       for (const openKeyword of Object.keys(blockPairs)) {
-        const regex = new RegExp(`\\b${openKeyword}\\b`, "i");
+        const regex = openBlockRegexes.get(openKeyword)!;
         const match = regex.exec(codePart);
         if (match) {
           // Пропустить "WAIT FOR" — это команда ожидания условия, а не цикл FOR
           if (openKeyword === "FOR") {
             const beforeFor = codePart.substring(0, match.index);
-            if (/\bWAIT\s*$/i.test(beforeFor)) {
+            if (waitForRegex.test(beforeFor)) {
               continue; // Это WAIT FOR, пропускаем
             }
           }
@@ -575,7 +587,7 @@ export class DiagnosticsProvider {
 
       // Проверка закрывающих блоков
       for (const closeKeyword of Object.keys(closeToOpen)) {
-        const regex = new RegExp(`\\b${closeKeyword}\\b`, "i");
+        const regex = closeBlockRegexes.get(closeKeyword)!;
         const match = regex.exec(codePart);
         if (match) {
           const expectedOpen = closeToOpen[closeKeyword];
