@@ -36,7 +36,11 @@ import { CodeActionsProvider } from "./features/codeActions";
 import { CodeLensProvider } from "./features/codeLens";
 import { CallHierarchyProvider } from "./features/callHierarchy";
 import { SymbolExtractor, extractStrucVariables } from "./lib/collector";
-import { getAllDatFiles, getAllSourceFiles } from "./lib/fileSystem";
+import {
+  getAllDatFiles,
+  getAllSourceFiles,
+  findWorkspaceRoot,
+} from "./lib/fileSystem";
 import { setLocale } from "./lib/i18n";
 import * as fs from "fs";
 import * as path from "path";
@@ -302,21 +306,8 @@ documents.onDidChangeContent(async (change) => {
 
   // Örtülü Çalışma Alanı Çıkarımı
   if (!state.workspaceRoot) {
-    let currentDir = path.dirname(URI.parse(document.uri).fsPath);
-    // Kök bulmak için yukarı doğru ara
-    while (currentDir.length > 1) {
-      if (
-        fs.existsSync(path.join(currentDir, "KRC")) ||
-        fs.existsSync(path.join(currentDir, "R1")) ||
-        path.basename(currentDir).toUpperCase() === "KRC"
-      ) {
-        break;
-      }
-      const parent = path.dirname(currentDir);
-      if (parent === currentDir) break; // Köke ulaşıldı
-      currentDir = parent;
-    }
-    state.workspaceRoot = currentDir;
+    const currentDir = path.dirname(URI.parse(document.uri).fsPath);
+    state.workspaceRoot = await findWorkspaceRoot(currentDir);
     log(`[ÖrtülüKök] Çıkarılan kök: ${state.workspaceRoot}`);
     diagnostics.setWorkspaceRoot(state.workspaceRoot);
 

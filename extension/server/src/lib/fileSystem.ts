@@ -50,3 +50,42 @@ export async function getAllDatFiles(dir: string): Promise<string[]> {
 export async function getAllSourceFiles(dir: string): Promise<string[]> {
   return findFilesByExtension(dir, [".src", ".dat", ".sub"]);
 }
+
+/**
+ * Çalışma alanı kökünü bulmak için yukarı doğru arama yapar (Asenkron).
+ * "KRC" veya "R1" dizinlerini veya adı "KRC" olan bir dizini arar.
+ */
+export async function findWorkspaceRoot(startDir: string): Promise<string> {
+  let currentDir = startDir;
+  while (currentDir.length > 1) {
+    // 1. İsim kontrolü (En hızlısı, I/O gerektirmez)
+    if (path.basename(currentDir).toUpperCase() === "KRC") {
+      return currentDir;
+    }
+
+    // 2. Dizin kontrolü (Paralel ve asenkron)
+    try {
+      const [hasKrc, hasR1] = await Promise.all([
+        fs.promises
+          .access(path.join(currentDir, "KRC"))
+          .then(() => true)
+          .catch(() => false),
+        fs.promises
+          .access(path.join(currentDir, "R1"))
+          .then(() => true)
+          .catch(() => false),
+      ]);
+
+      if (hasKrc || hasR1) {
+        return currentDir;
+      }
+    } catch {
+      // Hata durumunda devam et
+    }
+
+    const parent = path.dirname(currentDir);
+    if (parent === currentDir) break;
+    currentDir = parent;
+  }
+  return currentDir;
+}
