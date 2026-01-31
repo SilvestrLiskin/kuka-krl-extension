@@ -351,7 +351,6 @@
         },
         "krl.deploy.password": {
           "type": "string",
-          "default": "kukauser",
           "description": "FTP Password"
         },
         "krl.deploy.targetPath": {
@@ -374,6 +373,8 @@
     "test": "node tests/extension.test.js"
   },
   "devDependencies": {
+    "@types/node": "^18.19.130",
+    "@types/vscode": "^1.108.1",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
     "eslint": "^9.39.2",
@@ -386,6 +387,7 @@
     "@types/adm-zip": "^0.5.7",
     "adm-zip": "^0.5.16",
     "basic-ftp": "^5.1.0",
+    "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12",
     "vscode-uri": "^3.1.0"

@@ -29,6 +29,7 @@ interface Messages {
   // Prompts
   "prompt.foldRegionName": string;
   "prompt.foldRegionPlaceholder": string;
+  "prompt.ftpPassword": string;
 
   // Pickers
   "picker.systemVariables": string;
@@ -52,6 +53,7 @@ const en: Messages = {
 
   "prompt.foldRegionName": "Enter name for FOLD region",
   "prompt.foldRegionPlaceholder": "e.g.: Initialization, Movement, Gripper",
+  "prompt.ftpPassword": "Enter FTP Password",
 
   "info.noSystemVariablesFound": "No system variables found in workspace.",
   "picker.systemVariables": "System Variables",
@@ -74,6 +76,7 @@ const ru: Messages = {
 
   "prompt.foldRegionName": "Введите имя для FOLD-региона",
   "prompt.foldRegionPlaceholder": "например: Инициализация, Движение, Захват",
+  "prompt.ftpPassword": "Введите пароль FTP",
 
   "info.noSystemVariablesFound":
     "Системные переменные не найдены в рабочем пространстве.",
@@ -98,6 +101,7 @@ const tr: Messages = {
 
   "prompt.foldRegionName": "FOLD bölgesi için isim girin",
   "prompt.foldRegionPlaceholder": "örn: Başlatma, Hareket, Gripper",
+  "prompt.ftpPassword": "FTP Şifresini Girin",
 
   "info.noSystemVariablesFound":
     "Çalışma alanında sistem değişkeni bulunamadı.",

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as ftp from "basic-ftp";
-// i18n import removed - not used in this file
+import { t } from "../i18n";
 
 export async function deployToRobot() {
   const editor = vscode.window.activeTextEditor;
@@ -29,8 +29,21 @@ export async function deployToRobot() {
   const config = vscode.workspace.getConfiguration("krl.deploy");
   const host = config.get<string>("ip", "172.31.1.147");
   const user = config.get<string>("user", "kukauser");
-  const password = config.get<string>("password", "kukauser");
+  let password = config.get<string>("password");
   const targetPath = config.get<string>("targetPath", "/R1/Program");
+
+  // If password is not set, prompt the user
+  if (!password) {
+    password = await vscode.window.showInputBox({
+      prompt: t("prompt.ftpPassword"),
+      password: true,
+    });
+  }
+
+  if (!password) {
+    // User cancelled or provided empty password
+    return;
+  }
 
   const client = new ftp.Client();
   // client.ftp.verbose = true;
