@@ -14,8 +14,7 @@ import { getKeywordDoc } from "../lib/krlDocs";
 
 export class InfoProvider {
   /**
-   * Fare ile üzerine gelindiğinde bilgi gösterir.
-   * Fonksiyonlar için imza, değişkenler için tip bilgisi gösterir.
+   * Отображает информацию при наведении курсора (Hover).
    */
   public async onHover(
     params: HoverParams,
@@ -28,7 +27,7 @@ export class InfoProvider {
     const lines = doc.getText().split(/\r?\n/);
     const lineText = lines[params.position.line];
 
-    // Bildirim satırlarını atla
+    // Пропускаем строки объявления
     if (/^\s*(GLOBAL\s+)?(DEF|DEFFCT|DECL|SIGNAL|STRUC)\b/i.test(lineText))
       return;
 
@@ -36,7 +35,7 @@ export class InfoProvider {
     if (!wordInfo) return;
     const symbolName = wordInfo.word;
 
-    // Anahtar kelime mi kontrol et
+    // 1. Ключевые слова
     if (CODE_KEYWORDS.includes(symbolName.toUpperCase())) {
       const lang = getLocale();
       const detailedDoc = getKeywordDoc(symbolName, lang);
@@ -58,7 +57,7 @@ export class InfoProvider {
       };
     }
 
-    // Sistem değişkeni mi kontrol et - önce dokümantasyonu ara
+    // 2. Системные переменные
     const lang = getLocale();
     const sysVarDoc = getSystemVarDoc(symbolName, lang);
     if (sysVarDoc) {
@@ -70,7 +69,6 @@ export class InfoProvider {
       };
     }
 
-    // Fallback: dokümantasyonu olmayan sistem değişkenleri için
     const sysVar = KSS_87_SYSTEM_VARS.find(
       (v) =>
         v.toUpperCase() === `$${symbolName}`.toUpperCase() ||
@@ -85,7 +83,7 @@ export class InfoProvider {
       };
     }
 
-    // Önce fonksiyon listesinden ara
+    // 3. Пользовательские функции (из кэша)
     const cachedFunc = state.functionsDeclared.find(
       (f) => f.name.toUpperCase() === symbolName.toUpperCase(),
     );
@@ -98,7 +96,7 @@ export class InfoProvider {
       };
     }
 
-    // Değişken listesinden ara
+    // 4. Переменные
     const variable = state.mergedVariables.find(
       (v) => v.name.toUpperCase() === symbolName.toUpperCase(),
     );
@@ -120,7 +118,7 @@ export class InfoProvider {
       };
     }
 
-    // Struct tanımlarından ara
+    // 5. Структуры
     for (const structName of Object.keys(state.structDefinitions)) {
       if (structName.toUpperCase() === symbolName.toUpperCase()) {
         const members = state.structDefinitions[structName];
@@ -133,7 +131,7 @@ export class InfoProvider {
       }
     }
 
-    // Önbellekte yoksa dosyalardan fonksiyon ara
+    // 6. Поиск функции по файлам (если нет в кэше)
     const result = await isSymbolDeclared(
       state.workspaceRoot,
       symbolName,

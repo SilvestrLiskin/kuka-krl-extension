@@ -1,6 +1,6 @@
 /**
- * Call Hierarchy Provider for KRL
- * Shows where functions are called from (incoming) and what they call (outgoing)
+ * Call Hierarchy Provider для KRL.
+ * Показывает, откуда вызвана функция (incoming) и какие функции вызывает она (outgoing).
  */
 
 import {
@@ -19,7 +19,7 @@ import { ServerState } from "../types";
 
 export class CallHierarchyProvider {
   /**
-   * Prepare call hierarchy - find the function at cursor position
+   * Подготовка иерархии вызовов - находит функцию под курсором.
    */
   prepareCallHierarchy(
     params: CallHierarchyPrepareParams,
@@ -34,7 +34,7 @@ export class CallHierarchyProvider {
 
     if (!line) return null;
 
-    // Find word at cursor position
+    // Находим слово под курсором
     const wordMatch = this.getWordAtPosition(line, position.character);
     if (!wordMatch) return null;
 
@@ -42,7 +42,7 @@ export class CallHierarchyProvider {
     const startChar = wordMatch.start;
     const endChar = wordMatch.end;
 
-    // Check if it's a function definition or call
+    // Проверяем, является ли это объявлением функции или вызовом
     const func = state.functionsDeclared.find(
       (f) => f.name.toUpperCase() === word.toUpperCase(),
     );
@@ -70,7 +70,7 @@ export class CallHierarchyProvider {
       ];
     }
 
-    // If not found in declared functions, return current location
+    // Если не найдено в объявленных функциях, возвращаем текущее местоположение
     return [
       {
         name: word,
@@ -88,7 +88,7 @@ export class CallHierarchyProvider {
   }
 
   /**
-   * Find all incoming calls (who calls this function)
+   * Находит все входящие вызовы (кто вызывает эту функцию).
    */
   incomingCalls(
     params: CallHierarchyIncomingCallsParams,
@@ -99,12 +99,13 @@ export class CallHierarchyProvider {
     const funcName = item.name;
     const results: CallHierarchyIncomingCall[] = [];
 
-    // Search all documents for calls to this function
+    // Регулярное выражение для поиска вызова функции
     const callPattern = new RegExp(
       `\\b${this.escapeRegex(funcName)}\\s*\\(`,
       "gi",
     );
 
+    // Ищем во всех открытых документах
     for (const doc of documents.all()) {
       const text = doc.getText();
       const lines = text.split(/\r?\n/);
@@ -113,11 +114,11 @@ export class CallHierarchyProvider {
         const line = lines[i];
         let match;
 
-        // Reset regex
+        // Сброс regex
         callPattern.lastIndex = 0;
 
         while ((match = callPattern.exec(line)) !== null) {
-          // Skip if it's the definition itself
+          // Пропускаем, если это само определение
           if (
             doc.uri === item.uri &&
             i === item.range.start.line &&
@@ -126,8 +127,13 @@ export class CallHierarchyProvider {
             continue;
           }
 
-          // Find the containing function
-          const containingFunc = this.findContainingFunction(lines, i, state);
+          // Находим содержащую функцию
+          const containingFunc = this.findContainingFunction(
+            lines,
+            i,
+            state,
+            doc.uri,
+          );
 
           if (containingFunc) {
             results.push({
@@ -145,7 +151,7 @@ export class CallHierarchyProvider {
   }
 
   /**
-   * Find all outgoing calls (what functions does this function call)
+   * Находит все исходящие вызовы (какие функции вызывает эта функция).
    */
   outgoingCalls(
     params: CallHierarchyOutgoingCallsParams,
@@ -160,26 +166,26 @@ export class CallHierarchyProvider {
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    // Find the range of this function
+    // Находим диапазон текущей функции
     const funcRange = this.findFunctionRange(lines, item.range.start.line);
     if (!funcRange) return [];
 
-    // Search for function calls within this function
+    // Ищем вызовы функций внутри этой функции
     for (let i = funcRange.start; i <= funcRange.end; i++) {
       const line = lines[i];
       if (!line) continue;
 
-      // Find function calls: word followed by (
+      // Поиск вызовов: слово, за которым следует (
       const callPattern = /\b([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/g;
       let match;
 
       while ((match = callPattern.exec(line)) !== null) {
         const calledName = match[1];
 
-        // Skip if it's the current function
+        // Пропускаем рекурсивные вызовы (или это баг логики?)
         if (calledName.toUpperCase() === item.name.toUpperCase()) continue;
 
-        // Skip keywords that look like function calls
+        // Пропускаем ключевые слова
         const keywords = [
           "IF",
           "WHILE",
@@ -191,13 +197,13 @@ export class CallHierarchyProvider {
         ];
         if (keywords.includes(calledName.toUpperCase())) continue;
 
-        // Find function definition
+        // Находим определение вызываемой функции
         const targetFunc = state.functionsDeclared.find(
           (f) => f.name.toUpperCase() === calledName.toUpperCase(),
         );
 
         if (targetFunc) {
-          // Check if already added
+          // Проверяем, добавлена ли уже
           const existing = results.find(
             (r) => r.to.name.toUpperCase() === calledName.toUpperCase(),
           );
@@ -244,7 +250,7 @@ export class CallHierarchyProvider {
   }
 
   /**
-   * Find word at position
+   * Находит слово в позиции.
    */
   private getWordAtPosition(
     line: string,
@@ -265,14 +271,15 @@ export class CallHierarchyProvider {
   }
 
   /**
-   * Find the function containing a line
+   * Находит функцию, содержащую указанную строку.
    */
   private findContainingFunction(
     lines: string[],
     lineNum: number,
     _state: ServerState,
+    uri: string,
   ): CallHierarchyItem | null {
-    // Look backwards for DEF or DEFFCT
+    // Ищем вверх DEF или DEFFCT
     const defPattern =
       /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
 
@@ -285,7 +292,7 @@ export class CallHierarchyProvider {
         return {
           name: funcName,
           kind: SymbolKind.Function,
-          uri: "", // Will be filled by caller
+          uri: uri, // Исправлено: передаем URI
           range: Range.create(i, startChar, i, startChar + funcName.length),
           selectionRange: Range.create(
             i,
@@ -296,7 +303,8 @@ export class CallHierarchyProvider {
         };
       }
 
-      // Stop if we hit END
+      // Если встретили END, значит мы не внутри функции (или вышли из предыдущей)
+      // Это примитивная логика, не учитывающая вложенность, но для KRL подходит (плоская структура)
       if (/^\s*END\b/i.test(lines[i]) && i < lineNum) {
         break;
       }
@@ -306,13 +314,13 @@ export class CallHierarchyProvider {
   }
 
   /**
-   * Find the range of a function starting at a line
+   * Находит границы функции (от startLine до END).
    */
   private findFunctionRange(
     lines: string[],
     startLine: number,
   ): { start: number; end: number } | null {
-    // Look for END or ENDFCT
+    // Ищем END или ENDFCT
     for (let i = startLine + 1; i < lines.length; i++) {
       if (/^\s*(END|ENDFCT)\b/i.test(lines[i])) {
         return { start: startLine, end: i };
@@ -322,7 +330,7 @@ export class CallHierarchyProvider {
   }
 
   /**
-   * Escape special regex characters
+   * Экранирование спецсимволов regex.
    */
   private escapeRegex(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

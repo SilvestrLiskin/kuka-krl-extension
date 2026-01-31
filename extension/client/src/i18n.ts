@@ -1,16 +1,16 @@
 /**
- * Internationalization (i18n) module for KRL Language Support extension.
- * Provides localized strings for the client-side (VS Code extension host).
+ * Модуль интернационализации (i18n) для расширения KRL Language Support.
+ * Предоставляет локализованные строки для клиентской части (расширения VS Code).
  */
 
 import * as vscode from "vscode";
 
-// Supported locales
+// Поддерживаемые локали
 type Locale = "en" | "ru" | "tr";
 
-// Message keys
+// Ключи сообщений
 interface Messages {
-  // Information messages
+  // Информационные сообщения
   "info.checkingAllFiles": string;
   "info.documentFormatted": string;
   "info.trailingWhitespaceRemoved": string;
@@ -19,23 +19,23 @@ interface Messages {
   "info.noDeclarationsToSort": string;
   "info.noSystemVariablesFound": string;
 
-  // Warning messages
+  // Предупреждения
   "warning.noActiveKrlFile": string;
   "warning.invalidGlobalUsage": string;
 
-  // Error messages
+  // Ошибки
   "error.serverNotRunning": string;
 
-  // Prompts
+  // Приглашения ввода (prompts)
   "prompt.foldRegionName": string;
   "prompt.foldRegionPlaceholder": string;
 
-  // Pickers
+  // Выбор (pickers)
   "picker.systemVariables": string;
   "picker.selectSystemVariable": string;
 }
 
-// English (default)
+// Английский (по умолчанию)
 const en: Messages = {
   "info.checkingAllFiles": "KRL: Checking all files...",
   "info.documentFormatted": "KRL: Document formatted.",
@@ -58,7 +58,7 @@ const en: Messages = {
   "picker.selectSystemVariable": "Select a system variable to find...",
 };
 
-// Russian
+// Русский
 const ru: Messages = {
   "info.checkingAllFiles": "KRL: Проверка всех файлов...",
   "info.documentFormatted": "KRL: Документ отформатирован.",
@@ -81,7 +81,7 @@ const ru: Messages = {
   "picker.selectSystemVariable": "Выберите системную переменную для поиска...",
 };
 
-// Turkish
+// Турецкий
 const tr: Messages = {
   "info.checkingAllFiles": "KRL: Tüm dosyalar kontrol ediliyor...",
   "info.documentFormatted": "KRL: Belge biçimlendirildi.",
@@ -108,7 +108,7 @@ const tr: Messages = {
 const locales: Record<Locale, Messages> = { en, ru, tr };
 
 /**
- * Get current VS Code display language.
+ * Получает текущий язык интерфейса VS Code.
  */
 function getCurrentLocale(): Locale {
   const vscodeLang = vscode.env.language;
@@ -118,14 +118,14 @@ function getCurrentLocale(): Locale {
 }
 
 /**
- * Get localized message by key.
- * Supports placeholders: {0}, {1}, etc.
+ * Получает локализованное сообщение по ключу.
+ * Поддерживает заполнители: {0}, {1} и т.д.
  */
 export function t(key: keyof Messages, ...args: (string | number)[]): string {
   const locale = getCurrentLocale();
   let message = locales[locale][key] || locales.en[key] || key;
 
-  // Replace placeholders
+  // Замена заполнителей
   args.forEach((arg, index) => {
     message = message.replace(`{${index}}`, String(arg));
   });
@@ -134,7 +134,7 @@ export function t(key: keyof Messages, ...args: (string | number)[]): string {
 }
 
 /**
- * Get all message keys for a specific locale.
+ * Получает все ключи сообщений для указанной локали.
  */
 export function getMessages(locale: Locale = "en"): Messages {
   return locales[locale];

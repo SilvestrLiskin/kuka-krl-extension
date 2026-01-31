@@ -17,7 +17,7 @@ import * as fs from "fs";
 
 export class RenameProvider {
   /**
-   * Yeniden adlandırma için hazırlık - sembolün yeniden adlandırılabilir olup olmadığını kontrol eder.
+   * Подготовка переименования (проверка возможности).
    */
   public async prepareRename(
     params: PrepareRenameParams,
@@ -41,7 +41,7 @@ export class RenameProvider {
 
     if (startChar === -1) return null;
 
-    // Anahtar kelimeleri yeniden adlandırmaya izin verme
+    // Запрещаем переименование ключевых слов
     const keywords = [
       "DEF",
       "DEFFCT",
@@ -76,7 +76,7 @@ export class RenameProvider {
   }
 
   /**
-   * Sembolü tüm dosyalarda yeniden adlandırır.
+   * Выполнение переименования.
    */
   public async onRename(
     params: RenameParams,
@@ -95,21 +95,19 @@ export class RenameProvider {
     const oldName = wordInfo.word;
     const newName = params.newName;
 
-    // Yeni isim geçerli mi kontrol et
+    // Валидация нового имени
     if (!/^[a-zA-Z_]\w*$/.test(newName)) {
       return null;
     }
 
     const changes: { [uri: string]: TextEdit[] } = {};
 
-    // Tüm kaynak dosyalarında ara
     const files = await getAllSourceFiles(state.workspaceRoot);
 
     for (const filePath of files) {
       const uri = URI.file(filePath).toString();
       let content: string;
 
-      // Açık belgeden veya dosyadan oku
       const openDoc = documents.get(uri);
       if (openDoc) {
         content = openDoc.getText();
@@ -131,7 +129,7 @@ export class RenameProvider {
   }
 
   /**
-   * İçerikte sembolü bulur ve değiştirir.
+   * Поиск и замена в содержимом файла.
    */
   private findAndReplaceInContent(
     content: string,
@@ -141,18 +139,14 @@ export class RenameProvider {
     const edits: TextEdit[] = [];
     const lines = content.split(/\r?\n/);
 
-    // Kelime sınırlarıyla eşleşen regex
     const regex = new RegExp(`\\b${escapeRegex(oldName)}\\b`, "gi");
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-
-      // Yorum kısmını atla (codePart kullanılıyor)
       const codePart = getCodePart(line);
 
       let match;
       while ((match = regex.exec(codePart)) !== null) {
-        // String içinde mi kontrol et
         if (isInsideString(codePart, match.index)) continue;
 
         edits.push(

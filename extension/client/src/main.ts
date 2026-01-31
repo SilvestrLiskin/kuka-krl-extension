@@ -18,19 +18,24 @@ import { ZipFileSystemProvider } from "./features/zipFileSystem";
 import { showCalculator } from "./features/calculator";
 import { initErrorLens } from "./features/errorLens";
 
-// KRL tanılama koleksiyonu
+// Коллекция диагностики KRL
 const krlDiagnostics = vscode.languages.createDiagnosticCollection("krl");
 let lsClient: LanguageClient;
 
+/**
+ * Точка входа в расширение.
+ * Активируется при открытии файлов .src, .dat, .sub или при запуске команд.
+ */
 export function activate(context: vscode.ExtensionContext) {
-  // Initialize Error Lens
+  // Инициализация Error Lens (отображение ошибок в строке)
   initErrorLens(context);
 
-  // Sunucu yolunu belirle
+  // Определение пути к серверу
   const serverPath = context.asAbsolutePath(
     path.join("server", "out", "core.js"),
   );
 
+  // Опции отладки сервера
   const debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
   const serverOptions: ServerOptions = {
     run: { module: serverPath, transport: TransportKind.stdio },
@@ -41,7 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
     },
   };
 
-  // KRL için girinti kuralları
+  // Настройка правил отступов для KRL
   vscode.languages.setLanguageConfiguration("krl", {
     indentationRules: {
       decreaseIndentPattern:
@@ -52,7 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   /**
-   * Отправляет настройки на сервер.
+   * Отправляет настройки расширения на сервер.
    */
   function sendSettingsToServer() {
     if (lsClient.state === State.Running) {
@@ -77,6 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
+  // Конфигурация клиента
   const clientConfig: LanguageClientOptions = {
     documentSelector: [{ scheme: "file", language: "krl" }],
     synchronize: {
@@ -85,6 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
     },
   };
 
+  // Создание клиента языка
   lsClient = new LanguageClient(
     "krlContext",
     "KRL Language Support",
@@ -93,10 +100,10 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   // =====================
-  // Komut Kayıtları
+  // Регистрация команд
   // =====================
 
-  // Çalışma alanını doğrulama komutu
+  // Команда проверки всего рабочего пространства
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.validateWorkspace", () => {
       if (lsClient.state === State.Running) {
@@ -108,7 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // Katlama komutları
+  // Команды сворачивания кода
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.foldAll", () =>
       vscode.commands.executeCommand("editor.foldAll"),
@@ -118,7 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
-  // Belgeyi biçimlendir komutu
+  // Команда форматирования документа
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.formatDocument", async () => {
       const editor = vscode.window.activeTextEditor;
@@ -131,7 +138,7 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // Sondaki boşlukları kaldır komutu
+  // Команда удаления пробелов в конце строк
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "krl.removeTrailingWhitespace",
@@ -171,7 +178,7 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
-  // Документация генератор
+  // Генератор документации
   const docGenerator = new DocGenerator();
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.generateDocumentation", () => {
@@ -180,10 +187,10 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   // =====================
-  // Tree Views
+  // Деревья просмотра (Tree Views)
   // =====================
 
-  // I/O Tree View
+  // I/O Signals Tree View
   const ioTreeProvider = new IOTreeProvider();
   vscode.window.registerTreeDataProvider("krlIO", ioTreeProvider);
   context.subscriptions.push(
@@ -201,14 +208,14 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // Find System Variables command
+  // Команда поиска системных переменных
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.findSystemVariables", () => {
       showSystemVariablesPicker();
     }),
   );
 
-  // Bildirimleri sırala komutu
+  // Команда сортировки объявлений переменных
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.sortDeclarations", async () => {
       const editor = vscode.window.activeTextEditor;
@@ -221,7 +228,7 @@ export function activate(context: vscode.ExtensionContext) {
       const text = document.getText();
       const lines = text.split(/\r?\n/);
 
-      // DEFDAT bloğunu bul
+      // Поиск блока DEFDAT
       let defdatStart = -1;
       let defdatEnd = -1;
       const declarations: { type: string; line: string; index: number }[] = [];
@@ -233,7 +240,7 @@ export function activate(context: vscode.ExtensionContext) {
           defdatEnd = i;
           break;
         } else if (defdatStart !== -1 && defdatEnd === -1) {
-          // DECL satırlarını topla
+          // Сбор строк DECL
           const match = lines[i].match(
             /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?(\w+)\s+/i,
           );
@@ -252,7 +259,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      // Tür önceliğine göre sırala
+      // Сортировка по типу
       const typeOrder = [
         "INT",
         "REAL",
@@ -275,7 +282,7 @@ export function activate(context: vscode.ExtensionContext) {
         return a.line.localeCompare(b.line);
       });
 
-      // Sıralanmış satırları uygula
+      // Применение сортировки
       const sortedLines = declarations.map((d) => d.line);
       const originalIndices = declarations
         .map((d) => d.index)
@@ -300,21 +307,21 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // Clean up unused variables command
+  // Команда очистки неиспользуемых переменных
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.cleanupUnusedVariables", () => {
       cleanupUnusedVariables();
     }),
   );
 
-  // Deploy command
+  // Команда деплоя (FTP)
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.deploy", () => {
       deployToRobot();
     }),
   );
 
-  // Zip Archive Support
+  // Поддержка ZIP архивов (просмотр)
   context.subscriptions.push(
     vscode.workspace.registerFileSystemProvider(
       "kuka-zip",
@@ -330,8 +337,7 @@ export function activate(context: vscode.ExtensionContext) {
       if (uris && uris.length > 0) {
         const zipUri = uris[0];
         const zipPath = zipUri.fsPath.replace(/\\/g, "/");
-        // Construct URI: kuka-zip:///path/to/zip/::/
-        // Need to ensure leading slash for path if not present (Windows drive letter)
+        // Конструкция URI: kuka-zip:///path/to/zip/::/
         const cleanPath = zipPath.startsWith("/") ? zipPath : "/" + zipPath;
         const rootUri = vscode.Uri.parse(`kuka-zip://${cleanPath}/::/`);
 
@@ -349,7 +355,7 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // FOLD bölgesi ekle komutu
+  // Команда вставки региона FOLD
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.insertFold", async () => {
       const editor = vscode.window.activeTextEditor;
@@ -386,10 +392,10 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   // =====================
-  // Otomatik İşlemler
+  // Автоматические действия
   // =====================
 
-  // Otomatik katlama işleyicisi
+  // Обработчик автоматического сворачивания
   const handleAutoFold = () => {
     const config = vscode.workspace.getConfiguration("krl");
     if (config.get<boolean>("autoFold", true)) {
@@ -422,14 +428,14 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // Kaydetme öncesi işlemler
+  // Действия перед сохранением
   context.subscriptions.push(
     vscode.workspace.onWillSaveTextDocument((e) => {
       if (e.document.languageId !== "krl") return;
 
       const config = vscode.workspace.getConfiguration("krl");
 
-      // Sondaki boşlukları otomatik kaldır
+      // Автоматическое удаление пробелов в конце
       if (config.get<boolean>("removeTrailingWhitespaceOnFormat", true)) {
         const edits: vscode.TextEdit[] = [];
         for (let i = 0; i < e.document.lineCount; i++) {
@@ -450,6 +456,7 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
+  // Запуск клиента
   lsClient.start().then(() => {
     // Отправляем локаль на сервер
     lsClient.sendNotification("custom/setLocale", vscode.env.language);
@@ -467,6 +474,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(krlDiagnostics);
 }
 
+/**
+ * Деактивация расширения.
+ */
 export function deactivate(): Thenable<void> | undefined {
   krlDiagnostics.clear();
   krlDiagnostics.dispose();
@@ -477,7 +487,8 @@ export function deactivate(): Thenable<void> | undefined {
 }
 
 /**
- * İstemci tarafında hafif sözdizimi kontrolü.
+ * Легкая проверка синтаксиса на стороне клиента.
+ * В основном дублируется сервером, но может быть полезно для быстрого отклика.
  */
 function runSyntaxCheck(document: vscode.TextDocument): void {
   const issues: vscode.Diagnostic[] = [];
@@ -488,7 +499,7 @@ function runSyntaxCheck(document: vscode.TextDocument): void {
 
     if (!text) continue;
 
-    // GLOBAL kullanımını kontrol et
+    // Проверка использования GLOBAL
     if (/\bGLOBAL\b/i.test(text)) {
       const validContext =
         /\b(DECL|DEF|DEFFCT|STRUC|SIGNAL|ENUM)\b/i.test(text) ||

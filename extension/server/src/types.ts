@@ -1,33 +1,33 @@
-// Değişken bilgisi arayüzü
+// Интерфейс информации о переменной
 export interface VariableInfo {
   name: string;
   type: string;
   value?: string;
 }
 
-// Struct haritası - struct adı => üye isimleri
+// Карта структур - имя структуры => список имен членов
 export interface StructMap {
   [structName: string]: string[];
 }
 
-// Değişken-Struct tipi haritası
+// Карта переменная-структура - имя переменной => тип структуры
 export interface VariableToStructMap {
   [varName: string]: string;
 }
 
-// Kelime bilgisi - pozisyondaki kelime ve alt değişken olup olmadığı
+// Информация о слове - само слово и является ли оно подпеременной (свойством)
 export interface WordInfo {
   word: string;
   isSubvariable: boolean;
 }
 
-// Kapsam satırları - fonksiyon/defdat bloğunun üst ve alt sınırları
+// Границы области видимости (функции или defdat блока)
 export interface EnclosuresLines {
   upperLine: number;
   bottomLine: number;
 }
 
-// Fonksiyon tanımı bilgisi
+// Информация об объявлении функции
 export interface FunctionDeclaration {
   uri: string;
   line: number;
@@ -37,7 +37,7 @@ export interface FunctionDeclaration {
   name: string;
 }
 
-// Sunucu durumu - tüm global veriler burada tutulur
+// Состояние сервера - хранит все глобальные данные
 export interface ServerState {
   workspaceRoot: string | null;
   fileVariablesMap: Map<string, VariableInfo[]>;

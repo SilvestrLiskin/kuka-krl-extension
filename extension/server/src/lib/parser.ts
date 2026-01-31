@@ -6,7 +6,8 @@ import { WordInfo, FunctionDeclaration } from "../types";
 export type ParseMode = "function" | "variable" | "struc";
 
 /**
- * Çalışma alanında bir sembolün tanımlı olup olmadığını kontrol eder.
+ * Проверяет, объявлен ли символ в рабочем пространстве.
+ * Выполняет поиск по всем файлам с использованием регулярных выражений.
  */
 export async function isSymbolDeclared(
   workspaceRoot: string | null,
@@ -46,7 +47,6 @@ export async function isSymbolDeclared(
       content =
         fileContentOverride ?? (await fs.promises.readFile(filePath, "utf8"));
     } catch {
-      // File read error - silently ignored
       continue;
     }
 
@@ -81,8 +81,7 @@ export async function isSymbolDeclared(
 }
 
 /**
- * Bir satırda belirli karakter pozisyonundaki kelimeyi çıkarır.
- * Düzeltildi: indexOf hatası giderildi, regex tabanlı arama kullanılıyor.
+ * Получает слово в указанной позиции в строке.
  */
 export function getWordAtPosition(
   lineText: string,
@@ -105,9 +104,9 @@ export function getWordAtPosition(
   return undefined;
 }
 
-// KRL anahtar kelimeleri - tekrarsız ve düzenlenmiş liste
+// Ключевые слова KRL
 export const CODE_KEYWORDS = [
-  // Temel yapısal anahtar kelimeler
+  // Структурные
   "GLOBAL",
   "DEF",
   "DEFFCT",
@@ -118,7 +117,7 @@ export const CODE_KEYWORDS = [
   "ENDDAT",
   "PUBLIC",
   "CONST",
-  // Kontrol yapıları
+  // Управление потоком
   "IF",
   "THEN",
   "ELSE",
@@ -137,14 +136,14 @@ export const CODE_KEYWORDS = [
   "CASE",
   "DEFAULT",
   "ENDSWITCH",
-  // Mantıksal operatörler
+  // Логические
   "AND",
   "OR",
   "NOT",
   "EXOR",
   "TRUE",
   "FALSE",
-  // Bit operatörleri
+  // Битовые
   "B_AND",
   "B_OR",
   "B_NOT",
@@ -152,7 +151,7 @@ export const CODE_KEYWORDS = [
   "B_NAND",
   "B_NOR",
   "B_XNOR",
-  // Veri tipleri
+  // Типы данных
   "DECL",
   "INT",
   "REAL",
@@ -168,7 +167,7 @@ export const CODE_KEYWORDS = [
   "STRUC",
   "ENUM",
   "SIGNAL",
-  // Hareket komutları
+  // Движение
   "PTP",
   "LIN",
   "CIRC",
@@ -182,7 +181,7 @@ export const CODE_KEYWORDS = [
   "C_LIN",
   "C_VEL",
   "C_DIS",
-  // SPLINE parametreleri (SPTP, SLIN, SCIRC için)
+  // Параметры сплайна
   "SVEL",
   "SVEL_JOINT",
   "SACC",
@@ -202,7 +201,7 @@ export const CODE_KEYWORDS = [
   "SORI_EX",
   "SJERK",
   "USE_CM_PRO_VALUES",
-  // Kesme ve kontrol
+  // Прерывания и управление
   "INTERRUPT",
   "TRIGGER",
   "BRAKE",
@@ -216,10 +215,10 @@ export const CODE_KEYWORDS = [
   "WAIT",
   "SEC",
   "DELAY",
-  // IR (Interrupt) sabitleri
+  // Константы прерываний
   "IR_STOPM",
   "IR_STOPMESS",
-  // Fonksiyonlar
+  // Системные функции
   "BAS",
   "BAS_COMMAND",
   "EXT",
@@ -236,7 +235,7 @@ export const CODE_KEYWORDS = [
   "MBX_REC",
   "VARSTATE",
   "PULSE",
-  // Mesaj fonksiyonları
+  // Сообщения
   "MsgNotify",
   "MsgQuit",
   "MsgDialog",
@@ -244,7 +243,7 @@ export const CODE_KEYWORDS = [
   "SET_KRLMSG",
   "EXISTS_KRLMSG",
   "CLEAR_KRLMSG",
-  // Matematik fonksiyonları
+  // Математика
   "ABS",
   "SIN",
   "COS",
@@ -255,14 +254,14 @@ export const CODE_KEYWORDS = [
   "SQRT",
   "MAX",
   "MIN",
-  // Kinematik
+  // Кинематика
   "INVERSE",
   "FORWARD",
   "BASE",
   "TOOL",
   "LOAD_DATA",
   "NULLFRAME",
-  // Koordinatlar
+  // Координаты
   "X",
   "Y",
   "Z",
@@ -283,7 +282,7 @@ export const CODE_KEYWORDS = [
   "E4",
   "E5",
   "E6",
-  // Tetikleme
+  // Триггеры
   "WHEN",
   "DO",
   "DISTANCE",
@@ -292,34 +291,34 @@ export const CODE_KEYWORDS = [
   "WITH",
   "IN",
   "OUT",
-  // Hareket parametreleri
+  // Параметры движения
   "PTP_PARAMS",
   "CP_PARAMS",
   "APO",
   "VEL",
   "ACC",
   "OV_PRO",
-  // Sistem modları
+  // Режимы
   "T1",
   "T2",
   "AUT",
   "MANUAL",
   "TCP",
-  // MASREF ve sistem değişkenleri
+  // MASREF
   "R_GAP_BETWEEN",
   "R_TABLE_LENGTH",
   "MASREFG_GROUPSEQUENCE",
-  // CD (Collision Detection) parametreleri
+  // Обнаружение столкновений
   "SET_CD_PARAMS",
-  // Init fonksiyonları
+  // Инициализация
   "INIT_IO",
   "INI",
   "INIT",
-  // === kuka_krl_wonderlibrary functions ===
-  // Math functions (mathlib)
+  // === Функции kuka_krl_wonderlibrary ===
+  // Математика (mathlib)
   "IN_RANGE",
   "IN_TOLERANCE",
-  // String functions (stringlib)
+  // Строки (stringlib)
   "STOF",
   "STOI",
   "FTOS",
@@ -327,13 +326,13 @@ export const CODE_KEYWORDS = [
   "BTOS",
   "PTOS",
   "MID",
-  // Logical functions (logicallib)
+  // Логика (logicallib)
   "BOOL_CHOOSEI",
   "BOOL_CHOOSEF",
   "BOOL_CHOOSE_E6POS",
   "BOOL_CHOOSESTR",
   "INT_CHOOSEF",
-  // File functions (fileslib)
+  // Файлы (fileslib)
   "fopen",
   "fclose",
   "fclose_all",
@@ -349,7 +348,7 @@ export const CODE_KEYWORDS = [
   "LOGDEBUG",
   "WRITE_FILE",
   "MSG",
-  // Geometry 2D functions (geometrylib)
+  // Геометрия 2D (geometrylib)
   "DISTANCE_POINT_POINT",
   "LINE2D_FROM_2P",
   "LINE2D_FROM_ABC",
@@ -363,7 +362,7 @@ export const CODE_KEYWORDS = [
   "CIRCUMFERENCE_CENTER",
   "CIRCUMFERENCE_RADIUS",
   "RADICAL_AXIS",
-  // Geometry 3D functions (geometrylib)
+  // Геометрия 3D (geometrylib)
   "PLANE_FROM_3p",
   "PLANE_X_GivenYZ",
   "PLANE_Y_GivenXZ",
@@ -377,12 +376,12 @@ export const CODE_KEYWORDS = [
   "LINE3D_xzGivenY",
   "LINE3D_xyGivenZ",
   "VECTOR3D_DIRECTOR_COSINE",
-  // Geometry structs
+  // Геометрические структуры
   "STR_LINE2D",
   "STR_CIRCUMFERENCE2D",
   "STR_PLANE",
   "STR_VECTOR3D",
   "STR_LINE3D",
-  // Math constant
+  // Константы
   "M_PI",
 ];

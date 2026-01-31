@@ -9,24 +9,22 @@ import { VariableInfo } from "../types";
 import { t } from "../lib/i18n";
 
 /**
- * Görünmez Unicode karakterlerini kaldırır.
- * Bu karakterler bazen web sayfalarından veya belgelerden kopyalama sırasında eklenir
- * ve kelimeleri parçaladıkları için hatalara neden olabilir (örn: "WAIT" -> "W", "it").
+ * Заменяет невидимые символы Unicode пробелами для сохранения длины строки и корректности индексов.
  */
 function stripInvisibleChars(text: string): string {
-  // Zero-width characters ve diğer görünmez karakterleri kaldır
+  // Заменяем невидимые символы на пробелы той же длины (обычно 1)
   // U+200B (Zero Width Space)
   // U+200C (Zero Width Non-Joiner)
   // U+200D (Zero Width Joiner)
   // U+200E (Left-to-Right Mark)
   // U+200F (Right-to-Left Mark)
-  // U+FEFF (Byte Order Mark / Zero Width No-Break Space)
+  // U+FEFF (Byte Order Mark)
   // U+00AD (Soft Hyphen)
   // U+2060 (Word Joiner)
-  return text.replace(/[\u200B-\u200F\uFEFF\u00AD\u2060]/g, "");
+  return text.replace(/[\u200B-\u200F\uFEFF\u00AD\u2060]/g, " ");
 }
 
-// Önbellek - fonksiyon isimleri için hızlı arama
+// Кэш имен функций
 let functionNamesCache: Set<string> = new Set();
 
 export class DiagnosticsProvider {
@@ -39,26 +37,20 @@ export class DiagnosticsProvider {
 
   public setWorkspaceRoot(root: string | null) {
     this.workspaceRoot = root;
-    // Kök değiştiğinde önbelleği sıfırla
     functionNamesCache.clear();
   }
 
-  /**
-   * Fonksiyon önbelleğini günceller.
-   */
   public updateFunctionCache(functionNames: string[]) {
     functionNamesCache = new Set(functionNames.map((n) => n.toUpperCase()));
   }
 
   /**
-   * .dat dosyasını doğrular - GLOBAL/PUBLIC tutarlılığını kontrol eder.
-   * Ayrıca ASCII olmayan karakterleri ve kapatılmamış stringleri kontrol eder.
+   * Валидация .dat файлов (GLOBAL/PUBLIC, кодировка).
    */
   public async validateDatFile(
     document: TextDocument,
     validateNonAscii: boolean = true,
   ) {
-    // SİSTEM DOSYALARINI ATLA (büyük/küçük harf duyarsız)
     const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
     if (
       lowerUri.includes("/mada/") ||
@@ -79,11 +71,10 @@ export class DiagnosticsProvider {
       const line = lines[i];
       const trimmedLine = line.trim();
 
-      // ASCII olmayan karakterleri kontrol et (validateNonAscii ayarı etkinse)
+      // Проверка ASCII
       if (validateNonAscii) {
         const nonAsciiMatch = line.match(/[^\x00-\x7F]/g);
         if (nonAsciiMatch) {
-          // Her bir non-ASCII karakteri bul ve işaretle
           for (let j = 0; j < line.length; j++) {
             if (line.charCodeAt(j) > 127) {
               const char = line[j];
@@ -101,9 +92,7 @@ export class DiagnosticsProvider {
         }
       }
 
-      // Kapatılmamış stringleri kontrol et
-      // Düzeltildi: String içindeki noktalı virgülleri yorum olarak algılama
-
+      // Проверка незакрытых строк
       let inString = false;
       let quoteCount = 0;
       let effectiveLineLength = line.length;
@@ -114,17 +103,13 @@ export class DiagnosticsProvider {
           inString = !inString;
           quoteCount++;
         } else if (char === ";" && !inString) {
-          // String dışındaysak, bu bir yorum başlangıcıdır
           effectiveLineLength = j;
           break;
         }
       }
 
-      // Yorum kısmını at
       const codePart = line.substring(0, effectiveLineLength);
-      // Sayılan tırnaklar yorum öncesi kısımdakilerdir
 
-      // Eğer tırnak sayısı tekse, string kapatılmamıştır
       if (quoteCount % 2 !== 0) {
         const firstQuote = codePart.indexOf('"');
         diagnostics.push({
@@ -138,7 +123,7 @@ export class DiagnosticsProvider {
         });
       }
 
-      // DEFDAT başlangıcını algıla
+      // DEFDAT логика
       const defdatMatch = trimmedLine.match(/^DEFDAT\s+(\w+)(?:\s+PUBLIC)?/i);
       if (defdatMatch) {
         insideDefdat = true;
@@ -146,7 +131,6 @@ export class DiagnosticsProvider {
         continue;
       }
 
-      // DEFDAT sonunu algıla
       if (/^ENDDAT\b/i.test(trimmedLine)) {
         insideDefdat = false;
         insidePublicDefdat = false;
@@ -154,7 +138,6 @@ export class DiagnosticsProvider {
       }
 
       if (insideDefdat) {
-        // Bildirim satırı mı kontrol et
         const isDeclLine =
           /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+\w+/i.test(
             trimmedLine,
@@ -164,11 +147,9 @@ export class DiagnosticsProvider {
 
         if (!isDeclLine) continue;
 
-        // GLOBAL anahtar kelimesi var mı?
         const hasGlobal = /\bGLOBAL\b/i.test(trimmedLine);
 
         if (insidePublicDefdat) {
-          // PUBLIC DEFDAT içinde GLOBAL olmalı
           if (!hasGlobal && /^(?:DECL|SIGNAL|STRUC)\b/i.test(trimmedLine)) {
             const newDiagnostic: Diagnostic = {
               severity: DiagnosticSeverity.Warning,
@@ -178,11 +159,11 @@ export class DiagnosticsProvider {
               },
               message: t("diag.notGlobalButPublic"),
               source: "krl-language-support",
+              code: "globalPublicMismatch",
             };
             diagnostics.push(newDiagnostic);
           }
         } else {
-          // PUBLIC olmayan DEFDAT içinde GLOBAL olmamalı
           if (hasGlobal) {
             const newDiagnostic: Diagnostic = {
               severity: DiagnosticSeverity.Error,
@@ -192,18 +173,18 @@ export class DiagnosticsProvider {
               },
               message: t("diag.globalButNotPublic"),
               source: "krl-language-support",
+              code: "globalPublicMismatch",
             };
             diagnostics.push(newDiagnostic);
           }
         }
 
-        // KUKA 24-karakter değişken isim limitini kontrol et
+        // Проверка длины имени переменной
         const declMatch = trimmedLine.match(
           /^(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?\w+\s+(\w+)/i,
         );
         if (declMatch) {
           const varName = declMatch[1];
-          // 24-karakter limiti
           if (varName.length > 24) {
             diagnostics.push({
               severity: DiagnosticSeverity.Error,
@@ -218,7 +199,6 @@ export class DiagnosticsProvider {
               source: "krl-language-support",
             });
           }
-          // Rakamla başlayan isimler
           if (/^\d/.test(varName)) {
             diagnostics.push({
               severity: DiagnosticSeverity.Error,
@@ -240,8 +220,7 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Değişken kullanımlarını doğrular - tanımsız değişkenleri tespit eder.
-   * Optimize edildi: async çağrılar önbellekle değiştirildi.
+   * Проверяет использование переменных (undefined check).
    */
   public validateVariablesUsage(
     document: TextDocument,
@@ -252,7 +231,6 @@ export class DiagnosticsProvider {
     const lines = text.split(/\r?\n/);
     const variableRegex = /\b([a-zA-Z_]\w*)\b/g;
 
-    // MAKİNA DAT DOSYALARINI VE SİSTEM KONFİGÜRASYONUNU ATLA
     const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
     if (
       lowerUri.includes("/mada/") ||
@@ -264,12 +242,11 @@ export class DiagnosticsProvider {
       return [];
     }
 
-    // Dizi'den Set'e dönüştür - O(1) arama için (büyük/küçük harf duyarsız)
     const validatedNames = new Set(
       declaredVariables.map((v) => v.name.toUpperCase()),
     );
 
-    // Mevcut belgeden YEREL değişkenleri de çıkar
+    // Локальные переменные
     const localDeclRegex =
       /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
     let localMatch;
@@ -288,39 +265,28 @@ export class DiagnosticsProvider {
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       const line = lines[lineIndex];
 
-      // Bildirim veya struct veya sinyal satırlarını atla
       if (/^\s*(?:GLOBAL\s+)?(?:DECL|STRUC|SIGNAL)\b/i.test(line)) {
         continue;
       }
 
-      // DEF/DEFFCT satırlarını atla
       if (/^\s*(?:GLOBAL\s+)?(?:DEF|DEFFCT)\b/i.test(line)) {
         continue;
       }
 
-      // Tırnak içindeki stringleri gizle
       let processedLine = line.replace(/"[^"]*"/g, '""');
-      // Bilimsel gösterimi gizle (örn: 1.0E+02)
       processedLine = processedLine.replace(/\d+\.?\d*[eE][+-]?\d+/g, "0");
-      // Görünmez Unicode karakterlerini kaldır (zero-width space vb.)
       processedLine = stripInvisibleChars(processedLine);
 
       let match;
       while ((match = variableRegex.exec(processedLine)) !== null) {
         const varName = match[1];
 
-        // ';' ile başlayan yorumları atla
-        // NOT: processedLine üzerinde arama yapılmalı, orijinal line değil!
-        // Çünkü match.index processedLine'a aittir.
         const commentIndex = processedLine.indexOf(";");
         if (commentIndex !== -1 && match.index >= commentIndex) continue;
 
-        // '&' ile başlayan parametreleri atla
         const lineBeforeMatch = processedLine.substring(0, match.index);
         if (lineBeforeMatch.includes("&")) continue;
 
-        // '$' veya '#' ile başlayan sistem değişkenlerini atla
-        // NOT: processedLine üzerinde kontrol yapılmalı!
         if (
           match.index !== undefined &&
           match.index > 0 &&
@@ -330,16 +296,10 @@ export class DiagnosticsProvider {
         )
           continue;
 
-        // Anahtar kelimeleri atla
         if (CODE_KEYWORDS.includes(varName.toUpperCase())) continue;
-
-        // Değişken listesinde tanımlı mı kontrol et
         if (validatedNames.has(varName.toUpperCase())) continue;
-
-        // Fonksiyon mu kontrol et (önbellekten)
         if (functionNamesCache.has(varName.toUpperCase())) continue;
 
-        // Bilinmeyen sembol ise hata bildir
         const newDiagnostic: Diagnostic = {
           severity: DiagnosticSeverity.Error,
           message: t("diag.variableNotDefined", varName),
@@ -348,6 +308,7 @@ export class DiagnosticsProvider {
             end: { line: lineIndex, character: match.index + varName.length },
           },
           source: "krl-language-support",
+          code: "variableNotDefined",
         };
 
         if (!this.isDuplicateDiagnostic(newDiagnostic, diagnostics)) {
@@ -374,27 +335,21 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет безопасные скорости в SRC файлах.
-   * Warning для $VEL.CP > 2 m/s и $VEL_PTP > 100%
+   * Проверка безопасных скоростей ($VEL.CP, $VEL_PTP).
    */
   public validateSafetySpeeds(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    // Regex для $VEL.CP = значение
     const velCpRegex = /\$VEL\.CP\s*=\s*(\d+(?:\.\d+)?)/gi;
-    // Regex для $VEL_PTP = значение
     const velPtpRegex = /\$VEL_PTP\s*=\s*(\d+(?:\.\d+)?)/gi;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-
-      // Пропустить комментарии
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
-      // Проверка $VEL.CP
       let match;
       velCpRegex.lastIndex = 0;
       while ((match = velCpRegex.exec(codePart)) !== null) {
@@ -412,7 +367,6 @@ export class DiagnosticsProvider {
         }
       }
 
-      // Проверка $VEL_PTP
       velPtpRegex.lastIndex = 0;
       while ((match = velPtpRegex.exec(codePart)) !== null) {
         const velocity = parseFloat(match[1]);
@@ -434,40 +388,27 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет инициализацию TOOL/BASE перед движением.
-   * Warning для PTP/LIN без предшествующей установки $TOOL/$BASE или BAS(#INITMOV)
+   * Проверка инициализации $TOOL и $BASE.
    */
   public validateToolBaseInit(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const text = document.getText();
-    const lines = text.split(/\r?\n/);
+    const lines = document.getText().split(/\r?\n/);
 
     let toolInitialized = false;
     let baseInitialized = false;
 
-    // Паттерны инициализации
     const toolInitPattern = /\$TOOL\s*=|BAS\s*\(\s*#INITMOV/i;
     const baseInitPattern = /\$BASE\s*=|BAS\s*\(\s*#INITMOV/i;
-    // Паттерны движения
     const movementPattern = /^\s*(?:PTP|LIN|CIRC|SPTP|SLIN|SCIRC)\s+/i;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-
-      // Пропустить комментарии
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
-      // Проверить инициализацию TOOL
-      if (toolInitPattern.test(codePart)) {
-        toolInitialized = true;
-      }
-      // Проверить инициализацию BASE
-      if (baseInitPattern.test(codePart)) {
-        baseInitialized = true;
-      }
+      if (toolInitPattern.test(codePart)) toolInitialized = true;
+      if (baseInitPattern.test(codePart)) baseInitialized = true;
 
-      // Проверить команды движения
       const movementMatch = movementPattern.exec(codePart);
       if (movementMatch) {
         if (!toolInitialized) {
@@ -500,7 +441,6 @@ export class DiagnosticsProvider {
         }
       }
 
-      // Сброс при новом DEF
       if (/^\s*(?:DEF|DEFFCT)\s+/i.test(codePart)) {
         toolInitialized = false;
         baseInitialized = false;
@@ -511,14 +451,12 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет баланс блоков: IF/ENDIF, FOR/ENDFOR, WHILE/ENDWHILE и т.д.
+   * Проверка баланса блоков (IF-ENDIF и т.д.).
    */
   public validateBlockBalance(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const text = document.getText();
-    const lines = text.split(/\r?\n/);
+    const lines = document.getText().split(/\r?\n/);
 
-    // Стек для отслеживания открытых блоков
     interface BlockInfo {
       type: string;
       line: number;
@@ -526,8 +464,6 @@ export class DiagnosticsProvider {
     }
 
     const blockStack: BlockInfo[] = [];
-
-    // Маппинг открывающих на закрывающие
     const blockPairs: Record<string, string> = {
       IF: "ENDIF",
       FOR: "ENDFOR",
@@ -540,7 +476,6 @@ export class DiagnosticsProvider {
       DEFDAT: "ENDDAT",
     };
 
-    // Обратный маппинг
     const closeToOpen: Record<string, string> = {};
     for (const [open, close] of Object.entries(blockPairs)) {
       closeToOpen[close] = open;
@@ -550,21 +485,15 @@ export class DiagnosticsProvider {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
-      // const upperCode = codePart.toUpperCase(); // Reserved for future use
 
-      // Проверка открывающих блоков
       for (const openKeyword of Object.keys(blockPairs)) {
         const regex = new RegExp(`\\b${openKeyword}\\b`, "i");
         const match = regex.exec(codePart);
         if (match) {
-          // Пропустить "WAIT FOR" — это команда ожидания условия, а не цикл FOR
           if (openKeyword === "FOR") {
             const beforeFor = codePart.substring(0, match.index);
-            if (/\bWAIT\s*$/i.test(beforeFor)) {
-              continue; // Это WAIT FOR, пропускаем
-            }
+            if (/\bWAIT\s*$/i.test(beforeFor)) continue;
           }
-          // Пропустить DEFFCT внутри DEF (они закрываются отдельно)
           blockStack.push({
             type: openKeyword,
             line: i,
@@ -573,7 +502,6 @@ export class DiagnosticsProvider {
         }
       }
 
-      // Проверка закрывающих блоков
       for (const closeKeyword of Object.keys(closeToOpen)) {
         const regex = new RegExp(`\\b${closeKeyword}\\b`, "i");
         const match = regex.exec(codePart);
@@ -599,7 +527,6 @@ export class DiagnosticsProvider {
       }
     }
 
-    // Незакрытые блоки
     for (const block of blockStack) {
       const expectedClose = blockPairs[block.type];
       diagnostics.push({
@@ -620,26 +547,19 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет дублирование имён функций и переменных.
+   * Проверка дубликатов имен функций.
    */
   public validateDuplicateNames(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const text = document.getText();
-    const lines = text.split(/\r?\n/);
-
-    // Хранилище найденных имён: name -> {type, line}
+    const lines = document.getText().split(/\r?\n/);
     const foundNames = new Map<string, { type: string; line: number }>();
-
-    // Регулярки
     const funcRegex = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
-    // const varRegex = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(\w+)\s+(\w+)/i; // Reserved for future use
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
-      // Проверка функций
       const funcMatch = funcRegex.exec(codePart);
       if (funcMatch) {
         const funcName = funcMatch[2].toUpperCase();
@@ -672,15 +592,11 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет недостижимый код после RETURN, EXIT, GOTO.
-   * Также учитывает метки (label:) как точки входа.
+   * Проверка мертвого кода (после RETURN, EXIT и т.д.).
    */
   public validateDeadCode(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const text = document.getText();
-    const lines = text.split(/\r?\n/);
-
-    // Не включаем GOTO в exit keywords, т.к. код после GOTO может быть достижим через метки
+    const lines = document.getText().split(/\r?\n/);
     const exitKeywords = ["RETURN", "EXIT", "HALT"];
     let skipUntilBlockEnd = false;
     let lastExitKeyword = "";
@@ -692,16 +608,13 @@ export class DiagnosticsProvider {
       const trimmed = codePart.trim();
       const upperTrimmed = trimmed.toUpperCase();
 
-      // Пропускаем пустые строки и комментарии
       if (trimmed === "") continue;
 
-      // Проверка метки (label:) - метка делает код достижимым через GOTO
       if (/^\w+\s*:\s*$/i.test(trimmed)) {
         skipUntilBlockEnd = false;
         continue;
       }
 
-      // Проверка конца блока - снимаем флаг
       if (
         /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i.test(
           upperTrimmed,
@@ -711,7 +624,6 @@ export class DiagnosticsProvider {
         continue;
       }
 
-      // Если мы в режиме пропуска - это мёртвый код
       if (skipUntilBlockEnd) {
         diagnostics.push({
           severity: DiagnosticSeverity.Warning,
@@ -725,7 +637,6 @@ export class DiagnosticsProvider {
         continue;
       }
 
-      // Проверка exit-ключевых слов
       for (const kw of exitKeywords) {
         if (new RegExp(`^${kw}\\b`, "i").test(upperTrimmed)) {
           skipUntilBlockEnd = true;
@@ -739,12 +650,11 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет пустые блоки IF/FOR/WHILE.
+   * Проверка пустых блоков.
    */
   public validateEmptyBlocks(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const text = document.getText();
-    const lines = text.split(/\r?\n/);
+    const lines = document.getText().split(/\r?\n/);
 
     const blockPatterns = [
       {
@@ -781,14 +691,12 @@ export class DiagnosticsProvider {
         const commentIdx = line.indexOf(";");
         const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
-        // Проверяем начало блока, но исключаем паттерны вроде WAIT FOR
         if (
           pattern.start.test(codePart) &&
           !(pattern.excludePattern && pattern.excludePattern.test(codePart))
         ) {
           blockStartLine = i;
         } else if (pattern.end.test(codePart) && blockStartLine >= 0) {
-          // Проверяем есть ли код между началом и концом
           let hasCode = false;
           for (let j = blockStartLine + 1; j < i; j++) {
             const innerLine = lines[j];
@@ -827,19 +735,17 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет WAIT FOR без timeout и опасные HALT.
+   * Проверка потенциально опасных инструкций (WAIT без таймаута, HALT).
    */
   public validateDangerousStatements(document: TextDocument): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const text = document.getText();
-    const lines = text.split(/\r?\n/);
+    const lines = document.getText().split(/\r?\n/);
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
-      // WAIT FOR без TIMEOUT
       if (/\bWAIT\s+FOR\b/i.test(codePart) && !/\bTIMEOUT\b/i.test(codePart)) {
         const match = codePart.match(/\bWAIT\s+FOR\b/i);
         if (match) {
@@ -855,7 +761,6 @@ export class DiagnosticsProvider {
         }
       }
 
-      // HALT
       if (/^\s*HALT\b/i.test(codePart)) {
         const match = codePart.match(/\bHALT\b/i);
         if (match) {
@@ -876,7 +781,7 @@ export class DiagnosticsProvider {
   }
 
   /**
-   * Проверяет использование типов: REAL в SWITCH, дробные числа в INT переменных.
+   * Проверка типов (REAL в SWITCH, INT/REAL присваивание).
    */
   public validateTypeUsage(
     document: TextDocument,
@@ -886,13 +791,11 @@ export class DiagnosticsProvider {
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    // Создаём карту переменных для быстрого поиска
     const varTypeMap = new Map<string, string>();
     for (const v of declaredVariables) {
       varTypeMap.set(v.name.toUpperCase(), v.type.toUpperCase());
     }
 
-    // Также извлекаем локальные переменные из текущего документа
     const localDeclRegex = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(\w+)\s+(\w+)/gim;
     let localMatch;
     while ((localMatch = localDeclRegex.exec(text)) !== null) {
@@ -903,17 +806,11 @@ export class DiagnosticsProvider {
       }
     }
 
-    // Switch tracking variables - reserved for future use
-    // let insideSwitch = false;
-    // let switchVarName = "";
-    // let switchLine = -1;
-
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 
-      // Проверка SWITCH с REAL переменной
       const switchMatch = codePart.match(/\bSWITCH\s+(\w+)/i);
       if (switchMatch) {
         const varName = switchMatch[1].toUpperCase();
@@ -933,16 +830,8 @@ export class DiagnosticsProvider {
             data: { varName: switchMatch[1], line: i },
           });
         }
-        // insideSwitch = true;
-        // switchVarName = varName;
-        // switchLine = i;
       }
 
-      if (/\bENDSWITCH\b/i.test(codePart)) {
-        // insideSwitch = false;
-      }
-
-      // Проверка присваивания дробных чисел INT переменным
       const assignMatch = codePart.match(/(\w+)\s*=\s*(-?\d+\.\d+)/);
       if (assignMatch) {
         const varName = assignMatch[1].toUpperCase();

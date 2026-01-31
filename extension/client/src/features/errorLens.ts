@@ -1,6 +1,6 @@
 /**
- * Error Lens - Display diagnostic messages inline at the end of lines
- * Similar to the popular Error Lens extension but built-in for KRL
+ * Error Lens - Отображает диагностические сообщения (ошибки) в конце строки редактора.
+ * Встроенный аналог популярного расширения Error Lens, специально для KRL.
  */
 
 import * as vscode from "vscode";
@@ -10,10 +10,10 @@ let warningLensDecorations: vscode.TextEditorDecorationType | undefined;
 let infoLensDecorations: vscode.TextEditorDecorationType | undefined;
 
 /**
- * Initialize Error Lens feature
+ * Инициализация функции Error Lens.
  */
 export function initErrorLens(context: vscode.ExtensionContext): void {
-  // Create decoration types
+  // Создание типов декораций
   errorLensDecorations = vscode.window.createTextEditorDecorationType({
     after: {
       margin: "0 0 0 2em",
@@ -47,7 +47,7 @@ export function initErrorLens(context: vscode.ExtensionContext): void {
     infoLensDecorations,
   );
 
-  // Update decorations when diagnostics change
+  // Обновление декораций при изменении диагностики
   context.subscriptions.push(
     vscode.languages.onDidChangeDiagnostics((e) => {
       const editor = vscode.window.activeTextEditor;
@@ -60,7 +60,7 @@ export function initErrorLens(context: vscode.ExtensionContext): void {
     }),
   );
 
-  // Update decorations when active editor changes
+  // Обновление декораций при смене активного редактора
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
@@ -69,24 +69,24 @@ export function initErrorLens(context: vscode.ExtensionContext): void {
     }),
   );
 
-  // Initial update
+  // Первичное обновление
   if (vscode.window.activeTextEditor) {
     updateErrorLensDecorations(vscode.window.activeTextEditor);
   }
 }
 
 /**
- * Update Error Lens decorations for the given editor
+ * Обновляет декорации Error Lens для указанного редактора.
  */
 function updateErrorLensDecorations(editor: vscode.TextEditor): void {
-  // Check if Error Lens is enabled
+  // Проверяем, включен ли Error Lens
   const config = vscode.workspace.getConfiguration("krl");
   if (!config.get<boolean>("errorLens.enabled", true)) {
     clearDecorations(editor);
     return;
   }
 
-  // Only for KRL files
+  // Только для KRL файлов
   if (editor.document.languageId !== "krl") {
     return;
   }
@@ -97,7 +97,7 @@ function updateErrorLensDecorations(editor: vscode.TextEditor): void {
   const warnings: vscode.DecorationOptions[] = [];
   const infos: vscode.DecorationOptions[] = [];
 
-  // Group diagnostics by line (show only first per line)
+  // Группируем по строкам (показываем только первую ошибку в строке)
   const seenLines = new Set<number>();
 
   for (const diagnostic of diagnostics) {
@@ -140,7 +140,7 @@ function updateErrorLensDecorations(editor: vscode.TextEditor): void {
 }
 
 /**
- * Clear all Error Lens decorations
+ * Очищает все декорации Error Lens.
  */
 function clearDecorations(editor: vscode.TextEditor): void {
   if (errorLensDecorations) {

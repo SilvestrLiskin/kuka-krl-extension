@@ -18,7 +18,7 @@ import {
 
 export class CodeActionsProvider {
   /**
-   * Kod eylemleri sağlar (Quick Fixes).
+   * Предоставляет Code Actions (быстрые исправления).
    */
   public onCodeAction(
     params: CodeActionParams,
@@ -32,26 +32,26 @@ export class CodeActionsProvider {
     const diagnostics = params.context.diagnostics;
 
     for (const diagnostic of diagnostics) {
-      // Tanımsız değişken hatası için quick fix
+      // Быстрое исправление для неопределенной переменной
       if (matchesDiagnosticPattern(diagnostic.message, "variableNotDefined")) {
         const varName = extractVariableFromMessage(diagnostic.message);
         if (varName) {
-          // INT olarak tanımla
+          // Объявить как INT
           actions.push(
             this.createDeclareVariableAction(doc, diagnostic, varName, "INT"),
           );
-          // REAL olarak tanımla
+          // Объявить как REAL
           actions.push(
             this.createDeclareVariableAction(doc, diagnostic, varName, "REAL"),
           );
-          // BOOL olarak tanımla
+          // Объявить как BOOL
           actions.push(
             this.createDeclareVariableAction(doc, diagnostic, varName, "BOOL"),
           );
         }
       }
 
-      // GLOBAL without PUBLIC warning
+      // Исправление несоответствия GLOBAL / PUBLIC
       if (
         matchesDiagnosticPattern(diagnostic.message, "globalPublicMismatch")
       ) {
@@ -63,26 +63,26 @@ export class CodeActionsProvider {
           diagnostic.message.includes("PUBLIC değil") ||
           diagnostic.message.includes("не является PUBLIC")
         ) {
-          // GLOBAL'ı kaldır
+          // Удалить GLOBAL
           actions.push(this.createRemoveGlobalAction(doc, diagnostic, line));
         } else if (
           diagnostic.message.includes("not GLOBAL") ||
           diagnostic.message.includes("GLOBAL değil") ||
           diagnostic.message.includes("не GLOBAL")
         ) {
-          // GLOBAL ekle
+          // Добавить GLOBAL
           actions.push(this.createAddGlobalAction(doc, diagnostic, line));
         }
       }
 
-      // Quick Fix для REAL в SWITCH — изменить тип на INT
+      // Исправление типа REAL в SWITCH — изменить тип переменной на INT
       if (diagnostic.code === "realInSwitch") {
         actions.push(
           ...this.createChangeTypeActions(doc, diagnostic, "REAL", "INT"),
         );
       }
 
-      // Quick Fix для дробного числа в INT — изменить тип на REAL или обернуть в ROUND()
+      // Исправление дробного числа в INT — изменить тип на REAL или обернуть в ROUND()
       if (diagnostic.code === "shouldBeReal") {
         actions.push(
           ...this.createChangeTypeActions(doc, diagnostic, "INT", "REAL"),
@@ -91,14 +91,14 @@ export class CodeActionsProvider {
       }
     }
 
-    // Genel kod eylemleri (diagnostic'e bağlı değil)
+    // Общие действия (рефакторинг)
     actions.push(...this.getGeneralActions(doc, params.range));
 
     return actions;
   }
 
   /**
-   * Değişken bildirimi ekleyen kod eylemi oluşturur.
+   * Создает действие объявления переменной.
    */
   private createDeclareVariableAction(
     doc: TextDocument,
@@ -108,15 +108,15 @@ export class CodeActionsProvider {
   ): CodeAction {
     const lines = doc.getText().split(/\r?\n/);
 
-    // En uygun ekleme pozisyonunu bul
+    // Находим место для вставки
     let insertLine = 0;
     for (let i = 0; i < lines.length; i++) {
-      // DEFDAT veya DEF bloğunun başlangıcını bul
+      // DEFDAT или DEF блок
       if (/^\s*(?:DEFDAT|DEF)\b/i.test(lines[i])) {
         insertLine = i + 1;
         break;
       }
-      // Son DECL satırının altını bul
+      // После последнего DECL
       if (/^\s*(?:GLOBAL\s+)?DECL\b/i.test(lines[i])) {
         insertLine = i + 1;
       }
@@ -138,7 +138,7 @@ export class CodeActionsProvider {
   }
 
   /**
-   * GLOBAL anahtar kelimesini kaldıran kod eylemi oluşturur.
+   * Создает действие удаления GLOBAL.
    */
   private createRemoveGlobalAction(
     doc: TextDocument,
@@ -168,14 +168,14 @@ export class CodeActionsProvider {
   }
 
   /**
-   * GLOBAL anahtar kelimesini ekleyen kod eylemi oluşturur.
+   * Создает действие добавления GLOBAL.
    */
   private createAddGlobalAction(
     doc: TextDocument,
     diagnostic: Diagnostic,
     line: string,
   ): CodeAction {
-    // DECL veya tip adından önce GLOBAL ekle
+    // Добавить GLOBAL перед DECL или типом
     let newLine: string;
     if (/^\s*DECL\b/i.test(line)) {
       newLine = line.replace(/^(\s*)DECL\b/i, "$1GLOBAL DECL");
@@ -204,13 +204,13 @@ export class CodeActionsProvider {
   }
 
   /**
-   * Genel kod eylemleri (refactoring vb.).
+   * Общие действия (например, обернуть в FOLD).
    */
   private getGeneralActions(doc: TextDocument, range: Range): CodeAction[] {
     const actions: CodeAction[] = [];
     const text = doc.getText(range);
 
-    // Seçili metin varsa FOLD ile sar
+    // Если выбран текст, предлагаем обернуть в FOLD
     if (text && text.trim().length > 0 && text.includes("\n")) {
       actions.push({
         title: t("action.wrapWithFold"),
@@ -229,7 +229,7 @@ export class CodeActionsProvider {
   }
 
   /**
-   * Satır başındaki boşlukları alır.
+   * Получает отступ строки.
    */
   private getIndent(line: string): string {
     const match = line.match(/^(\s*)/);
@@ -237,7 +237,7 @@ export class CodeActionsProvider {
   }
 
   /**
-   * Создаёт действия для изменения типа переменной.
+   * Создает действия для изменения типа переменной.
    */
   private createChangeTypeActions(
     doc: TextDocument,
@@ -294,7 +294,7 @@ export class CodeActionsProvider {
   }
 
   /**
-   * Создаёт действие для оборачивания значения в ROUND().
+   * Создает действие для оборачивания значения в ROUND().
    */
   private createWrapWithRoundAction(
     doc: TextDocument,
@@ -307,9 +307,11 @@ export class CodeActionsProvider {
     const lineIndex = diagnostic.range.start.line;
     const line = lines[lineIndex] || "";
 
-    // Находим присваивание и оборачиваем значение в ROUND()
+    // Находим присваивание и оборачиваем значение
+    // Экранируем точку в значении (например 3.14 -> 3\.14)
+    const valEscaped = data?.value?.replace(".", "\\.");
     const assignRegex = new RegExp(
-      `(${data?.varName}\\s*=\\s*)(${data?.value?.replace(".", "\\.")})`,
+      `(${data?.varName}\\s*=\\s*)(${valEscaped})`,
       "i",
     );
     const newLine = line.replace(assignRegex, `$1ROUND($2)`);

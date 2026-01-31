@@ -1,12 +1,14 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as ftp from "basic-ftp";
-// i18n import removed - not used in this file
 
+/**
+ * Развертывание (деплой) текущего файла на робот через FTP.
+ */
 export async function deployToRobot() {
   const editor = vscode.window.activeTextEditor;
   if (!editor) {
-    vscode.window.showWarningMessage("No active file to deploy.");
+    vscode.window.showWarningMessage("Нет активного файла для деплоя.");
     return;
   }
 
@@ -15,17 +17,17 @@ export async function deployToRobot() {
   const fileName = path.basename(localPath);
   const ext = path.extname(localPath).toLowerCase();
 
-  // Check if it's a KRL file
+  // Проверка, является ли файл KRL
   if (![".src", ".dat", ".sub"].includes(ext)) {
     const proceed = await vscode.window.showWarningMessage(
-      `File ${fileName} does not look like a KRL file. Deploy anyway?`,
-      "Yes",
-      "No",
+      `Файл ${fileName} не похож на KRL файл. Все равно деплоить?`,
+      "Да",
+      "Нет",
     );
-    if (proceed !== "Yes") return;
+    if (proceed !== "Да") return;
   }
 
-  // Load config
+  // Загрузка конфигурации
   const config = vscode.workspace.getConfiguration("krl.deploy");
   const host = config.get<string>("ip", "172.31.1.147");
   const user = config.get<string>("user", "kukauser");
@@ -33,19 +35,14 @@ export async function deployToRobot() {
   const targetPath = config.get<string>("targetPath", "/R1/Program");
 
   const client = new ftp.Client();
-  // client.ftp.verbose = true;
 
-  // files to upload
+  // файлы для загрузки
   const uploads = [localPath];
 
-  // If src/dat, try to find the pair
+  // Если это src/dat, пытаемся найти пару
   if (ext === ".src") {
     const datPath = localPath.replace(/\.src$/i, ".dat");
-    // We can't easily check if file exists without fs, but vscode fs is available
-    // assuming standard fs for local files
     try {
-      // Just add it, basic-ftp uploadFrom will throw if missing?
-      // Better to check.
       const fs = require("fs");
       if (fs.existsSync(datPath)) {
         uploads.push(datPath);
@@ -64,21 +61,21 @@ export async function deployToRobot() {
   vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `Deploying to ${host}...`,
+      title: `Деплой на ${host}...`,
       cancellable: true,
     },
     async (progress, token) => {
       try {
-        progress.report({ message: "Connecting..." });
+        progress.report({ message: "Подключение..." });
 
         await client.access({
           host,
           user,
           password,
-          secure: false, // KUKA usually uses plain FTP
+          secure: false, // KUKA обычно использует простой FTP
         });
 
-        progress.report({ message: "Uploading files..." });
+        progress.report({ message: "Загрузка файлов..." });
 
         await client.ensureDir(targetPath);
 
@@ -86,18 +83,18 @@ export async function deployToRobot() {
           const name = path.basename(file);
           if (token.isCancellationRequested) break;
 
-          progress.report({ message: `Uploading ${name}...` });
+          progress.report({ message: `Загрузка ${name}...` });
           await client.uploadFrom(file, `${targetPath}/${name}`);
         }
 
         if (!token.isCancellationRequested) {
           vscode.window.showInformationMessage(
-            `Successfully deployed ${uploads.length} files to ${host}.`,
+            `Успешно загружено ${uploads.length} файлов на ${host}.`,
           );
         }
       } catch (err: unknown) {
         vscode.window.showErrorMessage(
-          `Deploy failed: ${err instanceof Error ? err.message : String(err)}`,
+          `Ошибка деплоя: ${err instanceof Error ? err.message : String(err)}`,
         );
       } finally {
         client.close();

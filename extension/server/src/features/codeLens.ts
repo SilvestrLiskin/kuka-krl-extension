@@ -4,11 +4,11 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { t } from "../lib/i18n";
 
 /**
- * Code Lens Provider - shows metrics above functions and inline forms
+ * Code Lens Provider - показывает метрики над функциями и inline-формы.
  */
 export class CodeLensProvider {
   /**
-   * Generates Code Lens for the document
+   * Генерирует Code Lens для документа.
    */
   public onCodeLens(
     params: CodeLensParams,
@@ -24,7 +24,7 @@ export class CodeLensProvider {
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    // 1. Find all function definitions in current document
+    // 1. Поиск определений функций в текущем документе
     const defRegex = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
 
     for (let i = 0; i < lines.length; i++) {
@@ -35,7 +35,7 @@ export class CodeLensProvider {
         const functionName = match[2];
         const functionType = match[1].toUpperCase();
 
-        // Find end of function
+        // Поиск конца функции
         const endPattern =
           functionType === "DEFFCT" ? /^\s*ENDFCT\b/i : /^\s*END\b/i;
         let endLine = i + 1;
@@ -48,7 +48,7 @@ export class CodeLensProvider {
 
         const lineCount = endLine - i + 1;
 
-        // Count references
+        // Подсчет ссылок (Примечание: текущая реализация считает объявления, а не вызовы. Требуется глобальный индекс ссылок)
         const referenceCount = this.countReferences(functionName, state);
 
         const range: Range = {
@@ -68,7 +68,7 @@ export class CodeLensProvider {
       }
     }
 
-    // 2. Find Motion Folds (PTP, LIN, etc.) - Visualization of Inline Forms
+    // 2. Поиск Motion Folds (PTP, LIN и т.д.) - Визуализация Inline Forms
     const foldRegex =
       /^\s*;FOLD\s+(PTP|LIN|CIRC|SPTP|SLIN|SCIRC)\s+(.*);%{PE}%R/i;
     for (let i = 0; i < lines.length; i++) {
@@ -76,7 +76,7 @@ export class CodeLensProvider {
       const match = foldRegex.exec(line);
       if (match) {
         const command = match[1];
-        // match[2] contains "P1 Vel=100 % PDAT1 Tool[1] Base[1]" usually
+        // match[2] обычно содержит "P1 Vel=100 % PDAT1 Tool[1] Base[1]"
         const params = match[2].trim();
 
         const range: Range = {
@@ -99,7 +99,7 @@ export class CodeLensProvider {
   }
 
   /**
-   * Resolves Code Lens (adds command and title)
+   * Разрешает (Resolve) Code Lens (добавляет команду и заголовок).
    */
   public onCodeLensResolve(codeLens: CodeLens): CodeLens {
     const data = codeLens.data as
@@ -144,7 +144,7 @@ export class CodeLensProvider {
   }
 
   /**
-   * Counts references
+   * Считает ссылки (пока считает объявления, требуется доработка для реального подсчета использований).
    */
   private countReferences(
     functionName: string,

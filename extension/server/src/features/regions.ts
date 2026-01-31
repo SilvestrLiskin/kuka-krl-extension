@@ -8,7 +8,8 @@ import { TextDocuments } from "vscode-languageserver/node";
 
 export class RegionProvider {
   /**
-   * Katlanabilir bölgeleri sağlar - FOLD/ENDFOLD ve DEF/END blokları.
+   * Предоставляет диапазоны сворачивания кода (Folding Ranges).
+   * Поддерживает регионы FOLD/ENDFOLD и блоки функций DEF/END.
    */
   public onFoldingRanges(
     params: FoldingRangeParams,
@@ -20,25 +21,23 @@ export class RegionProvider {
     const lines = document.getText().split(/\r?\n/);
     const ranges: FoldingRange[] = [];
 
-    // FOLD/ENDFOLD yığını
     const foldStack: number[] = [];
-    // DEF/DEFFCT/DEFDAT yığını
     const defStack: number[] = [];
 
-    // FOLD ve ENDFOLD için regex (büyük/küçük harf duyarsız, boşluklara izin verir)
+    // FOLD/ENDFOLD (регистронезависимо)
     const foldStartRegex = /;\s*FOLD\b/i;
     const foldEndRegex = /;\s*ENDFOLD\b/i;
 
-    // DEF/DEFFCT/DEFDAT için regex - kesin eşleşme
+    // DEF/DEFFCT/DEFDAT
     const defStartRegex = /^\s*(?:GLOBAL\s+)?(?:DEF|DEFFCT|DEFDAT)\b/i;
-    // END için regex - END, ENDFCT, ENDDAT - diğer END* ile karışmasın
+    // END, ENDFCT, ENDDAT
     const defEndRegex = /^\s*(?:ENDFCT|ENDDAT)\b/i;
-    const simpleEndRegex = /^\s*END\s*$/i; // Sadece "END" kelimesi
+    const simpleEndRegex = /^\s*END\s*$/i;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      // FOLD katlama
+      // Обработка FOLD
       if (foldStartRegex.test(line)) {
         foldStack.push(i);
       } else if (foldEndRegex.test(line)) {
@@ -52,7 +51,7 @@ export class RegionProvider {
         }
       }
 
-      // DEF/DEFFCT/DEFDAT katlama
+      // Обработка DEF
       if (defStartRegex.test(line)) {
         defStack.push(i);
       } else if (defEndRegex.test(line) || simpleEndRegex.test(line)) {

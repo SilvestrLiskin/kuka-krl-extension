@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
 
+/**
+ * Открывает калькулятор фреймов (координат) в Webview.
+ */
 export function showCalculator(_context: vscode.ExtensionContext) {
   const panel = vscode.window.createWebviewPanel(
     "krlCalculator",
@@ -11,6 +14,9 @@ export function showCalculator(_context: vscode.ExtensionContext) {
   panel.webview.html = getWebviewContent();
 }
 
+/**
+ * Генерирует HTML контент для калькулятора.
+ */
 function getWebviewContent() {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -116,20 +122,10 @@ function getWebviewContent() {
             const cb = Math.cos(B), sb = Math.sin(B);
             const cc = Math.cos(C), sc = Math.sin(C);
             
-            // KUKA Rotation: Rz(A) * Ry(B) * Rx(C)
+            // KUKA Rotasyonu: Rz(A) * Ry(B) * Rx(C)
             const r11 = ca*cb;
             const r12 = ca*sb*sc - sa*cc; 
-            // R = [
-            //  ca*cb,  ca*sb*sc - sa*cc,  ca*sb*cc + sa*sc
-            //  sa*cb,  sa*sb*sc + ca*cc,  sa*sb*cc - ca*sc
-            //  -sb,    cb*sc,             cb*cc
-            // ]
-            // Correct formula check:
-            // Rz(A) = [ca -sa 0; sa ca 0; 0 0 1]
-            // Ry(B) = [cb 0 sb; 0 1 0; -sb 0 cb]
-            // Rx(C) = [1 0 0; 0 cc -sc; 0 sc cc]
             
-            // Let's implement full matrix mult to be safe
             return [
                  ca*cb,  ca*sb*sc - sa*cc,  ca*sb*cc + sa*sc,  f.x,
                  sa*cb,  sa*sb*sc + ca*cc,  sa*sb*cc - ca*sc,  f.y,
@@ -186,11 +182,10 @@ function getWebviewContent() {
         }
 
         function invert() {
-             // To implement
              // INV(T) = [R^T, -R^T * P]
              const f1 = getFrame('f1');
              const m = getMatrix(f1);
-             // R is top left 3x3
+
              const r11=m[0], r12=m[1], r13=m[2];
              const r21=m[4], r22=m[5], r23=m[6];
              const r31=m[8], r32=m[9], r33=m[10];
@@ -220,9 +215,6 @@ function getWebviewContent() {
              const f = getFrame('result');
              const str = \`{X \${f.x.toFixed(3)},Y \${f.y.toFixed(3)},Z \${f.z.toFixed(3)},A \${f.a.toFixed(3)},B \${f.b.toFixed(3)},C \${f.c.toFixed(3)}}\`;
              
-             // Using navigator.clipboard might fail in vscode webview if not focused or secure context?
-             // Use vscode API messaging to copy?
-             // Or try standard execCommand
              const el = document.createElement('textarea');
              el.value = str;
              document.body.appendChild(el);

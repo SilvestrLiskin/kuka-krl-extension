@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import * as fs from "fs";
 
 /**
  * Генератор документации для KRL файлов.
@@ -95,20 +94,29 @@ export class DocGenerator {
       docContent.push("");
     }
 
-    // Сохранить файл
-    const docPath = document.fileName.replace(/\.(src|dat)$/i, "_DOC.md");
-
-    fs.writeFileSync(docPath, docContent.join("\n"), "utf8");
-
-    // Открыть документ
-    const doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(docPath),
+    // Сохранить файл (используя VS Code API)
+    const docPathStr = document.fileName.replace(
+      /\.(src|dat|sub)$/i,
+      "_DOC.md",
     );
-    await vscode.window.showTextDocument(doc, { preview: false });
+    const docUri = vscode.Uri.file(docPathStr);
+    const contentBuffer = Buffer.from(docContent.join("\n"), "utf8");
 
-    vscode.window.showInformationMessage(
-      `Документация создана: ${path.basename(docPath)}`,
-    );
+    try {
+      await vscode.workspace.fs.writeFile(docUri, contentBuffer);
+
+      // Открыть документ
+      const doc = await vscode.workspace.openTextDocument(docUri);
+      await vscode.window.showTextDocument(doc, { preview: false });
+
+      vscode.window.showInformationMessage(
+        `Документация создана: ${path.basename(docPathStr)}`,
+      );
+    } catch (err) {
+      vscode.window.showErrorMessage(
+        `Ошибка при сохранении документации: ${err}`,
+      );
+    }
   }
 
   /**
@@ -123,7 +131,7 @@ export class DocGenerator {
       Description: /;\s*(?:Description|Описание|Açıklama):\s*(.+)/i,
     };
 
-    // Ищем только первые 50 строк
+    // Ищем только в первых 50 строках
     for (let i = 0; i < Math.min(50, lines.length); i++) {
       for (const [key, regex] of Object.entries(patterns)) {
         const match = lines[i].match(regex);

@@ -10,8 +10,7 @@ import { TextDocuments } from "vscode-languageserver/node";
 
 export class DocumentSymbolsProvider {
   /**
-   * Belge sembollerini sağlar - Outline paneli için.
-   * DEF, DEFFCT, DEFDAT bloklarını ve değişken bildirimlerini gösterir.
+   * Предоставляет символы документа для панели Outline (Структура).
    */
   public onDocumentSymbols(
     params: DocumentSymbolParams,
@@ -24,13 +23,13 @@ export class DocumentSymbolsProvider {
     const lines = text.split(/\r?\n/);
     const symbols: DocumentSymbol[] = [];
 
-    // Stack for nested symbols (like functions inside modules)
+    // Стек для вложенных символов
     const symbolStack: { symbol: DocumentSymbol; endPattern: RegExp }[] = [];
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      // DEF - Module/Subroutine
+      // DEF - Процедура
       const defMatch = line.match(
         /^\s*(?:GLOBAL\s+)?DEF\s+(\w+)\s*\(([^)]*)\)/i,
       );
@@ -58,7 +57,7 @@ export class DocumentSymbolsProvider {
         continue;
       }
 
-      // DEFFCT - Function with return type
+      // DEFFCT - Функция с возвращаемым значением
       const deffctMatch = line.match(
         /^\s*(?:GLOBAL\s+)?DEFFCT\s+(\w+)\s+(\w+)\s*\(([^)]*)\)/i,
       );
@@ -87,7 +86,7 @@ export class DocumentSymbolsProvider {
         continue;
       }
 
-      // DEFDAT - Data module
+      // DEFDAT - Модуль данных
       const defdatMatch = line.match(/^\s*DEFDAT\s+(\w+)(?:\s+PUBLIC)?/i);
       if (defdatMatch) {
         const name = defdatMatch[1];
@@ -113,30 +112,27 @@ export class DocumentSymbolsProvider {
         continue;
       }
 
-      // Check for end patterns
+      // Проверка окончания блока
       for (let j = symbolStack.length - 1; j >= 0; j--) {
         if (symbolStack[j].endPattern.test(line)) {
           const completed = symbolStack.splice(j, 1)[0];
-          // Update range to include END
           completed.symbol.range = Range.create(
             completed.symbol.range.start,
             Position.create(i, line.length),
           );
 
           if (symbolStack.length > 0) {
-            // Add as child to parent
             symbolStack[symbolStack.length - 1].symbol.children!.push(
               completed.symbol,
             );
           } else {
-            // Top-level symbol
             symbols.push(completed.symbol);
           }
           break;
         }
       }
 
-      // Variable declarations (only at top level or in DEFDAT)
+      // Объявление переменных
       const declMatch = line.match(
         /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(\w+)\s+(\w+)/i,
       );
@@ -144,7 +140,6 @@ export class DocumentSymbolsProvider {
         const typeName = declMatch[1].toUpperCase();
         const varName = declMatch[2];
 
-        // Skip if it's a keyword like DEF, DEFFCT, etc.
         const keywords = [
           "DEF",
           "DEFFCT",
@@ -160,7 +155,6 @@ export class DocumentSymbolsProvider {
         ];
         if (keywords.includes(typeName)) continue;
 
-        // Only show DECL statements or type-prefixed declarations
         const isDecl =
           /^\s*(?:GLOBAL\s+)?DECL\b/i.test(line) ||
           /^\s*(?:GLOBAL\s+)?(INT|REAL|BOOL|CHAR|STRING|FRAME|POS|E6POS|AXIS|E6AXIS|LOAD|SIGNAL)\s+\w+/i.test(
@@ -191,7 +185,7 @@ export class DocumentSymbolsProvider {
         }
       }
 
-      // SIGNAL declarations
+      // SIGNAL
       const signalMatch = line.match(/^\s*(?:GLOBAL\s+)?SIGNAL\s+(\w+)/i);
       if (signalMatch) {
         const name = signalMatch[1];
@@ -220,7 +214,7 @@ export class DocumentSymbolsProvider {
         }
       }
 
-      // STRUC definitions
+      // STRUC
       const strucMatch = line.match(/^\s*(?:GLOBAL\s+)?STRUC\s+(\w+)/i);
       if (strucMatch) {
         const name = strucMatch[1];
@@ -249,7 +243,7 @@ export class DocumentSymbolsProvider {
         }
       }
 
-      // ENUM definitions
+      // ENUM
       const enumMatch = line.match(/^\s*(?:GLOBAL\s+)?ENUM\s+(\w+)/i);
       if (enumMatch) {
         const name = enumMatch[1];
@@ -277,7 +271,7 @@ export class DocumentSymbolsProvider {
       }
     }
 
-    // Add any unclosed symbols (shouldn't happen in well-formed code)
+    // Закрываем оставшиеся символы
     while (symbolStack.length > 0) {
       const unclosed = symbolStack.pop()!;
       if (symbolStack.length > 0) {

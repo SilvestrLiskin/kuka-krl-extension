@@ -1,14 +1,15 @@
 /**
- * Utility functions for KRL Language Server.
- * Shared helpers to avoid code duplication across features.
+ * Утилиты для KRL Language Server.
+ * Общие вспомогательные функции для предотвращения дублирования кода.
  */
 
 /**
- * Check if a position in a line is inside a string literal.
- * KRL does not support escape sequences inside strings.
- * @param line The line of text
- * @param position The character position to check
- * @returns true if the position is inside a string
+ * Проверяет, находится ли позиция в строке внутри строкового литерала.
+ * KRL не поддерживает экранирование через обратный слэш, но поддерживает двойные кавычки ("").
+ * Эта функция просто считает количество кавычек до позиции. Если их нечетное количество, то мы внутри строки.
+ * @param line Строка текста
+ * @param position Позиция курсора (индекс символа)
+ * @returns true, если позиция внутри строки
  */
 export function isInsideString(line: string, position: number): boolean {
   let inString = false;
@@ -21,18 +22,18 @@ export function isInsideString(line: string, position: number): boolean {
 }
 
 /**
- * Escape special regex characters in a string.
- * @param str The string to escape
- * @returns The escaped string safe for use in RegExp
+ * Экранирует специальные символы регулярных выражений в строке.
+ * @param str Строка для экранирования
+ * @returns Экранированная строка, безопасная для использования в RegExp
  */
 export function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /**
- * Get the code part of a line (before any comment).
- * @param line The line of text
- * @returns The code part without the comment
+ * Получает кодовую часть строки (до комментария).
+ * @param line Строка текста
+ * @returns Кодовая часть без комментария
  */
 export function getCodePart(line: string): string {
   const commentIndex = line.indexOf(";");

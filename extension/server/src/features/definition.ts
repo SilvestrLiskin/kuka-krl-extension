@@ -10,7 +10,7 @@ import { isSymbolDeclared, getWordAtPosition } from "../lib/parser";
 
 export class SymbolResolver {
   /**
-   * Tanım konumunu bulur - Go to Definition işlevi.
+   * Находит определение символа (Go to Definition).
    */
   public async onDefinition(
     params: DefinitionParams,
@@ -23,7 +23,7 @@ export class SymbolResolver {
     const lines = doc.getText().split(/\r?\n/);
     const lineText = lines[params.position.line];
 
-    // Bildirim satırlarını atla
+    // Пропускаем строки объявления (чтобы не переходить на самого себя странным образом)
     if (
       /^\s*(GLOBAL\s+)?(DEF|DEFFCT|DECL\s+INT|DECL\s+REAL|DECL\s+BOOL|DECL\s+FRAME)\b/i.test(
         lineText,
@@ -31,7 +31,7 @@ export class SymbolResolver {
     )
       return;
 
-    // Struct içindeki alt değişkenleri atla
+    // Пропускаем подпеременные (свойства структур)
     if (getWordAtPosition(lineText, params.position.character)?.isSubvariable) {
       return;
     }
@@ -42,7 +42,7 @@ export class SymbolResolver {
     )?.word;
     if (!functionName) return;
 
-    // Önce fonksiyon olarak ara
+    // 1. Поиск функции
     const resultFct = await isSymbolDeclared(
       state.workspaceRoot,
       functionName,
@@ -55,7 +55,7 @@ export class SymbolResolver {
       });
     }
 
-    // Özel kullanıcı değişken tipi (Struct) olarak ara
+    // 2. Поиск структуры (типа)
     for (const key in state.structDefinitions) {
       if (key === functionName) {
         const resultStruc = await isSymbolDeclared(
@@ -72,13 +72,13 @@ export class SymbolResolver {
       }
     }
 
-    // Değişken olarak ara
+    // 3. Поиск переменной
     const enclosures = this.findEnclosuresLines(params.position.line, lines);
 
-    // Önce mergedVariables listesinden kontrol et
+    // Проверяем наличие в списке известных переменных
     for (const element of state.mergedVariables) {
       if (element.name.toUpperCase() === functionName.toUpperCase()) {
-        // İlk: yerel kapsamda ara (kapsam içinde)
+        // А. Локальный поиск (в текущей области видимости)
         const scopedResult = await isSymbolDeclared(
           state.workspaceRoot,
           functionName,
@@ -96,7 +96,7 @@ export class SymbolResolver {
           });
         }
 
-        // Yerel olarak bulunamadıysa global arama yap
+        // Б. Глобальный поиск
         const resultVar = await isSymbolDeclared(
           state.workspaceRoot,
           functionName,
@@ -116,8 +116,7 @@ export class SymbolResolver {
   }
 
   /**
-   * Kapsam satırlarını bulur - DEF/DEFFCT/DEFDAT bloğunun sınırları.
-   * Düzeltildi: includes yerine \b regex kullanılarak kesin eşleşme sağlandı.
+   * Находит границы текущей области видимости (функции или блока DEFDAT).
    */
   private findEnclosuresLines(
     lineNumber: number,
@@ -129,7 +128,7 @@ export class SymbolResolver {
       bottomLine: lines.length - 1,
     };
 
-    // Yukarı doğru ara - başlangıç sınırı
+    // Поиск вверх - начало блока
     while (row >= 0) {
       const line = lines[row];
       if (
@@ -142,10 +141,10 @@ export class SymbolResolver {
       row--;
     }
 
-    // Satırı sıfırla
+    // Сброс строки
     row = lineNumber;
 
-    // Aşağı doğru ara - bitiş sınırı
+    // Поиск вниз - конец блока
     while (row < lines.length) {
       const line = lines[row];
       if (

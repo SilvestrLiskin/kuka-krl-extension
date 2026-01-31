@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 
 /**
- * Tree item для I/O элемента
+ * Элемент дерева для I/O сигнала.
  */
 export class IOItem extends vscode.TreeItem {
   constructor(
@@ -23,7 +23,7 @@ export class IOItem extends vscode.TreeItem {
 }
 
 /**
- * Tree item для места использования I/O
+ * Элемент дерева для места использования I/O.
  */
 export class IOLocation extends vscode.TreeItem {
   constructor(
@@ -48,7 +48,7 @@ export class IOLocation extends vscode.TreeItem {
 }
 
 /**
- * Tree item для категории I/O (Inputs, Outputs, etc.)
+ * Элемент дерева для категории I/O (Входы, Выходы и т.д.).
  */
 export class IOCategory extends vscode.TreeItem {
   constructor(
@@ -67,7 +67,7 @@ export class IOCategory extends vscode.TreeItem {
 }
 
 /**
- * Провайдер Tree View для I/O сигналов
+ * Провайдер Tree View для I/O сигналов ($IN, $OUT, $ANIN, $ANOUT).
  */
 export class IOTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<
@@ -87,12 +87,18 @@ export class IOTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> 
     this.refresh();
   }
 
+  /**
+   * Обновляет данные дерева.
+   */
   refresh(): void {
     this.scanWorkspace().then(() => {
       this._onDidChangeTreeData.fire(undefined);
     });
   }
 
+  /**
+   * Сканирует рабочее пространство на наличие I/O сигналов.
+   */
   private async scanWorkspace(): Promise<void> {
     this.inputs.clear();
     this.outputs.clear();
@@ -187,7 +193,7 @@ export class IOTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> 
           }
         }
       } catch {
-        // Error reading KRL file - silently ignored
+        // Ошибка чтения файла игнорируется
       }
     }
   }

@@ -1,7 +1,10 @@
 import * as vscode from "vscode";
 import * as AdmZip from "adm-zip";
-// path import removed - not used in this file
 
+/**
+ * Провайдер файловой системы для ZIP архивов.
+ * Позволяет открывать архивы KUKA как рабочие пространства в режиме только для чтения.
+ */
 export class ZipFileSystemProvider implements vscode.FileSystemProvider {
   private _onDidChangeFile = new vscode.EventEmitter<
     vscode.FileChangeEvent[]
@@ -9,6 +12,7 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
   readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> =
     this._onDidChangeFile.event;
 
+  // Кэш открытых ZIP архивов
   private zips: Map<string, AdmZip> = new Map();
 
   watch(
@@ -26,7 +30,7 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
       return { type: vscode.FileType.Directory, ctime: 0, mtime: 0, size: 0 };
     }
 
-    // Clean entry path (remove leading slash)
+    // Очистка пути (удаление начального слэша)
     const cleanEntryPath = entryPath.startsWith("/")
       ? entryPath.substring(1)
       : entryPath;
@@ -43,8 +47,8 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
       };
     }
 
-    // If not found, check if it's a directory by looking for children
-    // (AdmZip might not have explicit directory entries for intermediate folders)
+    // Если запись не найдена, проверяем, может это директория
+    // (AdmZip может не иметь явных записей для промежуточных папок)
     const entries = zip.getEntries();
     const dirPrefix = cleanEntryPath.endsWith("/")
       ? cleanEntryPath
@@ -65,7 +69,7 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
     const cleanEntryPath = entryPath.startsWith("/")
       ? entryPath.substring(1)
       : entryPath;
-    // Ensure standard format for comparison
+    // Приводим к стандартному формату для сравнения
     const prefix =
       cleanEntryPath === ""
         ? ""
@@ -78,14 +82,14 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
     zip.getEntries().forEach((entry) => {
       if (!entry.entryName.startsWith(prefix)) return;
 
-      // Get relative path part
+      // Получаем относительный путь
       const relative = entry.entryName.substring(prefix.length);
-      if (!relative) return; // Same dir
+      if (!relative) return; // Та же директория
 
       const parts = relative.split("/");
       const name = parts[0];
 
-      // Check if it is a file or subdir
+      // Проверяем, файл это или подкаталог
       const isDir = parts.length > 1 || entry.isDirectory;
 
       if (!result.has(name)) {
@@ -112,7 +116,7 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
     return new Uint8Array(entry.getData());
   }
 
-  // Read-only for now
+  // Только для чтения
   writeFile(
     _uri: vscode.Uri,
     _content: Uint8Array,
@@ -139,30 +143,19 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
 
   private parseUri(uri: vscode.Uri): { zipPath: string; entryPath: string } {
     // scheme: kuka-zip
-    // authority: ignored?
-    // path: /c:/path/to/archive.zip/inner/path
-
-    // Strategy: The URI path contains the full path to zip + inner path.
-    // We need a separator.
-    // Let's assume usage: kuka-zip:///c:/Users/.../archive.zip/ folder/file
-    // Actually, VS Code URIs for custom schemes are tricky.
-    // Let's define: authority = empty
-    // path = /absolute/path/to/zip/::/inner/path (using :: as separator)
+    // path: /c:/path/to/archive.zip/::/inner/path
 
     const pathStr = uri.path;
     const separatorIndex = pathStr.indexOf("/::");
 
     if (separatorIndex === -1) {
-      // Maybe root?
-      // Or maybe we treat the *authority* as the zip path?
-      // Windows paths in authority are messy.
       throw vscode.FileSystemError.FileNotFound();
     }
 
     const zipPath = pathStr.substring(0, separatorIndex);
-    const entryPath = pathStr.substring(separatorIndex + 3); // /:: is 3 chars
+    const entryPath = pathStr.substring(separatorIndex + 3); // /:: это 3 символа
 
-    // Fix Windows path if it starts with /c: -> c:
+    // Исправление пути Windows, если он начинается с /c: -> c:
     const fsPath =
       zipPath.startsWith("/") && zipPath[2] === ":"
         ? zipPath.substring(1)
@@ -173,7 +166,7 @@ export class ZipFileSystemProvider implements vscode.FileSystemProvider {
 
   private getZip(zipPath: string): AdmZip {
     if (!this.zips.has(zipPath)) {
-      // Check file exists
+      // Проверяем существование файла
       try {
         const zip = new AdmZip(zipPath);
         this.zips.set(zipPath, zip);

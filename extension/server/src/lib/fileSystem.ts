@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 /**
- * Bir dizinde belirli uzantılara sahip tüm dosyaları özyinelemeli olarak bulur.
+ * Рекурсивно находит все файлы с заданными расширениями в указанной директории.
  */
 export async function findFilesByExtension(
   dir: string,
@@ -14,7 +14,7 @@ export async function findFilesByExtension(
     for (const entry of list) {
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
-        // node_modules ve benzeri dizinleri atla
+        // Пропускаем node_modules и скрытые папки
         if (entry.name === "node_modules" || entry.name.startsWith(".")) {
           continue;
         }
@@ -31,21 +31,20 @@ export async function findFilesByExtension(
       }
     }
   } catch {
-    // Dizin okuma hatası sessizce yoksayılır
-    // console.error(`Dizin okuma hatası ${dir}:`, error);
+    // Ошибки чтения директории игнорируются
   }
   return results;
 }
 
 /**
- * Tüm .dat dosyalarını özyinelemeli olarak bulur.
+ * Находит все .dat файлы в директории.
  */
 export async function getAllDatFiles(dir: string): Promise<string[]> {
   return findFilesByExtension(dir, [".dat"]);
 }
 
 /**
- * Tüm kaynak dosyalarını (.src, .dat, .sub) özyinelemeli olarak bulur.
+ * Находит все исходные файлы KRL (.src, .dat, .sub).
  */
 export async function getAllSourceFiles(dir: string): Promise<string[]> {
   return findFilesByExtension(dir, [".src", ".dat", ".sub"]);

@@ -9,8 +9,8 @@ import { ServerState } from "../types";
 
 export class WorkspaceSymbolsProvider {
   /**
-   * Çalışma alanı sembollerini sağlar (Ctrl+T için).
-   * Tüm fonksiyonları, değişkenleri ve struct tanımlarını listeler.
+   * Предоставляет символы рабочего пространства (Ctrl+T).
+   * Ищет функции, переменные и структуры по всем файлам.
    */
   public onWorkspaceSymbol(
     params: WorkspaceSymbolParams,
@@ -19,7 +19,7 @@ export class WorkspaceSymbolsProvider {
     const query = params.query.toUpperCase();
     const symbols: WorkspaceSymbol[] = [];
 
-    // Fonksiyonları ekle
+    // 1. Функции
     for (const func of state.functionsDeclared) {
       if (query === "" || func.name.toUpperCase().includes(query)) {
         symbols.push({
@@ -34,7 +34,7 @@ export class WorkspaceSymbolsProvider {
       }
     }
 
-    // Değişkenleri ekle
+    // 2. Переменные
     for (const [uri, variables] of state.fileVariablesMap.entries()) {
       const containerName = this.getContainerName(uri);
       for (const variable of variables) {
@@ -42,6 +42,9 @@ export class WorkspaceSymbolsProvider {
           symbols.push({
             name: variable.name,
             kind: this.getSymbolKind(variable.type),
+            // Внимание: местоположение указывает на начало файла (строка 0),
+            // так как коллектор переменных пока не сохраняет номера строк.
+            // Для точной навигации требуется обновление коллектора.
             location: Location.create(uri, {
               start: Position.create(0, 0),
               end: Position.create(0, variable.name.length),
@@ -52,14 +55,14 @@ export class WorkspaceSymbolsProvider {
       }
     }
 
-    // Struct tanımlarını ekle
+    // 3. Структуры
     for (const structName of Object.keys(state.structDefinitions)) {
       if (query === "" || structName.toUpperCase().includes(query)) {
         symbols.push({
           name: structName,
           kind: SymbolKind.Struct,
           location: Location.create(
-            "", // URI bilinmiyor, genel arama
+            "", // URI неизвестен в текущей структуре данных
             {
               start: Position.create(0, 0),
               end: Position.create(0, structName.length),
@@ -70,12 +73,11 @@ export class WorkspaceSymbolsProvider {
       }
     }
 
-    // Sonuçları sınırla (performans için)
+    // Ограничиваем количество результатов для производительности
     return symbols.slice(0, 100);
   }
 
   private getContainerName(uri: string): string {
-    // URI'den dosya adını çıkar
     const parts = uri.split("/");
     return parts[parts.length - 1] || "";
   }

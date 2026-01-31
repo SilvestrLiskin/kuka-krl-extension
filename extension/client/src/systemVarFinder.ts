@@ -3,10 +3,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { t } from "./i18n";
 
-// SystemVarInfo interface removed - not used
-
 /**
- * Ищет все системные переменные ($...) в workspace
+ * Ищет все системные переменные ($...) в рабочем пространстве.
  */
 export async function findSystemVariables(): Promise<
   Map<string, vscode.Location[]>
@@ -63,7 +61,7 @@ export async function findSystemVariables(): Promise<
 }
 
 /**
- * Показывает Quick Pick со списком найденных системных переменных
+ * Показывает Quick Pick со списком найденных системных переменных.
  */
 export async function showSystemVariablesPicker(): Promise<void> {
   const statusBar = vscode.window.setStatusBarMessage(
@@ -129,7 +127,7 @@ export async function showSystemVariablesPicker(): Promise<void> {
 }
 
 /**
- * Возвращает строку с уникальными файлами
+ * Возвращает строку с списком уникальных файлов, где найдена переменная.
  */
 function getUniqueFiles(locations: vscode.Location[]): string {
   const files = new Set(locations.map((l) => path.basename(l.uri.fsPath)));

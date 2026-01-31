@@ -4,42 +4,24 @@ import * as path from "path";
 import { t } from "../i18n";
 
 /**
- * Parses a DECL line to extract variable names.
- * Example: "DECL INT a, b[5], c" -> ["a", "b", "c"]
+ * Парсит строку DECL для извлечения имен переменных.
+ * Пример: "DECL INT a, b[5], c" -> ["a", "b", "c"]
  */
 function extractVariableNames(declLine: string): string[] {
-  // Remove DECL, types, GLOBAL, etc. to get the variable list
-  // This is a simplified approach. A full parser would be better but regex suffices for KRL.
-  // Regex from collector.ts:
-  // /^\s*(?:(?:GLOBAL\s+)?(?:CONST\s+)?DECL\s+(?:GLOBAL\s+)?(?:CONST\s+)?(\w+)|(?:GLOBAL\s+)?(?:CONST\s+)?(INT|REAL|...))\s+([^\r\n;]+)/gim;
-
-  const parts = declLine.split(";"); // Remove comments
+  // Удаляем DECL, типы, GLOBAL и т.д. чтобы получить список переменных
+  const parts = declLine.split(";"); // Удаляем комментарии
   let content = parts[0].trim();
 
-  // Remove keywords
+  // Удаляем ключевые слова
   content = content.replace(
     /^(GLOBAL\s+)?(CONST\s+)?(DECL\s+)?(GLOBAL\s+)?(CONST\s+)?/i,
     "",
   );
 
-  // Now we might have 'INT a, b' or just 'a, b' if type was removed differently?
-  // Actually the previous regex matched the type and the rest.
-  // Let's try to match the list part.
-  const match = content.match(/^(?:(?:\w+|\[\])\s+)?(.+)$/);
-  if (!match) return [];
-
-  // If there is a type at the beginning (INT, REAL, etc), remove it
-  // But struct types can be anything.
-  // So we just take everything after the first space if it matches a type pattern?
-  // This is risky.
-
-  // Let's use the collector approach: Split by comma respecting brackets.
-  // But we need to isolate the variable list first.
-
-  // Easier: Just look for the variable list.
-  // If the line starts with DECL/INT.., usually the first word is the type, the rest is vars.
+  // Пытаемся найти список переменных
+  // Обычно первое слово - это тип, остальное - переменные.
   const firstSpace = content.indexOf(" ");
-  if (firstSpace === -1) return []; // No variables? "DECL INT" ?
+  if (firstSpace === -1) return []; // Нет переменных? "DECL INT" ?
 
   const varListStr = content.substring(firstSpace).trim();
 
@@ -65,13 +47,16 @@ function extractVariableNames(declLine: string): string[] {
 
 function cleanVarName(raw: string): string {
   let name = raw.trim();
-  // Remove array dim: a[5] -> a
+  // Удаляем размерность массива: a[5] -> a
   name = name.replace(/\[.*?\]/g, "");
-  // Remove initialization: a = 5 -> a
+  // Удаляем инициализацию: a = 5 -> a
   name = name.split("=")[0].trim();
   return name;
 }
 
+/**
+ * Очищает неиспользуемые переменные в .dat файле.
+ */
 export async function cleanupUnusedVariables() {
   const editor = vscode.window.activeTextEditor;
   if (!editor) {
@@ -91,26 +76,24 @@ export async function cleanupUnusedVariables() {
     datPath = doc.fileName;
     srcPath = doc.fileName.replace(/\.dat$/i, ".src");
   } else {
-    vscode.window.showWarningMessage(t("warning.noActiveKrlFile")); // You might need to add this key or use string
+    vscode.window.showWarningMessage(t("warning.noActiveKrlFile"));
     return;
   }
 
   if (!fs.existsSync(datPath)) {
-    vscode.window.showWarningMessage("No corresponding .dat file found.");
+    vscode.window.showWarningMessage("Не найден соответствующий .dat файл.");
     return;
   }
 
-  // If .src is missing, we can still clean .dat but we can't check usages!
-  // Wait, if .src is missing, then ALL variables in .dat are unused? No, could be GLOBAL.
   if (!fs.existsSync(srcPath)) {
     vscode.window.showWarningMessage(
-      "No corresponding .src file found to check usages.",
+      "Не найден соответствующий .src файл для проверки использования.",
     );
     return;
   }
 
   const datDoc = await vscode.workspace.openTextDocument(datPath);
-  const srcDoc = await vscode.workspace.openTextDocument(srcPath); // Might be same if opened? No, file system
+  const srcDoc = await vscode.workspace.openTextDocument(srcPath);
 
   const datText = datDoc.getText();
   const srcText = srcDoc.getText();
@@ -118,18 +101,18 @@ export async function cleanupUnusedVariables() {
   const lines = datText.split(/\r?\n/);
   const unusedDecls: { lineIndex: number; varNames: string[] }[] = [];
 
-  // 1. Find all declarations in DAT
+  // 1. Находим все объявления в DAT
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const trimLine = line.trim();
 
-    // Skip comments
+    // Пропускаем комментарии
     if (trimLine.startsWith(";")) continue;
 
-    // Skip GLOBAL declarations - unsafe to remove as they might be used in other files
+    // Пропускаем GLOBAL объявления - их небезопасно удалять, так как они могут использоваться в других файлах
     if (/\bGLOBAL\b/i.test(trimLine)) continue;
 
-    // Check if it is a DECL
+    // Проверяем, является ли это DECL
     if (
       !/\b(DECL|INT|REAL|BOOL|CHAR|FRAME|POS|E6POS|E6AXIS|AXIS|LOAD|SIGNAL|STRING|STRUC|ENUM)\b/i.test(
         trimLine,
@@ -138,37 +121,27 @@ export async function cleanupUnusedVariables() {
       continue;
     }
 
-    // Exclude specific KUKA lines like "&ACCESS" or simple key-values if any
+    // Исключаем специфические строки KUKA, например "&ACCESS"
     if (trimLine.startsWith("&")) continue;
 
     const vars = extractVariableNames(trimLine);
     if (vars.length === 0) continue;
 
-    // Check usages in SRC (and DAT itself!)
-    // Simple string search.
-    // We must ensure we match whole words.
+    // Проверяем использование в SRC (и в самом DAT!)
+    // Простой поиск подстроки.
     let isUsed = false;
 
     for (const v of vars) {
-      const regex = new RegExp(`\\b${v}\\b`, "i"); // Case insensitive? KRL is case insensitive.
+      const regex = new RegExp(`\\b${v}\\b`, "i");
 
-      // Check in SRC
+      // Проверка в SRC
       if (regex.test(srcText)) {
         isUsed = true;
         break;
       }
 
-      // Check in DAT (excluding the declaration line itself)
-      // We need to match in DAT carefully.
-      // Issues: internal DAT references?
-      // e.g. DECL INT a = 5
-      // DECL INT b = a -- usage!
-
-      // For simplicity, let's regex the WHOLE dat text.
-      // But we need to exclude the current declaration instance.
-      // If the variable appears MORE than once in DAT, it's used?
-      // Or better: Remove the current line from DAT text, then check.
-
+      // Проверка в DAT (исключая саму строку объявления)
+      // Если переменная появляется в DAT более одного раза (например, используется для инициализации другой), она используется.
       const datWithoutLine = lines.filter((_, idx) => idx !== i).join("\n");
       if (regex.test(datWithoutLine)) {
         isUsed = true;
@@ -182,22 +155,21 @@ export async function cleanupUnusedVariables() {
   }
 
   if (unusedDecls.length === 0) {
-    vscode.window.showInformationMessage("No unused variables found.");
+    vscode.window.showInformationMessage("Неиспользуемые переменные не найдены.");
     return;
   }
 
-  // Prompt user
+  // Запрос пользователю
   const result = await vscode.window.showInformationMessage(
-    `Found ${unusedDecls.length} lines with unused variables. Delete them?`,
-    "Yes",
-    "No",
+    `Найдено ${unusedDecls.length} строк с неиспользуемыми переменными. Удалить их?`,
+    "Да",
+    "Нет",
   );
 
-  if (result === "Yes") {
+  if (result === "Да") {
     const edit = new vscode.WorkspaceEdit();
 
-    // Map lines to ranges
-    // Deleting lines: We should probably delete the whole line.
+    // Удаление строк
     for (const decl of unusedDecls) {
       const line = datDoc.lineAt(decl.lineIndex);
       edit.delete(datDoc.uri, line.rangeIncludingLineBreak);
@@ -205,7 +177,7 @@ export async function cleanupUnusedVariables() {
 
     await vscode.workspace.applyEdit(edit);
     vscode.window.showInformationMessage(
-      `Removed ${unusedDecls.length} lines.`,
+      `Удалено ${unusedDecls.length} строк.`,
     );
   }
 }

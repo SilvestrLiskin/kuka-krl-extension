@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 
 /**
- * Tree item для файла KRL
+ * Элемент дерева для файла KRL.
  */
 export class KRLFileItem extends vscode.TreeItem {
   constructor(
@@ -39,7 +39,7 @@ export class KRLFileItem extends vscode.TreeItem {
 }
 
 /**
- * Tree item для папки
+ * Элемент дерева для папки.
  */
 export class FolderItem extends vscode.TreeItem {
   constructor(
@@ -60,7 +60,8 @@ export class FolderItem extends vscode.TreeItem {
 }
 
 /**
- * Провайдер Tree View для структуры проекта KRC
+ * Провайдер Tree View для структуры проекта KRC.
+ * Отображает структуру папок KRC/R1 или плоский список файлов.
  */
 export class KRCTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<
@@ -76,12 +77,18 @@ export class KRCTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
     this.refresh();
   }
 
+  /**
+   * Обновляет данные дерева.
+   */
   refresh(): void {
     this.buildTree().then(() => {
       this._onDidChangeTreeData.fire(undefined);
     });
   }
 
+  /**
+   * Строит дерево файлов и папок.
+   */
   private async buildTree(): Promise<void> {
     this.rootItems = [];
 
@@ -102,13 +109,16 @@ export class KRCTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
         const r1Folder = await this.buildFolderItem("🤖 R1", r1Path);
         if (r1Folder) this.rootItems.push(r1Folder);
       } else {
-        // Просто показываем все KRL файлы в корне
+        // Просто показываем все KRL файлы в корне, если структура не распознана
         const items = await this.buildFolderItem(`📁 ${folder.name}`, rootPath);
         if (items) this.rootItems.push(items);
       }
     }
   }
 
+  /**
+   * Рекурсивно строит элементы папки.
+   */
   private async buildFolderItem(
     name: string,
     folderPath: string,
@@ -127,7 +137,7 @@ export class KRCTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
         const subPath = path.join(folderPath, folder.name);
         const folderName = folder.name.toUpperCase();
 
-        // Добавляем эмодзи для известных папок
+        // Добавляем эмодзи для известных системных папок KUKA
         let displayName = folder.name;
         if (folderName === "PROGRAM") displayName = "📂 " + folder.name;
         else if (folderName === "SYSTEM") displayName = "⚙️ " + folder.name;
@@ -162,14 +172,19 @@ export class KRCTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
 
       return new FolderItem(name, folderPath, children);
     } catch {
-      // Error reading folder - silently ignored
+      // Ошибка чтения папки игнорируется
       return null;
     }
   }
 
+  /**
+   * Проверяет, является ли папка важной (должна отображаться даже если пуста).
+   */
   private isImportantFolder(name: string): boolean {
     const important = ["KRC", "R1", "PROGRAM", "SYSTEM", "TP", "STEU", "MADA"];
-    return important.includes(name.toUpperCase());
+    // Удаляем эмодзи перед проверкой, если они есть
+    const cleanName = name.replace(/^[^\w\s]+\s*/, "");
+    return important.includes(cleanName.toUpperCase());
   }
 
   getTreeItem(element: vscode.TreeItem): vscode.TreeItem {

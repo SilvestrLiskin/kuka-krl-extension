@@ -11,7 +11,7 @@ import { t } from "../lib/i18n";
 
 export class SignatureHelpProvider {
   /**
-   * Fonksiyon çağrısında parametre bilgisi sağlar.
+   * Предоставляет справку по сигнатуре функции (параметры).
    */
   public onSignatureHelp(
     params: SignatureHelpParams,
@@ -25,11 +25,11 @@ export class SignatureHelpProvider {
     const lineText = lines[params.position.line];
     const textBeforeCursor = lineText.substring(0, params.position.character);
 
-    // Açık parantez bul
+    // Находим открывающую скобку
     const openParenIndex = this.findOpenParen(textBeforeCursor);
     if (openParenIndex === -1) return null;
 
-    // Fonksiyon adını bul
+    // Находим имя функции перед скобкой
     const textBeforeParen = textBeforeCursor
       .substring(0, openParenIndex)
       .trim();
@@ -38,18 +38,17 @@ export class SignatureHelpProvider {
 
     const funcName = funcMatch[1];
 
-    // Fonksiyon tanımını bul
     const funcInfo = state.functionsDeclared.find(
       (f) => f.name.toUpperCase() === funcName.toUpperCase(),
     );
 
     if (!funcInfo || !funcInfo.params) return null;
 
-    // Parametreleri ayrıştır
+    // Парсинг параметров
     const params_list = this.parseParams(funcInfo.params);
     if (params_list.length === 0) return null;
 
-    // Aktif parametre indeksini bul
+    // Определение активного параметра
     const textInParens = textBeforeCursor.substring(openParenIndex + 1);
     const activeParameter = this.countCommas(textInParens);
 
@@ -76,7 +75,7 @@ export class SignatureHelpProvider {
   }
 
   /**
-   * En son eşleşmemiş açık parantezi bulur.
+   * Находит индекс соответствующей открывающей скобки.
    */
   private findOpenParen(text: string): number {
     let depth = 0;
@@ -95,7 +94,7 @@ export class SignatureHelpProvider {
   }
 
   /**
-   * Parametre string'ini ayrıştırır.
+   * Разбирает строку параметров на отдельные параметры.
    */
   private parseParams(paramsStr: string): string[] {
     if (!paramsStr.trim()) return [];
@@ -127,7 +126,7 @@ export class SignatureHelpProvider {
   }
 
   /**
-   * Parantez içindeki virgül sayısını sayar (nested parantezleri dikkate alarak).
+   * Считает количество запятых (учитывая вложенность и строки).
    */
   private countCommas(text: string): number {
     let count = 0;

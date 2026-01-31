@@ -14,7 +14,7 @@ import { WONDERLIB_FUNCTIONS } from "../lib/wonderlibFunctions";
 
 export class AutoCompleter {
   /**
-   * Otomatik tamamlama önerileri sağlar.
+   * Предоставляет предложения для автодополнения.
    */
   public onCompletion(
     params: CompletionParams,
@@ -26,7 +26,7 @@ export class AutoCompleter {
 
     const lines = document.getText().split(/\r?\n/);
 
-    // Yerel değişken tiplerini çıkar
+    // Извлечение типов локальных переменных для контекстного дополнения
     const localVariableStructTypes: Record<string, string> = {};
     for (const line of lines) {
       const declRegex =
@@ -42,11 +42,12 @@ export class AutoCompleter {
     const line = lines[params.position.line];
     const textBefore = line.substring(0, params.position.character);
 
-    // Nokta sonrası - struct üyelerini öner
+    // Дополнение после точки (члены структур)
     const dotMatch = textBefore.match(/(\w+)\.$/);
     if (dotMatch) {
       const varName = dotMatch[1];
       const structName = localVariableStructTypes[varName];
+      // Здесь можно добавить поиск типа глобальной переменной, если локально не найдено
       const members = state.structDefinitions[structName];
       if (members) {
         return members.map((member) => ({
@@ -57,7 +58,7 @@ export class AutoCompleter {
       return [];
     }
 
-    // === 1. Fonksiyon tamamlamaları ===
+    // === 1. Пользовательские функции ===
     const functionItems: CompletionItem[] = state.functionsDeclared.map(
       (fn) => {
         const paramList = fn.params
@@ -82,35 +83,20 @@ export class AutoCompleter {
       },
     );
 
-    // === 2. Anahtar kelime tamamlamaları ===
-    const currentWord =
-      textBefore.trim().split(/\s+/).pop()?.toUpperCase() || "";
-
-    const filtered = CODE_KEYWORDS.filter((kw) =>
-      kw.includes(currentWord),
-    ).sort((a, b) => {
-      const aStarts = a.startsWith(currentWord);
-      const bStarts = b.startsWith(currentWord);
-      if (aStarts && !bStarts) return -1;
-      if (!aStarts && bStarts) return 1;
-      return a.localeCompare(b);
-    });
-
-    const keywordsFiltered = filtered.map((kw) => ({
+    // === 2. Ключевые слова ===
+    // Возвращаем все ключевые слова, фильтрацию делает клиент
+    const uniqueKeywordItems = CODE_KEYWORDS.map((kw) => ({
       label: kw,
       kind: CompletionItemKind.Keyword,
       data: kw,
       sortText: kw,
       filterText: kw,
-    }));
-
-    // Fonksiyonlarla çakışan anahtar kelimeleri filtrele
-    const uniqueKeywordItems = keywordsFiltered.filter(
+    })).filter(
       (kwItem) =>
         !functionItems.some((fnItem) => fnItem.label === kwItem.label),
     );
 
-    // === 3. KSS 8.7 Sistem Değişkenleri ===
+    // === 3. Системные переменные KSS 8.7 ===
     const sysVarItems = KSS_87_SYSTEM_VARS.map((v) => ({
       label: v,
       kind: CompletionItemKind.Variable,
@@ -119,7 +105,7 @@ export class AutoCompleter {
       filterText: v,
     }));
 
-    // === 4. Değişken tamamlamaları ===
+    // === 4. Пользовательские переменные ===
     const varItems: CompletionItem[] = state.mergedVariables.map((v) => ({
       label: v.name,
       kind: CompletionItemKind.Variable,
@@ -128,7 +114,7 @@ export class AutoCompleter {
       filterText: v.name,
     }));
 
-    // === 5. Wonderlibrary Functions ===
+    // === 5. Функции Wonderlibrary ===
     const wonderlibItems: CompletionItem[] = WONDERLIB_FUNCTIONS.map((fn) => {
       const paramList = fn.params
         .split(",")
@@ -147,11 +133,11 @@ export class AutoCompleter {
         documentation: fn.description,
         commitCharacters: ["("],
         filterText: fn.name,
-        sortText: `zz_${fn.name}`, // Sort after user functions
+        sortText: `zz_${fn.name}`, // Сортировка после пользовательских функций
       };
     });
 
-    // Filter out wonderlib functions that are already declared by user
+    // Фильтрация wonderlib функций, если они уже переопределены пользователем
     const uniqueWonderlibItems = wonderlibItems.filter(
       (wlItem) =>
         !functionItems.some(
@@ -159,7 +145,7 @@ export class AutoCompleter {
         ),
     );
 
-    // === 6. Tüm tamamlamaları döndür ===
+    // === 6. Объединение результатов ===
     return [
       ...functionItems,
       ...uniqueWonderlibItems,

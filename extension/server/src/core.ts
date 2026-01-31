@@ -42,8 +42,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
 
-// DEBUG KAYIT - Hata ayıklama için log dosyası
-// Sadece DEBUG ortam değişkeni ayarlandığında loglar
+// DEBUG LOG - Файл лога для отладки
+// Логирует только если установлена переменная окружения
 const DEBUG_ENABLED = process.env.KRL_DEBUG === "true";
 const logFile = DEBUG_ENABLED
   ? path.join(os.tmpdir(), "krl-server-debug.log")
@@ -54,27 +54,27 @@ function log(msg: string) {
   try {
     fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${msg}\n`);
   } catch {
-    // Log yazma hatası sessizce yok sayılır
+    // Игнорируем ошибки записи лога
   }
 }
 
-// Sunucu başlatılıyor
-log(`Sunucu başlatılıyor. Node: ${process.version}, PID: ${process.pid}`);
+// Запуск сервера
+log(`Запуск сервера. Node: ${process.version}, PID: ${process.pid}`);
 
-// Hata yakalama
+// Перехват исключений
 process.on("uncaughtException", (err) => {
-  log("Yakalanmamış Hata: " + err.toString() + "\n" + (err.stack || ""));
+  log("Неперехваченная ошибка: " + err.toString() + "\n" + (err.stack || ""));
   process.exit(1);
 });
 process.on("unhandledRejection", (err) => {
-  log("İşlenmemiş Red: " + (err instanceof Error ? err.stack : err));
+  log("Необработанный отказ: " + (err instanceof Error ? err.stack : err));
 });
 
-// Bağlantı oluştur
+// Создание соединения
 const connection = createConnection(ProposedFeatures.all);
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
-// Global Durum
+// Глобальное состояние
 const state: ServerState = {
   workspaceRoot: null,
   fileVariablesMap: new Map(),
@@ -91,22 +91,22 @@ let serverConfig = {
   separateAfterBlocks: false,
 };
 
-// Debounce механизм для валидации документов
-// Это предотвращает ложные ошибки при быстром редактировании
+// Механизм debounce для валидации документов
+// Предотвращает ложные срабатывания при быстром вводе
 const validationTimeouts = new Map<string, NodeJS.Timeout>();
-const VALIDATION_DELAY_MS = 750; // Увеличена задержка для предотвращения ложных ошибок
+const VALIDATION_DELAY_MS = 750;
 
-// Флаг готовности инициализации workspace
-// Пока workspace не загружен полностью, не показываем ошибки "переменная не определена"
+// Флаг инициализации рабочего пространства
+// Пока не загружено, ошибки "переменная не определена" не показываются
 let workspaceInitialized = false;
 
 function scheduleValidation(uri: string, validationFn: () => void) {
-  // Отменяем предыдущий таймаут для этого документа
+  // Отменяем предыдущий таймаут
   const existingTimeout = validationTimeouts.get(uri);
   if (existingTimeout) {
     clearTimeout(existingTimeout);
   }
-  // Планируем новую валидацию
+  // Планируем новый
   const timeout = setTimeout(() => {
     validationTimeouts.delete(uri);
     validationFn();
@@ -114,7 +114,7 @@ function scheduleValidation(uri: string, validationFn: () => void) {
   validationTimeouts.set(uri, timeout);
 }
 
-// Özellikler
+// Инициализация провайдеров функций
 const definitions = new SymbolResolver();
 const completions = new AutoCompleter();
 const hoverInfo = new InfoProvider();
@@ -131,15 +131,15 @@ const callHierarchy = new CallHierarchyProvider();
 const diagnostics = new DiagnosticsProvider(connection);
 
 // =======================
-// Başlatma İşleyicileri
+// Обработчики инициализации
 // =======================
 
 connection.onInitialize((params: InitializeParams): InitializeResult => {
-  log(`[Başlatma] Kök URI: ${params.rootUri}`);
+  log(`[Инициализация] Root URI: ${params.rootUri}`);
   state.workspaceRoot = params.rootUri
     ? URI.parse(params.rootUri).fsPath
     : null;
-  log(`[Başlatma] Çalışma alanı kökü ayarlandı: ${state.workspaceRoot}`);
+  log(`[Инициализация] Рабочая директория: ${state.workspaceRoot}`);
   diagnostics.setWorkspaceRoot(state.workspaceRoot);
 
   return {
@@ -209,7 +209,7 @@ connection.onNotification("custom/setLocale", (locale: string) => {
 connection.onInitialized(async () => {
   if (!state.workspaceRoot) return;
 
-  // .dat dosyalarından değişkenleri yükle
+  // Загрузка переменных из .dat файлов
   const datFiles = await getAllDatFiles(state.workspaceRoot);
   for (const filePath of datFiles) {
     try {
@@ -220,32 +220,32 @@ connection.onInitialized(async () => {
       extractor.extractFromText(content);
       state.fileVariablesMap.set(uri, extractor.getVariables());
 
-      // Struct tanımlarını güncelle
+      // Обновление определений структур
       const structs = extractStrucVariables(content);
       Object.assign(state.structDefinitions, structs);
     } catch (err) {
-      connection.console.error(`Dosya okuma hatası ${filePath}: ${err}`);
+      connection.console.error(`Ошибка чтения файла ${filePath}: ${err}`);
     }
   }
 
-  // .src ve .sub dosyalarından fonksiyonları yükle
+  // Загрузка функций из .src и .sub файлов
   await extractFunctionsFromWorkspace(state.workspaceRoot);
 
   state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
 
-  // Fonksiyon önbelleğini güncelle
+  // Обновление кэша функций
   diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
 
-  // Workspace полностью инициализирован - теперь можно показывать ошибки
+  // Workspace полностью инициализирован
   workspaceInitialized = true;
 
   log(
-    `[Başlatma] ${state.functionsDeclared.length} fonksiyon ve ${state.mergedVariables.length} değişken yüklendi.`,
+    `[Инициализация] Загружено ${state.functionsDeclared.length} функций и ${state.mergedVariables.length} переменных.`,
   );
 });
 
 /**
- * Çalışma alanındaki tüm kaynak dosyalardan fonksiyon tanımlarını çıkarır.
+ * Извлекает определения функций из всех исходных файлов рабочего пространства.
  */
 async function extractFunctionsFromWorkspace(
   workspaceRoot: string,
@@ -270,7 +270,7 @@ async function extractFunctionsFromWorkspace(
           const params = match[3] ? match[3].trim() : "";
           const startChar = line.indexOf(funcName);
 
-          // Tekrar kontrolü
+          // Проверка на дубликаты
           if (
             !state.functionsDeclared.some(
               (f) => f.name.toUpperCase() === funcName.toUpperCase(),
@@ -288,22 +288,22 @@ async function extractFunctionsFromWorkspace(
         }
       }
     } catch (err) {
-      log(`Fonksiyon çıkarma hatası ${filePath}: ${err}`);
+      log(`Ошибка извлечения функций из ${filePath}: ${err}`);
     }
   }
 }
 
 // ==========================
-// Belge Değişiklik Olayı
+// Обработка изменений документа
 // ==========================
 
 documents.onDidChangeContent(async (change) => {
   const { document } = change;
 
-  // Örtülü Çalışma Alanı Çıkarımı
+  // Неявное определение корня, если не задан
   if (!state.workspaceRoot) {
     let currentDir = path.dirname(URI.parse(document.uri).fsPath);
-    // Kök bulmak için yukarı doğru ara
+    // Ищем вверх по дереву папки KRC или R1
     while (currentDir.length > 1) {
       if (
         fs.existsSync(path.join(currentDir, "KRC")) ||
@@ -313,14 +313,14 @@ documents.onDidChangeContent(async (change) => {
         break;
       }
       const parent = path.dirname(currentDir);
-      if (parent === currentDir) break; // Köke ulaşıldı
+      if (parent === currentDir) break; // Достигнут корень диска
       currentDir = parent;
     }
     state.workspaceRoot = currentDir;
-    log(`[ÖrtülüKök] Çıkarılan kök: ${state.workspaceRoot}`);
+    log(`[НеявныйКорень] Определен корень: ${state.workspaceRoot}`);
     diagnostics.setWorkspaceRoot(state.workspaceRoot);
 
-    // onInitialized atlandığı için ilk tarama
+    // Первичное сканирование (так как onInitialized был пропущен/не сработал корректно без корня)
     const datFiles = await getAllDatFiles(state.workspaceRoot);
     for (const filePath of datFiles) {
       try {
@@ -333,63 +333,53 @@ documents.onDidChangeContent(async (change) => {
         const structs = extractStrucVariables(content);
         Object.assign(state.structDefinitions, structs);
       } catch (err) {
-        log(`Dosya okuma hatası ${filePath}: ${err}`);
+        log(`Ошибка чтения файла ${filePath}: ${err}`);
       }
     }
 
-    // Fonksiyonları da yükle
     await extractFunctionsFromWorkspace(state.workspaceRoot);
     state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
-
-    // Fonksiyon önbelleğini güncelle
     diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
-
-    // Workspace полностью инициализирован (неявное определение)
     workspaceInitialized = true;
   }
 
   if (document.uri.endsWith(".dat")) {
     diagnostics.validateDatFile(document);
 
-    // Struct tanımlarını güncelle
+    // Обновление структур
     const structs = extractStrucVariables(document.getText());
     Object.assign(state.structDefinitions, structs);
   }
 
-  // Değişkenleri güncelle
+  // Обновление переменных
   const extractor = new SymbolExtractor();
   extractor.extractFromText(document.getText());
   state.fileVariablesMap.set(document.uri, extractor.getVariables());
 
   state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
 
-  // Fonksiyonları güncelle (mevcut dosyadan)
+  // Обновление функций из текущего документа
   updateFunctionsFromDocument(document);
 
-  // Fonksiyon önbelleğini güncelle
+  // Обновление кэша
   diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
 
-  // Запланировать валидацию с задержкой (предотвращает ложные ошибки)
-  // Сохраняем URI и версию документа для безопасного обращения в callback
+  // Планирование валидации с задержкой
   const docUri = document.uri;
   const docVersion = document.version;
 
   scheduleValidation(docUri, () => {
-    // Получаем актуальный документ из коллекции
     const currentDoc = documents.get(docUri);
-    // Если документ закрыт или версия изменилась — пропускаем валидацию
+    // Если документ закрыт или версия изменилась — пропускаем
     if (!currentDoc || currentDoc.version !== docVersion) {
       return;
     }
 
-    // Tüm teşhisleri topla ve tek seferde gönder
     let allDiagnostics: import("vscode-languageserver/node").Diagnostic[] = [];
 
-    // Обновляем mergedVariables перед валидацией (могут быть загружены новые переменные)
     state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
 
-    // Kullanım doğrulaması - только если workspace полностью загружен
-    // Это предотвращает ложные ошибки "переменная не определена" при открытии файлов
+    // Валидация использования переменных (только если workspace загружен)
     if (workspaceInitialized) {
       const varDiags = diagnostics.validateVariablesUsage(
         currentDoc,
@@ -398,7 +388,7 @@ documents.onDidChangeContent(async (change) => {
       allDiagnostics.push(...varDiags);
     }
 
-    // Safety diagnostics для SRC файлов
+    // Дополнительные проверки для SRC файлов
     if (currentDoc.uri.toLowerCase().endsWith(".src")) {
       allDiagnostics.push(
         ...diagnostics.validateSafetySpeeds(currentDoc),
@@ -412,7 +402,6 @@ documents.onDidChangeContent(async (change) => {
       );
     }
 
-    // Tüm teşhisleri tek seferde gönder
     connection.sendDiagnostics({
       uri: currentDoc.uri,
       diagnostics: allDiagnostics,
@@ -421,7 +410,7 @@ documents.onDidChangeContent(async (change) => {
 });
 
 /**
- * Tek bir belgeden fonksiyon tanımlarını günceller.
+ * Обновляет определения функций из одного документа.
  */
 function updateFunctionsFromDocument(document: TextDocument): void {
   const uri = document.uri;
@@ -430,7 +419,7 @@ function updateFunctionsFromDocument(document: TextDocument): void {
   const defRegex =
     /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(([^)]*)\)/gim;
 
-  // Bu URI'ye ait eski fonksiyonları kaldır
+  // Удаляем старые функции этого файла
   state.functionsDeclared = state.functionsDeclared.filter(
     (f) => f.uri !== uri,
   );
@@ -458,13 +447,13 @@ function updateFunctionsFromDocument(document: TextDocument): void {
 }
 
 // =====================
-// Özel İstekler
+// Пользовательские запросы
 // =====================
 
 connection.onNotification("custom/validateWorkspace", async () => {
   if (!state.workspaceRoot) return;
 
-  log("[ÇalışmaAlanıDoğrulama] Tam tarama başlatılıyor...");
+  log("[ВалидацияРабочегоПространства] Начало полного сканирования...");
   const files = await getAllSourceFiles(state.workspaceRoot);
 
   for (const filePath of files) {
@@ -472,7 +461,6 @@ connection.onNotification("custom/validateWorkspace", async () => {
       const content = await fs.promises.readFile(filePath, "utf8");
       const uri = URI.file(filePath).toString();
 
-      // Teşhis için TextDocument oluştur
       const doc = TextDocument.create(uri, "krl", 1, content);
 
       if (doc.uri.endsWith(".dat")) {
@@ -480,14 +468,16 @@ connection.onNotification("custom/validateWorkspace", async () => {
       }
       diagnostics.validateVariablesUsage(doc, state.mergedVariables);
     } catch (e) {
-      log(`Doğrulama hatası ${filePath}: ${e}`);
+      log(`Ошибка валидации ${filePath}: ${e}`);
     }
   }
-  log(`[ÇalışmaAlanıDoğrulama] Tamamlandı. ${files.length} dosya tarandı.`);
+  log(
+    `[ВалидацияРабочегоПространства] Завершено. Сканировано файлов: ${files.length}.`,
+  );
 });
 
 // =====================
-// İstek İşleyicileri
+// Обработчики LSP запросов
 // =====================
 
 connection.onDefinition((params: DefinitionParams) => {
@@ -559,7 +549,7 @@ connection.languages.callHierarchy.onOutgoingCalls((params) => {
 });
 
 // =====================
-// Yardımcı Fonksiyonlar
+// Вспомогательные функции
 // =====================
 
 function mergeAllVariables(map: Map<string, VariableInfo[]>): VariableInfo[] {
@@ -578,6 +568,6 @@ function mergeAllVariables(map: Map<string, VariableInfo[]>): VariableInfo[] {
   return result;
 }
 
-// Sunucuyu Başlat
+// Запуск прослушивания
 connection.listen();
 documents.listen(connection);

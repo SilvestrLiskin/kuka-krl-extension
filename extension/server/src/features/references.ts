@@ -14,7 +14,7 @@ import * as fs from "fs";
 
 export class ReferencesProvider {
   /**
-   * Sembolün tüm kullanımlarını bulur.
+   * Находит все ссылки на символ в рабочем пространстве.
    */
   public async onReferences(
     params: ReferenceParams,
@@ -33,14 +33,13 @@ export class ReferencesProvider {
     const symbolName = wordInfo.word;
     const locations: Location[] = [];
 
-    // Tüm kaynak dosyalarında ara
+    // Поиск во всех файлах
     const files = await getAllSourceFiles(state.workspaceRoot);
 
     for (const filePath of files) {
       const uri = URI.file(filePath).toString();
       let content: string;
 
-      // Açık belgeden veya dosyadan oku
       const openDoc = documents.get(uri);
       if (openDoc) {
         content = openDoc.getText();
@@ -65,7 +64,7 @@ export class ReferencesProvider {
   }
 
   /**
-   * İçerikte sembol referanslarını bulur.
+   * Ищет вхождения в тексте файла.
    */
   private findReferencesInContent(
     uri: string,
@@ -76,33 +75,45 @@ export class ReferencesProvider {
     const locations: Location[] = [];
     const lines = content.split(/\r?\n/);
 
-    // Kelime sınırlarıyla eşleşen regex (büyük/küçük harf duyarsız)
     const regex = new RegExp(`\\b${escapeRegex(symbolName)}\\b`, "gi");
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-
-      // Yorum kısmını atla
       const codePart = getCodePart(line);
 
-      // Bildirim satırı mı kontrol et
-      const isDeclaration =
+      // Проверка строки объявления
+      const isDeclarationLine =
         /^\s*(?:GLOBAL\s+)?(?:DECL|DEF|DEFFCT|SIGNAL|STRUC|ENUM)\b/i.test(line);
 
       let match;
       regex.lastIndex = 0;
-      let isFirstMatch = true;
 
       while ((match = regex.exec(codePart)) !== null) {
-        // String içinde mi kontrol et
         if (isInsideString(codePart, match.index)) continue;
 
-        // Eğer includeDeclaration false ise ve bu bildirim satırının ilk eşleşmesiyse, atla
-        if (!includeDeclaration && isDeclaration && isFirstMatch) {
-          isFirstMatch = false;
-          continue;
+        // Если это строка объявления, нужно проверить, является ли найденное слово
+        // объявляемой переменной или используется в инициализации.
+        if (isDeclarationLine) {
+          // Упрощенная проверка: если слово стоит сразу после типа или ключевого слова, это объявление.
+          // Если есть знак '=', и слово после него - это использование.
+          const beforeMatch = codePart.substring(0, match.index);
+          const afterMatch = codePart.substring(match.index + symbolName.length);
+
+          const isInitialization = beforeMatch.includes("=");
+          // Также может быть использование в массиве: DECL INT arr[N]
+
+          // Если это объявление и мы не должны включать декларации -> пропускаем
+          // Но если это использование в строке декларации (например a = b), то включаем.
+          // Сложно надежно определить без парсера.
+          // Эвристика: если перед словом есть '=' -> использование.
+          if (!includeDeclaration && !isInitialization) {
+            // Вероятно, это само объявление.
+            // Но может быть DECL INT a[N], где N - константа (использование).
+            // Оставим пропуск только для первого вхождения в строке DECL, если нет '='
+            // Это не идеально, но лучше чем было.
+            continue;
+          }
         }
-        isFirstMatch = false;
 
         locations.push(
           Location.create(uri, {

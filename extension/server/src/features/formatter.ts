@@ -7,37 +7,35 @@ import {
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { CODE_KEYWORDS } from "../lib/parser";
 
-// Преобразуем массив ключевых слов в Set для O(1) поиска
+// Набор ключевых слов для быстрого поиска
 const KEYWORDS = new Set(CODE_KEYWORDS);
 
-// Girinti azaltan anahtar kelimeler - satır yazdırılmadan ÖNCE
+// Ключевые слова, уменьшающие отступ (перед строкой)
 const DECREASE_INDENT =
   /^\s*(END|ENDFCT|ENDDAT|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|UNTIL|ENDSWITCH|CASE|DEFAULT|ELSE)\b/i;
 
-// Girinti artıran anahtar kelimeler - satır yazdırıldıktan SONRA
+// Ключевые слова, увеличивающие отступ (после строки)
 const INCREASE_INDENT =
   /^\s*(DEF|DEFFCT|DEFDAT|IF|ELSE|FOR|WHILE|LOOP|REPEAT|SWITCH|CASE|DEFAULT)\b/i;
 
-// Блоки, перед которыми можно добавить пустую строку
+// Блоки для добавления пустой строки перед ними
 const BLOCK_START = /^\s*(FOR|IF|WHILE|LOOP|REPEAT|SWITCH)\b/i;
 
-// Блоки, после которых можно добавить пустую строку
+// Блоки для добавления пустой строки после них
 const BLOCK_END = /^\s*(ENDFOR|ENDIF|ENDWHILE|ENDLOOP|UNTIL|ENDSWITCH)\b/i;
 
-// Настройки форматирования (получаются из клиента)
 interface FormattingSettings {
   separateBeforeBlocks: boolean;
   separateAfterBlocks: boolean;
 }
 
-// Хранилище настроек
 let formattingSettings: FormattingSettings = {
   separateBeforeBlocks: false,
   separateAfterBlocks: false,
 };
 
 /**
- * Устанавливает настройки форматирования.
+ * Установка настроек форматирования.
  */
 export function setFormattingSettings(
   settings: Partial<FormattingSettings>,
@@ -47,7 +45,7 @@ export function setFormattingSettings(
 
 export class KrlFormatter {
   /**
-   * Belge biçimlendirmesi sağlar - girinti ve anahtar kelime büyük harfleştirme.
+   * Форматирует документ (отступы, регистр ключевых слов).
    */
   provideFormatting(
     params: DocumentFormattingParams,
@@ -70,37 +68,33 @@ export class KrlFormatter {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
-      // const originalLine = lines[i]; // Not used
 
       if (line.length === 0) {
-        // Boş satır - sadece boşlukları temizle
         resultLines.push("");
         continue;
       }
 
-      // Yorum kısmını ayır
+      // Отделяем комментарий
       const commentIndex = line.indexOf(";");
       let codePart = commentIndex >= 0 ? line.substring(0, commentIndex) : line;
 
-      // Anahtar kelimeleri büyük harfe dönüştür
+      // Приводим ключевые слова к верхнему регистру (исключая строки)
       codePart = this.uppercaseKeywords(codePart);
 
-      // Satırı yeniden oluştur
+      // Собираем строку обратно
       const formattedLine =
         commentIndex >= 0 ? codePart + line.substring(commentIndex) : codePart;
 
-      // Girinti hesapla
-      // 1. Bu satır için azaltma gerekiyor mu?
+      // Уменьшение отступа
       if (DECREASE_INDENT.test(codePart)) {
         indentLevel = Math.max(0, indentLevel - 1);
       }
 
-      // Добавить пустую строку перед блоком (если включено)
+      // Пустая строка перед блоком
       if (
         formattingSettings.separateBeforeBlocks &&
         BLOCK_START.test(codePart)
       ) {
-        // Проверяем, что предыдущая строка не пустая
         if (
           resultLines.length > 0 &&
           resultLines[resultLines.length - 1].trim() !== ""
@@ -114,27 +108,25 @@ export class KrlFormatter {
 
       resultLines.push(newLineContent);
 
-      // Добавить пустую строку после блока (если включено)
+      // Пустая строка после блока
       if (formattingSettings.separateAfterBlocks && BLOCK_END.test(codePart)) {
-        // Пустая строка будет добавлена в следующей итерации, если следующая строка не пустая
-        // Добавляем только если это не последняя строка
         if (i < lines.length - 1 && lines[i + 1].trim() !== "") {
           resultLines.push("");
         }
       }
 
-      // 2. Sonraki satır için artırma gerekiyor mu?
+      // Увеличение отступа
       if (INCREASE_INDENT.test(codePart)) {
-        // Özel kontrol: IF ... ENDIF aynı satırda artırma yapmamalı
+        // Исключение для однострочного IF
         if (/^IF\b/i.test(codePart) && /\bENDIF\b/i.test(codePart)) {
-          // Değişiklik yok
+          // Нет изменения отступа
         } else {
           indentLevel++;
         }
       }
     }
 
-    // Формируем единый TextEdit для всего документа
+    // Замена всего текста
     const newText = resultLines.join("\n");
     if (newText !== text.replace(/\r\n/g, "\n")) {
       edits.push(
@@ -154,14 +146,77 @@ export class KrlFormatter {
   }
 
   /**
-   * Kod içindeki anahtar kelimeleri büyük harfe dönüştürür.
+   * Преобразует ключевые слова в верхний регистр, игнорируя содержимое строк.
    */
   private uppercaseKeywords(text: string): string {
-    return text.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (match) => {
-      if (KEYWORDS.has(match.toUpperCase())) {
-        return match.toUpperCase();
+    let result = "";
+    let i = 0;
+    let inString = false;
+    let wordStart = -1;
+
+    while (i < text.length) {
+      const char = text[i];
+
+      if (char === '"') {
+        if (inString) {
+          // Конец строки (или экранированная кавычка "")
+          // Проверяем следующую кавычку
+          /*
+          TODO: KRL использует "" для экранирования кавычки внутри строки.
+          Но для форматирования нам важно просто пропустить содержимое.
+          Если мы встретили ", это может быть конец или эскейп.
+          Если следующий символ тоже ", то это эскейп, мы остаемся в строке.
+          */
+          if (i + 1 < text.length && text[i + 1] === '"') {
+            result += '""';
+            i += 2;
+            continue;
+          } else {
+            inString = false;
+          }
+        } else {
+          inString = true;
+        }
+        result += char;
+        i++;
+        continue;
       }
-      return match;
-    });
+
+      if (inString) {
+        result += char;
+        i++;
+        continue;
+      }
+
+      // Если не в строке, ищем слова
+      if (/[a-zA-Z0-9_]/.test(char)) {
+        if (wordStart === -1) wordStart = i;
+      } else {
+        if (wordStart !== -1) {
+          // Конец слова
+          const word = text.substring(wordStart, i);
+          if (KEYWORDS.has(word.toUpperCase())) {
+            result += word.toUpperCase();
+          } else {
+            result += word;
+          }
+          wordStart = -1;
+        }
+        result += char;
+      }
+      i++;
+    }
+
+    // Обработка последнего слова
+    if (wordStart !== -1) {
+      const word = text.substring(wordStart);
+      if (KEYWORDS.has(word.toUpperCase())) {
+        result += word.toUpperCase();
+      } else {
+        result += word;
+      }
+    }
+
+    return result;
   }
 }
