@@ -29,6 +29,36 @@ function stripInvisibleChars(text: string): string {
 // Önbellek - fonksiyon isimleri için hızlı arama
 let functionNamesCache: Set<string> = new Set();
 
+const BLOCK_PAIRS: Record<string, string> = {
+  IF: "ENDIF",
+  FOR: "ENDFOR",
+  WHILE: "ENDWHILE",
+  LOOP: "ENDLOOP",
+  REPEAT: "UNTIL",
+  SWITCH: "ENDSWITCH",
+  DEF: "END",
+  DEFFCT: "ENDFCT",
+  DEFDAT: "ENDDAT",
+};
+
+const CLOSE_TO_OPEN: Record<string, string> = {};
+for (const [open, close] of Object.entries(BLOCK_PAIRS)) {
+  CLOSE_TO_OPEN[close] = open;
+}
+
+const OPEN_BLOCK_REGEXES = new Map<string, RegExp>();
+for (const openKeyword of Object.keys(BLOCK_PAIRS)) {
+  OPEN_BLOCK_REGEXES.set(openKeyword, new RegExp(`\\b${openKeyword}\\b`, "i"));
+}
+
+const CLOSE_BLOCK_REGEXES = new Map<string, RegExp>();
+for (const closeKeyword of Object.keys(CLOSE_TO_OPEN)) {
+  CLOSE_BLOCK_REGEXES.set(
+    closeKeyword,
+    new RegExp(`\\b${closeKeyword}\\b`, "i"),
+  );
+}
+
 export class DiagnosticsProvider {
   private connection: Connection;
   private workspaceRoot: string | null = null;
@@ -527,25 +557,6 @@ export class DiagnosticsProvider {
 
     const blockStack: BlockInfo[] = [];
 
-    // Маппинг открывающих на закрывающие
-    const blockPairs: Record<string, string> = {
-      IF: "ENDIF",
-      FOR: "ENDFOR",
-      WHILE: "ENDWHILE",
-      LOOP: "ENDLOOP",
-      REPEAT: "UNTIL",
-      SWITCH: "ENDSWITCH",
-      DEF: "END",
-      DEFFCT: "ENDFCT",
-      DEFDAT: "ENDDAT",
-    };
-
-    // Обратный маппинг
-    const closeToOpen: Record<string, string> = {};
-    for (const [open, close] of Object.entries(blockPairs)) {
-      closeToOpen[close] = open;
-    }
-
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
@@ -553,8 +564,8 @@ export class DiagnosticsProvider {
       // const upperCode = codePart.toUpperCase(); // Reserved for future use
 
       // Проверка открывающих блоков
-      for (const openKeyword of Object.keys(blockPairs)) {
-        const regex = new RegExp(`\\b${openKeyword}\\b`, "i");
+      for (const openKeyword of Object.keys(BLOCK_PAIRS)) {
+        const regex = OPEN_BLOCK_REGEXES.get(openKeyword)!;
         const match = regex.exec(codePart);
         if (match) {
           // Пропустить "WAIT FOR" — это команда ожидания условия, а не цикл FOR
@@ -574,11 +585,11 @@ export class DiagnosticsProvider {
       }
 
       // Проверка закрывающих блоков
-      for (const closeKeyword of Object.keys(closeToOpen)) {
-        const regex = new RegExp(`\\b${closeKeyword}\\b`, "i");
+      for (const closeKeyword of Object.keys(CLOSE_TO_OPEN)) {
+        const regex = CLOSE_BLOCK_REGEXES.get(closeKeyword)!;
         const match = regex.exec(codePart);
         if (match) {
-          const expectedOpen = closeToOpen[closeKeyword];
+          const expectedOpen = CLOSE_TO_OPEN[closeKeyword];
           if (blockStack.length === 0) {
             diagnostics.push({
               severity: DiagnosticSeverity.Error,
@@ -601,7 +612,7 @@ export class DiagnosticsProvider {
 
     // Незакрытые блоки
     for (const block of blockStack) {
-      const expectedClose = blockPairs[block.type];
+      const expectedClose = BLOCK_PAIRS[block.type];
       diagnostics.push({
         severity: DiagnosticSeverity.Error,
         range: {
