@@ -551,6 +551,21 @@
           "command": "krl.validateWorkspace",
           "group": "navigation@4",
           "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.showCalculator",
+          "group": "navigation@5",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.openSnippetGenerator",
+          "group": "navigation@6",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.refreshIOView",
+          "group": "navigation@7",
+          "when": "resourceLangId == krl"
         }
       ],
       "editor/context": [
@@ -583,6 +598,40 @@
           "command": "krl.cleanupUnusedVariables",
           "group": "1_modification@6",
           "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.showCalculator",
+          "group": "1_modification@7",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.openSnippetGenerator",
+          "group": "1_modification@8",
+          "when": "resourceLangId == krl"
+        },
+        {
+          "command": "krl.renameSignal",
+          "group": "1_modification@9",
+          "when": "resourceLangId == krl"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "krl.refreshIOView",
+          "when": "view == krlIO",
+          "group": "navigation"
+        },
+        {
+          "command": "krl.showCalculator",
+          "when": "view == krlCommands",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "krl.showCalculator",
+          "when": "view == krlCommands",
+          "group": "inline"
         }
       ]
     },
