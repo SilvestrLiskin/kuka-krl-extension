@@ -9,6 +9,9 @@
   "command.sortDeclarations": "Sort Declarations",
   "command.insertFold": "Insert FOLD Region",
   "command.refreshIOView": "Refresh I/O View",
+  "command.cleanupUnusedVariables": "Clean Up Unused Variables",
+  "command.showCalculator": "KRL Frame Calculator",
+  "command.renameSignal": "Rename Signal (Set Alias)",
   "config.title": "KUKA KRL Extension",
   "config.autoFold.description": "Automatically fold all regions when opening a KRL file",
   "config.formatOnSave.description": "Automatically format document on save",
@@ -17,5 +20,8 @@
   "config.separateBeforeBlocks.description": "Add empty line before control blocks (FOR, IF, WHILE, LOOP, etc.)",
   "config.separateAfterBlocks.description": "Add empty line after control blocks (ENDFOR, ENDIF, ENDWHILE, etc.)",
   "config.validateNonAscii.description": "Highlight non-ASCII characters (Cyrillic, special symbols) that may cause errors in KUKA controller",
+  "config.errorLens.enabled": "Show diagnostic messages inline at the end of lines",
+  "config.indentFolds": "Indent content inside ;FOLD blocks",
+  "config.alignAssignments": "Align assignment operators (=) in consecutive lines",
   "view.krlIO.welcome": "No I/O signals found in the current workspace. Use $IN[n], $OUT[n], etc. in your KRL code to see them here."
 }

@@ -737,7 +737,7 @@
     },
     "E6AXIS": {
       "name": "E6AXIS",
-      "description": "Extended axis structure for 6-axis robots with external axes. Contains A1-A6 for robot joints and E1-E6 for external axes.",
+      "description": "Extended Axis Angle structure. Stores the exact angle/position of every joint (A1-A6) and external axes (E1-E6). Used for PTP motions to ensure unique configuration.",
       "fields": {
         "A1": "Joint angle for axis 1 in degrees",
         "A2": "Joint angle for axis 2 in degrees",
@@ -756,7 +756,7 @@
     },
     "FRAME": {
       "name": "FRAME",
-      "description": "Geometric frame structure defining a coordinate system. Contains Cartesian position (X, Y, Z) and orientation angles (A, B, C).",
+      "description": "Geometric frame structure defining a coordinate system in 3D space. Contains Cartesian position (X, Y, Z) and Euler orientation angles (A, B, C).",
       "fields": {
         "X": "X coordinate in mm",
         "Y": "Y coordinate in mm",
@@ -769,7 +769,7 @@
     },
     "POS": {
       "name": "POS",
-      "description": "Position structure with Cartesian coordinates, orientation, and robot configuration. Adds Status (S) and Turn (T) to FRAME.",
+      "description": "Robot Position structure. Contains Cartesian coordinates (FRAME) plus robot configuration flags (Status S, Turn T) to resolve kinematic ambiguity.",
       "fields": {
         "X": "X coordinate in mm",
         "Y": "Y coordinate in mm",
@@ -784,7 +784,7 @@
     },
     "E6POS": {
       "name": "E6POS",
-      "description": "Extended position structure with Cartesian coordinates, orientation, robot configuration, and external axes. Most commonly used position type.",
+      "description": "Extended Robot Position. The standard position type for 6-axis robots. Contains POS data (X,Y,Z, A,B,C, S,T) plus external axes values (E1-E6).",
       "fields": {
         "X": "X coordinate in mm",
         "Y": "Y coordinate in mm",
@@ -1127,27 +1127,27 @@
   "commands": {
     "PTP": {
       "name": "PTP",
-      "description": "Point-to-Point motion. Moves the robot to a point using the fastest path.",
+      "description": "Point-to-Point motion. The robot moves all axes synchronously to reach the target point in the shortest time. The TCP path is not a straight line. \n\n**Usage:** Air moves, homing, repositioning where path shape doesn't matter.",
       "syntax": "PTP {Point} [C_PTP] [C_DIS]"
     },
     "LIN": {
       "name": "LIN",
-      "description": "Linear motion. Moves the robot in a straight line to the target point.",
+      "description": "Linear motion. The Robot TCP moves in a perfectly straight line to the target point. Orientation changes linearly. \n\n**Usage:** Process moves (welding, gluing, assembly) where path precision is critical.",
       "syntax": "LIN {Point} [C_DIS] [C_VEL]"
     },
     "CIRC": {
       "name": "CIRC",
-      "description": "Circular motion. Moves along a circular path via an auxiliary point.",
+      "description": "Circular motion. The Robot TCP moves along a circular arc defined by an Auxiliary point and a Target point. \n\n**Usage:** Curved paths, rounded corners.",
       "syntax": "CIRC {AuxPoint}, {TargetPoint} [C_DIS]"
     },
     "SPTP": {
       "name": "SPTP",
-      "description": "Spline PTP motion. Smoother, more precise PTP motion (KSS 8.3+).",
+      "description": "Spline PTP motion (KSS 8.3+). Superior to PTP. Optimizes axis jerks and prevents motion stops better than standard PTP.",
       "syntax": "SPTP {Point} [WITH $APO_FAC=...] [C_SPL] [C_DIS]"
     },
     "SLIN": {
       "name": "SLIN",
-      "description": "Spline Linear motion. Smoother, more precise Linear motion (KSS 8.3+).",
+      "description": "Spline Linear motion (KSS 8.3+). Superior to LIN. Offers constant velocity, better dynamic model compliance, and smoother transitions.",
       "syntax": "SLIN {Point} [WITH $APO_FAC=...] [C_SPL] [C_DIS]"
     },
     "SCIRC": {
@@ -1157,7 +1157,7 @@
     },
     "BRAKE": {
       "name": "BRAKE",
-      "description": "Stops robot motion inside an Interrupt."
+      "description": "Stops the robot motion immediately within an Interrupt routine. \n\n**Usage:** Required in Interrupts to stop the robot before handling the event (e.g., collision)."
     },
     "HALT": {
       "name": "HALT",
@@ -1165,7 +1165,7 @@
     },
     "IF": {
       "name": "IF",
-      "description": "Conditional branching. Executes a block if the condition is TRUE.",
+      "description": "Conditional branching. Executes the `THEN` block if the condition is TRUE. Optional `ELSE` block for FALSE case. \n\n**Note:** Ensure `ENDIF` is present.",
       "syntax": "IF {Condition} THEN\n  {Statements}\n[ELSE]\n  {Statements}\nENDIF"
     },
     "THEN": {
@@ -1182,7 +1182,7 @@
     },
     "FOR": {
       "name": "FOR",
-      "description": "Loop with a counter variable.",
+      "description": "Counted loop. Iterates a variable from `Start` to `End` values. \n\n**Usage:** Repeating an action a specific number of times (e.g., Palletizing).",
       "syntax": "FOR {Var} = {Start} TO {End} [STEP {Incr}]\n  {Statements}\nENDFOR"
     },
     "TO": {
@@ -1199,7 +1199,7 @@
     },
     "WHILE": {
       "name": "WHILE",
-      "description": "Loop that repeats as long as the condition is TRUE.",
+      "description": "Condition-controlled loop. Checks condition *before* execution. Repeats as long as condition is TRUE. \n\n**Usage:** Waiting for state changes or iterating while a safe condition is met.",
       "syntax": "WHILE {Condition}\n  {Statements}\nENDWHILE"
     },
     "ENDWHILE": {
@@ -1208,7 +1208,7 @@
     },
     "LOOP": {
       "name": "LOOP",
-      "description": "Infinite loop. Must be exited with EXIT or GOTO.",
+      "description": "Infinite loop. Runs forever until `EXIT` is called. \n\n**Usage:** The main program cycle of a robot application.",
       "syntax": "LOOP\n  {Statements}\nENDLOOP"
     },
     "ENDLOOP": {
@@ -1217,7 +1217,7 @@
     },
     "REPEAT": {
       "name": "REPEAT",
-      "description": "Loop that executes at least once and repeats until condition is TRUE.",
+      "description": "Condition-controlled loop. Checks condition *after* execution. Guarantees at least one execution. \n\n**Usage:** 'Do...Until' logic.",
       "syntax": "REPEAT\n  {Statements}\nUNTIL {Condition}"
     },
     "UNTIL": {
@@ -1270,19 +1270,19 @@
     },
     "INT": {
       "name": "INT",
-      "description": "Integer data type (32-bit signed). Range: -2^31 to 2^31-1."
+      "description": "Integer value (32-bit signed). Range: -2^31 to 2^31-1 (-2,147,483,648 to +2,147,483,647). Used for counters, state indices, and discrete control values."
     },
     "REAL": {
       "name": "REAL",
-      "description": "Floating point number (32-bit). Approx 7 digits precision."
+      "description": "Floating point value (32-bit). Approx. ±1.18e-38 to ±3.40e+38. Used for Cartesian positions, velocities, and precise calculations."
     },
     "BOOL": {
       "name": "BOOL",
-      "description": "Boolean data type. Values: TRUE, FALSE."
+      "description": "Boolean logical value. Values: `TRUE` or `FALSE`. Used for control flags, sensor states, and logical conditions."
     },
     "CHAR": {
       "name": "CHAR",
-      "description": "Character data type. Also used for Strings (Array of CHAR)."
+      "description": "Character value (ASCII byte). Used for single characters or as an array for Strings. Example: `DECL CHAR Name[24]`"
     },
     "FRAME": {
       "name": "FRAME",
@@ -1349,21 +1349,21 @@
     },
     "CONTINUE": {
       "name": "CONTINUE",
-      "description": "Prevents the advance run pointer from stopping at the next instruction. Use before I/O or logic."
+      "description": "Advance Run Control. Prevents the 'Advance Run Pointer' from stopping at the next instruction. \n\n**Usage:** Place before I/O or logic checks that should not break the smooth motion path."
     },
     "TRIGGER": {
       "name": "TRIGGER",
-      "description": "Path-triggered logic. Executes a statement at a specific point on the path.",
+      "description": "Path-Triggered Logic (Distance/Time). Executes a statement at a precise point along the motion path, regardless of velocity. \n\n**Usage:** Switching glue/paint guns, zoning signals.",
       "syntax": "TRIGGER WHEN DISTANCE={Dist} DELAY={Time} DO {Statement}"
     },
     "INTERRUPT": {
       "name": "INTERRUPT",
-      "description": "Defines an interrupt service routine.",
+      "description": "Interrupt Service Routine declaration. Monitors a signal/condition in the background. When triggered, it pauses the current motion/program and jumps to the declared subprogram. \n\n**Usage:** Collision detection, Stop requests, Search motions.",
       "syntax": "INTERRUPT DECL {Priority} WHEN {Condition} DO {Subprogram}"
     },
     "RESUME": {
       "name": "RESUME",
-      "description": "Aborts the current motion and stack, resuming execution at the level where the interrupt was declared."
+      "description": "Aborts the current motion and the subprogram stack, resuming execution at the level where the Interrupt was declared. \n\n**Usage:** Search motions (Sensor found -> Stop -> Resume to next step)."
     },
     "SIGNAL": {
       "name": "SIGNAL",
@@ -1406,7 +1406,7 @@
     },
     "BAS": {
       "name": "BAS",
-      "description": "Basis Technical package initialization and parameter setting.",
+      "description": "Basis Tech Initialization. Sets fundamental robot parameters (velocity, acceleration, tools, bases) for standard inline forms. \n\n**Common:** `BAS(#INITMOV, 0)` initializes defaults.",
       "syntax": "BAS ({Command}, {Value})"
     },
     "SET_CD_PARAMS": {

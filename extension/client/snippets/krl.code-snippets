@@ -494,5 +494,19 @@
             "DECL E6AXIS ${1:POINT} = {A1 ${2:0}, A2 ${3:0}, A3 ${4:0}, A4 ${5:0}, A5 ${6:0}, A6 ${7:0}}"
         ],
         "description": "E6AXIS variable declaration"
+    },
+    "BAS Initialization": {
+        "prefix": "BAS",
+        "body": [
+            "BAS(#INITMOV, 0)"
+        ],
+        "description": "Initialize standard KUKA parameters"
+    },
+    "BRAKE F": {
+        "prefix": "BRAKE F",
+        "body": [
+            "BRAKE F"
+        ],
+        "description": "Brake F - Stop path-maintaining (in interrupt)"
     }
 }
