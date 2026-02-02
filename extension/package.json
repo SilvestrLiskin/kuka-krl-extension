@@ -2,7 +2,7 @@
   "name": "kuka-krl-extension",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "1.7.8",
+  "version": "1.7.1",
   "icon": "logo.png",
   "publisher": "LiskinLabs",
   "author": {

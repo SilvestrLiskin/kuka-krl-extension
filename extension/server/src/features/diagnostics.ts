@@ -48,7 +48,7 @@ const REGEX_DEF_RESET = /^\s*(?:DEF|DEFFCT)\s+/i;
 const REGEX_FUNC_DEF = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
 
 const REGEX_LABEL = /^\w+\s*:\s*$/i;
-const REGEX_BLOCK_END = /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE|ENDDAT|ENDSUB|ENDSPS)\b/i;
+const REGEX_BLOCK_END = /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE|ENDDAT|ENDSUB|ENDSPS|ENDSWITCH)\b/i;
 
 // Pre-compiled regexes for optimization
 const REGEX_LABEL_DECL = /^\s*([a-zA-Z_]\w*)\s*:/gim;
@@ -1485,8 +1485,9 @@ export class DiagnosticsProvider {
 
     // Паттерны для "легальных" строк
     const REGEX_HEADER_CTRL = /^\s*&/i; // &ACCESS, &REL, &PARAM
-    // Allow system variables starting with $ on LHS of assignment
-    const REGEX_ASSIGNMENT = /^\s*(?:\$?[a-zA-Z0-9_]+)(?:\[[^\]]*\])?(?:\.\w+)*\s*=\s*/i;
+    // Allow system variables starting with $ on LHS of assignment. Support Struct.Field[i] mixed.
+    // Support nested brackets (up to one level of nesting) like $A[B[1]]
+    const REGEX_ASSIGNMENT = /^\s*(?:\$?[a-zA-Z0-9_]+)(?:\[(?:[^\[\]]|\[[^\[\]]*\])*\]|\.[a-zA-Z0-9_]+)*\s*=\s*/i;
     const REGEX_PROC_CALL = /^\s*(?:\$|\w+)\s*\(.*\)/i;
     const REGEX_WAIT = /^\s*WAIT\s+(?:FOR\s+|SEC\s+)/i;
     const REGEX_INTERRUPT = /^\s*(?:GLOBAL\s+)?INTERRUPT\s+(?:DECL|ON|OFF|ENABLE|DISABLE)/i;
@@ -1500,6 +1501,7 @@ export class DiagnosticsProvider {
     const REGEX_COMM = /^\s*(?:CWRITE|CREAD|SWRITE|SREAD|CAST_TO|CAST_FROM)\b/i;
     const REGEX_ANIN = /^\s*(?:ANIN|DIGIN)\b/i;
     const REGEX_ERR_HANDLE = /^\s*(?:ON_ERROR_PROCEED|ERR_CLEAR|ERR_RAISE)\b/i;
+    const REGEX_CHANNEL = /^\s*CHANNEL\b/i;
     const REGEX_IF_INLINE = /^\s*IF\s+.*THEN\s+\w+/i;
     const REGEX_FOLD_B = /^\s*;FOLD\b/i;
     const REGEX_FOLD_E = /^\s*;ENDFOLD\b/i;
@@ -1510,6 +1512,13 @@ export class DiagnosticsProvider {
 
       // Пропускаем пустые строки и комментарии
       if (!trimmed || trimmed.startsWith(";")) continue;
+
+      // Line must contain at least one valid KRL character (letter, number, $, &)
+      // This filters out ghost whitespace or lines with only invisible chars
+      if (!/[a-zA-Z0-9_\$&]/.test(trimmed)) continue;
+
+      // Ignore lines containing only invisible characters (if not handled by trim)
+      if (trimmed.replace(REGEX_INVISIBLE_CHARS, '').trim() === '') continue;
 
       const codePart = line.split(";")[0];
       const trimmedCode = codePart.trim();
@@ -1541,6 +1550,7 @@ export class DiagnosticsProvider {
         REGEX_COMM.test(trimmedCode) ||
         REGEX_ANIN.test(trimmedCode) ||
         REGEX_ERR_HANDLE.test(trimmedCode) ||
+        REGEX_CHANNEL.test(trimmedCode) ||
         REGEX_IF_INLINE.test(trimmedCode) ||
         REGEX_FOLD_B.test(trimmedCode) ||
         REGEX_FOLD_E.test(trimmedCode) ||
