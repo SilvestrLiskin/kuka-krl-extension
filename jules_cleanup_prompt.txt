@@ -1,0 +1,16 @@
+The repository contains unnecessary files and large directories that were accidentally committed.
+
+CRITICAL: Start by switching to the cleanup branch:
+`git fetch origin chore/cleanup`
+`git checkout chore/cleanup`
+
+Your task is to Clean these up.
+
+Please DELETE the following from the repository:
+1. The entire directory `bearded-theme-master/` (and all its contents). This is an external dependency source that should not be in our repo.
+2. The file `[Content_Types].xml` in the root (if it exists).
+3. The file `extension.vsixmanifest` in the root (if it exists).
+4. Any `pnpm-lock.yaml` files (we use `package-lock.json`).
+
+Do NOT touch the `extension/` directory (except for pnpm-lock.yaml), or `README.md`.
+We want to keep the root clean, containing only `extension/`, `README.md`, and git/vscode configs.
