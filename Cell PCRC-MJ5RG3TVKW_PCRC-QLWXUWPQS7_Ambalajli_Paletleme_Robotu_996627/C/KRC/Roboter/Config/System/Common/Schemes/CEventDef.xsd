@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ConditionalEventDef">
+   <xs:complexType>
+      <xs:sequence maxOccurs="1" minOccurs="1">
+
+
+
+                <xs:element name="ContentVersion" type="xs:float"></xs:element>
+                <xs:element name="Event" type="EventType"
+      		maxOccurs="unbounded" minOccurs="1">
+      	</xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:float">
+      </xs:attribute>
+   </xs:complexType>
+  </xs:element>
+    <xs:element name="Event" type="EventType"></xs:element>
+    <xs:complexType name="EventType">
+    	<xs:sequence maxOccurs="unbounded" minOccurs="1">
+
+            <xs:element name="NoState" type="NoStateType" maxOccurs="1" minOccurs="0"></xs:element>
+            <xs:element name="Signal" maxOccurs="unbounded"
+    			minOccurs="1" type="SignalType">
+
+    		</xs:element>
+
+    	</xs:sequence>
+    	<xs:attribute name="uid" use="required">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:int">
+    				<xs:minInclusive value="0"></xs:minInclusive>
+    				<xs:whiteSpace value="collapse"></xs:whiteSpace>
+    				<xs:maxInclusive value="32767"></xs:maxInclusive>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+        <xs:attribute name="name" type="xs:string"></xs:attribute>
+
+    	<xs:attribute name="timePrecision" use="required">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:string">
+    				<xs:minLength value="1"></xs:minLength>
+    				<xs:whiteSpace value="collapse"></xs:whiteSpace>
+    				<xs:enumeration value="1ms"></xs:enumeration>
+    				<xs:enumeration value="10ms"></xs:enumeration>
+    				<xs:enumeration value="100ms"></xs:enumeration>
+    				<xs:enumeration value="1000ms"></xs:enumeration>
+    				<xs:enumeration value="1s"></xs:enumeration>
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    </xs:complexType>
+    <xs:simpleType name="Datatype">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="uint8"></xs:enumeration>
+         <xs:minLength value="1"></xs:minLength>
+         <xs:whiteSpace value="collapse"></xs:whiteSpace>
+         <xs:enumeration value="sint8"></xs:enumeration>
+         <xs:enumeration value="uint16"></xs:enumeration>
+         <xs:enumeration value="sint16"></xs:enumeration>
+         <xs:enumeration value="uint32"></xs:enumeration>
+         <xs:enumeration value="sint32"></xs:enumeration>
+         <xs:enumeration value="uint64"></xs:enumeration>
+         <xs:enumeration value="sint64"></xs:enumeration>
+         <xs:enumeration value="float"></xs:enumeration>
+         <xs:enumeration value="double"></xs:enumeration>
+         <xs:enumeration value="string"></xs:enumeration>
+      </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="InterpreterType">
+      	<xs:choice>
+      		<xs:element ref="Enum"></xs:element>
+      		<xs:element name="Bitfield" type="BitfieldType"></xs:element>
+      		<xs:element name="Name" type="NameType"></xs:element>
+      	</xs:choice>
+      	<xs:attribute name="type" use="required">
+         <xs:simpleType>
+         	<xs:restriction base="xs:string">
+         		<xs:enumeration value="Enum"></xs:enumeration>
+         		<xs:minLength value="1"></xs:minLength>
+         		<xs:whiteSpace value="collapse"></xs:whiteSpace>
+         		<xs:enumeration value="Bitfield"></xs:enumeration>
+         		<xs:enumeration value="Name"></xs:enumeration>
+         	</xs:restriction>
+         </xs:simpleType>
+      	</xs:attribute>
+    </xs:complexType>
+    <xs:element name="Enum" type="EnumType"></xs:element>
+    <xs:complexType name="EnumType">
+      <xs:sequence maxOccurs="1" minOccurs="1">
+            <xs:element name="Name" type="SigPropType" maxOccurs="1"
+      		minOccurs="1">
+      	</xs:element>
+      	<xs:element name="NoResult" type="ResourceType" maxOccurs="1"
+      		minOccurs="0">
+      	</xs:element>
+      	<xs:element name="Index" type="EnumIndexType"
+      		maxOccurs="unbounded" minOccurs="1">
+      	</xs:element>
+
+      </xs:sequence>
+
+    </xs:complexType>
+    <xs:complexType name="EnumIndexType">
+    	<xs:sequence>
+    		<xs:element name="Text" type="ResourceType" maxOccurs="1" minOccurs="1"></xs:element>
+    	</xs:sequence>
+    	<xs:attribute name="value" type="xs:int" use="required"></xs:attribute>
+
+    </xs:complexType>
+
+    <xs:complexType name="BitfieldType">
+      <xs:sequence maxOccurs="unbounded" minOccurs="1">
+         <xs:element name="Value" type="BitfieldValueType" maxOccurs="1" minOccurs="1"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BitfieldValueType">
+      <xs:sequence maxOccurs="unbounded" minOccurs="1">
+      	<xs:element name="Name" type="SigPropType" maxOccurs="1"
+      		minOccurs="1">
+      	</xs:element>
+      	<xs:element name="NoResult" type="ResourceType" maxOccurs="1" minOccurs="0"></xs:element>
+      	<xs:element name="Result" type="BitfieldValueResultType"
+      		maxOccurs="unbounded" minOccurs="1">
+      	</xs:element>
+
+      </xs:sequence>
+      <xs:attribute name="hexMask" use="required" type="xs:hexBinary">
+      </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="BitfieldValueResultType">
+    	<xs:sequence>
+    		<xs:element name="Text" type="ResourceType"></xs:element>
+    	</xs:sequence>
+    	<xs:attribute name="hexValue" use="required"
+    		type="xs:hexBinary">
+    	</xs:attribute>
+
+    </xs:complexType>
+
+
+    <xs:complexType name="SignalType">
+	   <xs:choice maxOccurs="1" minOccurs="0">
+
+	   	<xs:element name="Interpreter" type="InterpreterType" maxOccurs="1" minOccurs="0"></xs:element>
+	   </xs:choice>
+	   
+	   <xs:attribute name="type" type="Datatype"
+		  use="required">
+	   </xs:attribute>
+	</xs:complexType>
+
+
+    <xs:complexType name="ResourceType">
+    	<xs:attribute name="resKey" type="xs:string" use="optional"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="SigPropType">
+    	<xs:complexContent>
+    		<xs:extension base="ResourceType">
+    		</xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NoStateType"></xs:complexType>
+
+
+    <xs:complexType name="NameType">
+    	<xs:complexContent>
+    		<xs:extension base="SigPropType"></xs:extension>
+    	</xs:complexContent>
+    </xs:complexType>
+</xs:schema>

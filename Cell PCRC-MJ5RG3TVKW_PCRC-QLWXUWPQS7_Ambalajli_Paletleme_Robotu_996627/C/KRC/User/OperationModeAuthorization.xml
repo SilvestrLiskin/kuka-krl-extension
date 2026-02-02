@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OPModeUserRelationConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Checksum="-692204063">
+  <OperationModeUserRelations>
+    <OPModeUserReleation UserMode="5" T1Allowed="true" T2Allowed="true" AutAllowed="true" ExtAllowed="true" />
+    <OPModeUserReleation UserMode="10" T1Allowed="true" T2Allowed="false" AutAllowed="true" ExtAllowed="true" />
+    <OPModeUserReleation UserMode="20" T1Allowed="true" T2Allowed="true" AutAllowed="true" ExtAllowed="true" />
+    <OPModeUserReleation UserMode="27" T1Allowed="true" T2Allowed="false" AutAllowed="true" ExtAllowed="true" />
+    <OPModeUserReleation UserMode="29" T1Allowed="true" T2Allowed="true" AutAllowed="true" ExtAllowed="true" />
+    <OPModeUserReleation UserMode="30" T1Allowed="true" T2Allowed="true" AutAllowed="true" ExtAllowed="true" />
+  </OperationModeUserRelations>
+</OPModeUserRelationConfiguration>

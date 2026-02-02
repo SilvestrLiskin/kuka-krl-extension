@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Version.xsd"/>
+   <xs:element name="Task">
+      <xs:complexType>
+         <xs:attribute name="Priority" type="xs:int" use="required"/>
+         <xs:attribute name="CPU" type="xs:int" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PtpProtocol">
+      <xs:complexType>
+         <xs:attribute name="InterfaceName" type="xs:string" use="required"/>
+         <xs:attribute name="InterfaceUnit" type="xs:int" use="required"/>
+         <xs:attribute name="SyncInterval" type="xs:int" use="required"/>
+         <xs:attribute name="SubDomainName" use="required">
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="_DFLT"/>
+                  <xs:enumeration value="_ALT1"/>
+                  <xs:enumeration value="_ALT2"/>
+                  <xs:enumeration value="_ALT3"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="ClockIdentifier" use="required">
+	         <xs:simpleType>
+	            <xs:restriction base="xs:string">
+	               <xs:enumeration value="DFLT"/>
+	               <xs:enumeration value="GPS"/>
+	               <xs:enumeration value="NTP"/>
+	               <xs:enumeration value="HAND"/>
+	               <xs:enumeration value="INIT"/>
+	               <xs:enumeration value="ATOM"/>
+	            </xs:restriction>
+	         </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="ClockPreferred" type="xs:int" use="required"/>
+         <xs:attribute name="CurrentUtcOffset" type="xs:int" use="required"/>
+         <xs:attribute name="EpochNumber" type="xs:int" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PulseConfig">
+      <xs:complexType>
+         <xs:attribute name="PulseCycleInIpoCycles" use="required">
+            <xs:simpleType>
+               <xs:restriction base="xs:int">
+                  <xs:minInclusive value="1"/>
+                  <xs:maxInclusive value="1000"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="ExternalPulseFactor" use="required">
+           <xs:simpleType>
+               <xs:restriction base="xs:int">
+                  <xs:minInclusive value="1"/>
+                  <xs:maxInclusive value="1000"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="NumValidationCycles" use="required">
+           <xs:simpleType>
+               <xs:restriction base="xs:int">
+                  <xs:minInclusive value="1"/>
+                  <xs:maxInclusive value="20"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="ValidationPercentage" use="required">
+           <xs:simpleType>
+               <xs:restriction base="xs:int">
+                  <xs:minInclusive value="1"/>
+                  <xs:maxInclusive value="10"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="StaticOffset" use="required">
+           <xs:simpleType>
+               <xs:restriction base="xs:int">
+                  <xs:minInclusive value="0"/>
+                  <xs:maxInclusive value="1000000000"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="TimeoutInSecs" use="required">
+           <xs:simpleType>
+               <xs:restriction base="xs:int">
+                  <xs:minInclusive value="1"/>
+                  <xs:maxInclusive value="30"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="Variable" type="xs:string" use="required"/>
+         <xs:attribute name="NumInput" type="xs:int" use="required"/>
+         <xs:attribute name="WatchThreadPrio" type="xs:int" use="required"/>
+         <xs:attribute name="WatchThreadCpuAffinity" type="xs:int" use="required"/>
+         <xs:attribute name="ActAsBoundaryClock" type="xs:boolean" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Controller">
+      <xs:complexType>
+         <xs:attribute name="Mode" type="xs:string" use="required"/>
+         <xs:attribute name="BusShiftQuota" use="required"> <!-- Deprecated. Not in use anymore. -->
+            <xs:annotation>
+               <xs:documentation>Bus Shift Quota in %</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+                  <xs:maxInclusive value="0.1"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="DeltaDiv" type="xs:int" use="required"/> <!-- Deprecated. Not in use anymore. -->
+         <xs:attribute name="DeltaDivSignChange" type="xs:int" use="required"/> <!-- Deprecated. Not in use anymore. -->
+         <xs:attribute name="MinCycles" type="xs:int" use="required"/> <!-- Deprecated. Not in use anymore. -->
+         <xs:attribute name="MaxCycles" type="xs:int" use="required"/> <!-- Deprecated. Not in use anymore. -->
+         <xs:attribute name="MaxCyclesSignChange" type="xs:int" use="required"/> <!-- Deprecated. Not in use anymore. -->
+         <xs:attribute name="NumDeltas" type="xs:int" use="required"/>
+         <xs:attribute name="MaxDelta" type="xs:int" use="required"/>
+         <xs:attribute name="MaxDeltaLowPrecision" type="xs:int" use="optional"/> <!-- Deprecated. Not in use anymore. -->
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SystemClockController">
+      <xs:complexType>
+         <xs:attribute name="Kp" type="xs:int" use="required"/>
+         <xs:attribute name="Ki" type="xs:int" use="required"/>
+         <xs:attribute name="Kd" type="xs:int" use="required"/>
+         <xs:attribute name="MaxDelta" type="xs:int" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EcatAccess">
+      <xs:complexType>
+         <xs:attribute name="BusId" type="xs:string" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Module">
+      <xs:complexType>
+         <xs:attribute name="UserConfig" type="xs:string" use="required"/>
+         <xs:attribute name="TimeSyncMode" type="xs:string" use="required"/>
+         <xs:attribute name="X46Mode" use="required"> <!-- Deprecated. Not in use anymore. -->
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="Default"/>
+                  <xs:enumeration value="VlanTagging"/>
+                  <xs:enumeration value="DefaultVlan"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="IsLoggingActive" type="xs:boolean" use="required"/>
+         <xs:attribute name="TimeStampSource" use="optional"> <!-- Deprecated. Not in use anymore. -->
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="Auto"/>
+                  <xs:enumeration value="CIB"/>
+                  <xs:enumeration value="NetworkHardware"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="LocalClock" use="optional"> <!-- Deprecated. Not in use anymore. -->
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="Auto"/>
+                  <xs:enumeration value="DistributedClockMaster"/>
+                  <xs:enumeration value="SystemClock"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="StopAtOffsetCorrection" type="xs:boolean" use="optional"/>
+         <xs:attribute name="ModificationPeriod" type="xs:int" use="optional"/>
+         <xs:attribute name="ModificationLength" type="xs:int" use="optional"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="TimeSyncBase">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version"/>
+            <xs:element ref="Task"/>
+            <xs:element ref="Module"/>
+            <xs:element ref="EcatAccess"/>
+            <xs:element ref="Controller" maxOccurs="5" minOccurs="1"/>
+            <xs:element ref="SystemClockController" maxOccurs="1" minOccurs="0"/>
+            <xs:element ref="PtpProtocol"/>
+            <xs:element ref="PulseConfig"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

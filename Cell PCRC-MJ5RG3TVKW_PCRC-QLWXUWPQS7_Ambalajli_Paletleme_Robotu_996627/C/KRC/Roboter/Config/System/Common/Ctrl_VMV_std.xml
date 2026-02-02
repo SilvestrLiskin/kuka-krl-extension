@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<CtrlParam xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Schemes/NGCtrlUser.xsd">
+   <Version Label="2">
+		<Info Version="KUKA V8.3"/>
+		<Schema Version="1"/>
+	</Version>
+    <!-- Vectormove Control Parameter for GetSystemData and SetSystemData no longer necessary because of IVectormove Interface  -->
+    <!-- File must not be deleted because of existing file links -->
+</CtrlParam>
+

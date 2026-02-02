@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="Version.xsd"/>
+	<xs:element name="TriggerSendToSendTime">
+		<xs:complexType>
+			<xs:attribute name="isActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="SendToSendLimit_us" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="500000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TriggerRecvToRecvTime">
+		<xs:complexType>
+			<xs:attribute name="isActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="RecvToRecvLimit_us" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="500000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TriggerMultiFrameResponse">
+		<xs:complexType>
+			<xs:attribute name="isActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="MaxMultiFrameResponseTrigger" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="1000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TriggerBusError">
+		<xs:complexType>
+			<xs:attribute name="isActive" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TriggerBusOP">
+		<xs:complexType>
+			<xs:attribute name="isActive" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TriggerBusWarning">
+		<xs:complexType>
+			<xs:attribute name="isActive" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="StartConfig">
+		<xs:complexType>
+			<xs:attribute name="SnifferActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="MemoryBuffer_kB" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="5000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="EcatInstance" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="PostTriggerFrames" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="400"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PcapConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="StartConfig"/>
+				<xs:element ref="LogFile"/>
+				<xs:element ref="TriggerBusError"/>
+				<xs:element ref="TriggerBusOP" minOccurs="0"/>
+				<xs:element ref="TriggerBusWarning" minOccurs="0"/>
+				<xs:element ref="TriggerMultiFrameResponse"/>
+				<xs:element ref="TriggerSendToSendTime"/>
+				<xs:element ref="TriggerRecvToRecvTime"/>
+				<xs:element ref="Options"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Options">
+		<xs:complexType>
+			<xs:attribute name="WriteTsmLog" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="false"/>
+						<xs:enumeration value="true"/>
+						<xs:enumeration value="trueWithUsrEvt"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="ReactivateLogAfterBusRestart" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LogFile">
+		<xs:complexType>
+			<xs:attribute name="MaxFileRingBuffer" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="FileRingBufferActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="FileName" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="24"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="EcatPcapLog">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version"/>
+				<xs:element ref="PcapConfig"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

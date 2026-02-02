@@ -1,0 +1,231 @@
+09/10/2025 12:52:20.60 [Information] -------------------------------
+09/10/2025 12:52:20.60 [Information] *** Begin Prepare ''!
+09/10/2025 12:52:20.60 [Information] *** Begin prepare project '26111233990000120003388130 V1.25.0.0'!
+09/10/2025 12:52:36.39 [Information] *** Start preparation of '26111233990000120003388130' path ''
+09/10/2025 12:52:39.33 [Information] Prepare Installation of project "26111233990000120003388130 V1.25.0.0".
+09/10/2025 12:52:39.33 [Information] Current project was "26111233990000120003388130 V1.22.0".
+09/10/2025 12:52:39.47 [Information] °°° Begin adding actions for project '26111233990000120003388130 V1.25.0.0'!
+09/10/2025 12:52:39.53 [Warning] Element Type changed for {ExternalFileManifest Safety:Copy(Config:\User\Common\CS_TUNID.SAF) - Automatic} -> config
+09/10/2025 12:52:39.53 [Warning] Element Type changed for {ExternalFileManifest Safety:Copy(Config:\User\Common\CS_SCID.SAF) - Automatic} -> config
+09/10/2025 12:52:39.53 [Warning] Element Type changed for {ExternalFileManifest Safety:Copy(Config:\User\Common\SCTLCRC.XML) - Automatic} -> config
+09/10/2025 12:52:39.53 [Warning] Element Type changed for {ExternalFileManifest File:Copy(Config:\User\Common\MotionDrivers\mdrJointOffset.ini) - Automatic, SavedExternal} -> config
+09/10/2025 12:52:39.53 [Warning] Element Type changed for {ExternalFileManifest File:Copy(Config:\User\Common\MotionDrivers\motiondrv.ini) - Automatic, SavedExternal} -> config
+09/10/2025 12:52:39.55 [Information] SafetyHandler ignores element: '{ExternalFileManifest safety:Copy(Config:\User\Common\HNFINFO.SAF) - SavedExternal}'
+09/10/2025 12:52:39.62 [Information] ° Reboot requested before activation = False
+09/10/2025 12:52:39.63 [Information] [ExternalToolGateKeeper] External tool execution will be created for source 'None'
+09/10/2025 12:52:39.64 [Information] °°° Begin initialize actions for project '26111233990000120003388130 V1.25.0.0'!
+09/10/2025 12:52:39.64 [Warning] Ignore UserPdiInstallAction: Copy "C:\KRC\ROBOTER\Config\User\Common\USERPDI.SAF". Header and content check states identical data!
+09/10/2025 12:52:39.65 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrJointOffset.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.65 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\motiondrv.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.65 [Information] [copy]	Action ignore: 'New:config.copy(Config:\User\Common\connectionchain.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.65 [Information] [copy]	Action ignore: 'New:config.copy(Config:\User\Common\KNet.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.66 [Information] [copy]	Action ignore: 'New:config.copy(Config:\User\Common\Modules_SysBusDriver.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.66 [Information] [copy]	Action ignore: 'New:config.copy(Config:\User\Common\SysBusDriver.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.66 [Information] [copy]	Action ignore: 'New:config.copy(Config:\User\Common\Modules_TimeSync.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.66 [Information] [copy]	Action ignore: 'New:config.copy(Config:\User\Common\TimeSync.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.66 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\SCTLCRC.XML), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.66 [Information] [copy]	Action ignore: 'New:config.copy(Config:\User\Common\TimeSyncBase.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.66 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\AsyncDataToKrl.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.67 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\FpExceptions.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.67 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\KLIConfig.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.67 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\KONIConfig.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.67 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\KrcConfig.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.67 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\KrcDryRun.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.68 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\KrcExtConfMsg.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.68 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Logging_BrakeTest.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.68 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\KrlModSize.bin), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.68 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Logging_PowerManagement.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.68 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\CS_SCID.SAF), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.68 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PersistPC\NGDecouple.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.69 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\A5.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.69 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA6.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.69 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA6AddFct.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.69 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\A6.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.69 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_KPP600-67L_380V_3200.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.69 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Supply\KPP600-67L_380V_3200.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.70 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NextGenDriveTech.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.70 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\StiffTab.bin), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.70 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\CS_TUNID.SAF), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.70 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\DampTab.bin), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.70 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\CFCoreWaggonDriverConfig.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.70 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\CFCore.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.71 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\EAWaggonDriverConfig.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.71 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\LDP.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.71 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\CabCtrl.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.71 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Cabinet\NGSharedO.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.71 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\MotionDrivers\MdlCtlDataDrv.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.71 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\MotionDrivers\motiondrv.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.71 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\MMAxisAdapter.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.72 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Logging_RoboTeam.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.72 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Logging_SpotControl.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.72 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Logging_System.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.72 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrEmily.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.72 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrSignalMonitor.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.73 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrStandStill.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.73 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrVwAscii.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.73 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\OpcUa\AccessConfigConfiguration.json), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.73 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\OpcUa\PubSubConfigurationFiles.json), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.73 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PersistCIB\Readme.txt), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.73 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PersistPDS\Readme.txt), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.73 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrConveyor_6D.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.74 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PersistRDC\Readme.txt), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.74 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\System\Common\Schemes\bas_cm_api.xsd), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.74 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\System\Common\Schemes\ippnio.xsd), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.74 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\System\Common\Schemes\pndev.xsd), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.74 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\System\Common\Schemes\PNIODriver.xsd), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.75 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Modules_PNIODriver.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.75 [Information] [Copy]	Action Requests reconfiguration: 'New:config.Copy(Config:\User\Common\PersistPC\KrcRrtLog.xml), 2000, 0'.
+09/10/2025 12:52:39.75 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\MotionModes.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.75 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PNIOSnmpData.dat), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.76 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\VxWin\knet.config), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.76 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrConveyor.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.76 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\mdrCncAdapter.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.76 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\MotionDrivers\loadDataDevice.ini), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.76 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Logging_VwAscii.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.76 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Modules_OpcUaAdapter.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.76 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Modules_VRC.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.77 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PowerManagementConfig.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.78 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\CtrlGainTab.bin), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.79 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\A4.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.79 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA4.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.79 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA4AddFct.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.79 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\Sensor1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.79 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Motor\M_TA-M0016-KM040-W1_KSP300-5_230V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.79 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Motor\M_TA-M0064-KM060-W1_KSP300-12_230V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.80 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Motor\M_TA-M0127-KM060-W1_KSP300-12_230V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.80 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_KSP300_230V_06.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.80 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_TA-M0016-KM040-W1_KSP300-5_230V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.80 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_TA-M0064-KM060-W1_KSP300-12_230V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.80 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_TA-M0127-KM060-W1_KSP300-12_230V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.80 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Supply\KSP300_230V_06.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.80 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PersistPC\EncoderMastering.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.81 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PersistPC\SimuMastering.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.81 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA5AddFct.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.81 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA5.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.81 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_SI-M1600-KM155-W0_KSP600-40_380V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.81 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\KRCAxes.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.82 [Warning] Ignore SafetyConfigParamAction: Copy "C:\KRC\ROBOTER\Config\User\Common\SCTLPARA.SAF". Param header and content check states identical data!
+09/10/2025 12:52:39.82 [Information] SafetyParamInfoAction 'New:safety.Copy(Config:\User\Common\SCTLINFO.SAF), 2000, 0': Ignored since safety parameter file is ignored too.
+09/10/2025 12:52:39.82 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\KRC_IO.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.82 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\KrcIoSignals.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.82 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\TransferApp_IO.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.83 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\PNIODriver.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.83 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\pndev1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.83 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\IPPNIO.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.83 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ecatms_config.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.87 [Information] SafetyNetworkInstallAction 'New:safety.Copy(Config:\User\Common\SAFEDEV.SAF), 2000, 0': Checksum is identical.
+09/10/2025 12:52:39.88 [Warning] Ignore SafetyNetworkInstallAction: Copy "C:\KRC\ROBOTER\Config\User\Common\SAFEDEV.SAF". Header and content check states identical data!
+09/10/2025 12:52:39.88 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Motor\M_SI-M3600-KM192-W0_KSP600-64_380V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.88 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Motor\M_SI-M1600-KM155-W0_KSP600-40_380V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.88 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_SI-M3600-KM192-W0_KSP600-64_380V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.88 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA1AddFct.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.88 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\A1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.89 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Motor\M_SI-M4800-KM192-W0_KSP600-64_380V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.89 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\ServoFile\S_SI-M4800-KM192-W0_KSP600-64_380V_V1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.89 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA2.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.89 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA2AddFct.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.89 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\A2.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.89 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA3.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.90 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA3AddFct.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.90 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\A3.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.90 [Information] [Copy]	Action ignore: 'New:config.Copy(Config:\User\Common\Mada\NGAxis\CtrlA1.xml), 2000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.90 [Warning] Ignore SafetyConfigParamAction: Copy "C:\KRC\ROBOTER\Config\User\Common\SCTLPARA.SAF". Param header and content check states identical data!
+09/10/2025 12:52:39.93 [Information] [CriticalParametersCopyAction] Action ignore: no changed critical parameters.
+09/10/2025 12:52:39.93 [Information] [Copy]	Action ignore: 'New:mada.Copy(KRC:\Steu\Mada\$option.dat), 4000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.93 [Information] [Copy]	Action ignore: 'New:mada.Copy(KRC:\STEU\$config.dat), 4000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.94 [Information] [Copy]	Action ignore: 'New:mada.Copy(KRC:\STEU\Mada\$machine.dat), 4000, 0'. MD5 check is identical!
+09/10/2025 12:52:39.94 [Information] KrcCopyAction 'New:mada.Copy(KRC:\R1\System\$config.dat), 4000, 0': Requests stopping the program.
+09/10/2025 12:52:39.94 [Information] KrcCopyAction 'New:mada.Copy(KRC:\R1\Mada\$robcor.dat), 4000, 0': Requests stopping the program.
+09/10/2025 12:52:39.94 [Information] KrcCopyAction 'New:mada.Copy(KRC:\Steu\Mada\$custom.dat), 4000, 0': Requests stopping the program.
+09/10/2025 12:52:39.94 [Information] KrcCopyAction 'New:mada.Copy(KRC:\R1\Mada\$machine.dat), 4000, 0': Requests stopping the program.
+09/10/2025 12:52:39.95 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_4_Palet_Ort.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.95 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\MqttConfig.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.95 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\MsgLib.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.95 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\Global_Points.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.95 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\p00.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.95 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\collmonlib.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.96 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestAxes.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.96 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestBack.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.96 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestPark.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.96 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\masref_user.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.96 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestReq.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.97 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestStart.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.97 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Al\ParcaAl.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.97 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\CollDetect_UserAction.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.97 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Alt_Programlar.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.97 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_3_Palet_Ort.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.98 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B1_Parca_Birakma.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.98 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_2_Palet_Ort.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.98 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_1_Palet_Ort.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.98 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B2_Parca_Birakma.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.98 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Global_Variables.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.98 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\masref_main.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.99 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B3_Parca_Birakma.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.99 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Service_Pos.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.99 [Information] [COPY; /Sequence=6500]	Action ignore: 'New:krl.COPY; /Sequence=6500(KRC:\R1\TP\Signals.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.99 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Go_Home.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:39.99 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B4_Parca_Birakma.dat), 6500, 0'. MD5 check is identical!
+09/10/2025 12:52:40.00 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\cell.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.00 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\CollDetect_UserAction.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.00 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\collmonlib.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.00 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\ir_stopm.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.00 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\masref_user.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.01 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\bas.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.01 [Information] KrcCopyAction 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Alt_Programlar.src), 7000, 0': Requests stopping the program.
+09/10/2025 12:52:40.01 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\MsgLib.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.01 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B4_Parca_Birakma.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.01 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B3_Parca_Birakma.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.02 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B2_Parca_Birakma.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.02 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Birakma\B1_Parca_Birakma.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.02 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_4_Palet_Ort.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.02 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_3_Palet_Ort.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.02 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_2_Palet_Ort.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.03 [Information] KrcCopyAction 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_1_Palet_Ort.src), 7000, 0': Requests stopping the program.
+09/10/2025 12:52:40.03 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\masref_main.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.03 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Global_Variables.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.03 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Go_Home.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.03 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Parca_Al\ParcaAl.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.04 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestStart.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.04 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestReq.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.04 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestPark.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.04 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestBack.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.04 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\BrakeTest\BrakeTestAxes.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.04 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\TP\p00.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.05 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\System\sps.sub), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.05 [Information] [Copy]	Action ignore: 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Service_Pos.src), 7000, 0'. MD5 check is identical!
+09/10/2025 12:52:40.05 [Information] [Copy]	Action ignore: 'New:solution.Copy(C:\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.wvs), 9000, 0'. Copy only once!
+09/10/2025 12:52:40.05 [Information] °°° Begin adding global actions for project '26111233990000120003388130 V1.25.0.0'!
+09/10/2025 12:52:40.06 [Information] °°° Execute prepare actions for project '26111233990000120003388130 V1.25.0.0'!
+09/10/2025 12:52:43.79 [Information] Successful execute PrepareAction 'Global.UserPermission(), 1000, 0'.
+09/10/2025 12:52:43.79 [Information] Execute Global.StopProgram(), 2000, 0. Krc not in Automatic!
+09/10/2025 12:52:43.79 [Information] Successful execute PrepareAction 'Global.StopProgram(), 2000, 0'.
+09/10/2025 12:52:43.79 [Information] *** End Prepare '26111233990000120003388130 V1.25.0.0'!
+09/10/2025 12:52:43.83 [Information] Committed: Prepared.
+09/10/2025 12:52:46.58 [Information] *** Start installation of "26111233990000120003388130 V1.25.0.0".
+09/10/2025 12:52:46.58 [Information] Reset current project!
+09/10/2025 12:52:46.69 [Information] Successful execute Install Action 'Global.PrepareReconfiguration(), 0, 0'.
+09/10/2025 12:52:46.69 [Information] Install Action 'Global.PrepareReconfiguration(), 0, 0' is installed with its 0 children.
+09/10/2025 12:52:46.75 [Information] Successful execute Install Action 'New:config.Copy(Config:\User\Common\PersistPC\KrcRrtLog.xml), 2000, 0'.
+09/10/2025 12:52:46.75 [Information] Install Action 'New:config.Copy(Config:\User\Common\PersistPC\KrcRrtLog.xml), 2000, 0' is installed with its 0 children.
+09/10/2025 12:52:46.93 [Information] Successful execute Install Action 'New:mada.Copy(KRC:\R1\Mada\$robcor.dat), 4000, 0'.
+09/10/2025 12:52:46.93 [Information] Install Action 'New:mada.Copy(KRC:\R1\Mada\$robcor.dat), 4000, 0' is installed with its 0 children.
+09/10/2025 12:52:47.00 [Information] Successful execute Install Action 'New:mada.Copy(KRC:\R1\Mada\$machine.dat), 4000, 0'.
+09/10/2025 12:52:47.00 [Information] Install Action 'New:mada.Copy(KRC:\R1\Mada\$machine.dat), 4000, 0' is installed with its 0 children.
+09/10/2025 12:52:47.07 [Information] Successful execute Install Action 'New:mada.Copy(KRC:\Steu\Mada\$custom.dat), 4000, 0'.
+09/10/2025 12:52:47.07 [Information] Install Action 'New:mada.Copy(KRC:\Steu\Mada\$custom.dat), 4000, 0' is installed with its 0 children.
+09/10/2025 12:52:47.13 [Information] Successful execute Install Action 'New:mada.Copy(KRC:\R1\System\$config.dat), 4000, 0'.
+09/10/2025 12:52:47.13 [Information] Install Action 'New:mada.Copy(KRC:\R1\System\$config.dat), 4000, 0' is installed with its 0 children.
+09/10/2025 12:52:47.19 [Information] Successful execute Install Action 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_1_Palet_Ort.src), 7000, 0'.
+09/10/2025 12:52:47.19 [Information] Install Action 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Bolge_1_Palet_Ort.src), 7000, 0' is installed with its 0 children.
+09/10/2025 12:52:47.23 [Information] Successful execute Install Action 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Alt_Programlar.src), 7000, 0'.
+09/10/2025 12:52:47.23 [Information] Install Action 'New:krl.Copy(KRC:\R1\Program\Sub_Rutinler\Alt_Programlar.src), 7000, 0' is installed with its 0 children.
+09/10/2025 12:52:47.24 [Information] *** Installation of "26111233990000120003388130 V1.25.0.0" successful!
+09/10/2025 12:52:47.37 [Information] Set current project: 26111233990000120003388130 V1.25.0.0
+09/10/2025 12:52:47.40 [Information] *** End installation of "26111233990000120003388130 V1.25.0.0".
+09/10/2025 12:52:47.57 [Information] Committed: Installed.
+09/10/2025 12:52:48.14 [Information] Successfully execute post action 'Global.AnalyseAll(), 1000, 0'.
+09/10/2025 12:52:48.14 [Information] Successfully execute post action 'Global.Reconfiguration(), 99900, 0'.
+09/10/2025 12:52:48.14 [Information] *** Post processing successful.
+09/10/2025 12:52:49.14 [Information] Committing: Removing package 'C:\KRC\User\ProjectRoot\PCRC-QLWXUWPQS7.pkg'.
+09/10/2025 12:52:49.15 [Information] Committed: Completed.
+09/10/2025 12:52:49.22 [Information] #----------------o0o---------------#

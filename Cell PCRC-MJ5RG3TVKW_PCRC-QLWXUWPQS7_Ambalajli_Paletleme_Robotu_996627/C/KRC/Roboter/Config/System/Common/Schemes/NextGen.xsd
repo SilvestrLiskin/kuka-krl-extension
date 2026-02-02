@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="NGVersion.xsd"/>
+   <xs:include schemaLocation="NGThread.xsd"/>
+   <xs:element name="Drive">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="Platform">
+               <xs:complexType>
+                  <xs:attribute name="Behaviour" use="required">
+                     <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                           <xs:enumeration value="Platform2"/>
+                           <xs:enumeration value="Platform3"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+            <xs:element ref="Version" minOccurs="0" />
+            <xs:element ref="Thread"/>
+            <xs:element name="SimpleAsyncThread">
+               <xs:complexType>
+                  <xs:attribute name="Priority" use="required">
+                     <xs:annotation>
+                        <xs:documentation>VxWorks priority</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:unsignedByte">
+                           <xs:maxInclusive value="255"/>
+                           <xs:minInclusive value="170"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="DriveTech">
+               <xs:complexType>
+                  <xs:attribute name="ConfigFile" type="xs:anyURI" use="required"/>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="ControllerFramework" minOccurs="0">
+               <xs:complexType>
+                  <xs:attribute name="ID" type="xs:short"/>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="MasteringData">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Mastering" minOccurs="0" maxOccurs="8">
+                        <xs:complexType>
+                           <xs:choice>
+                           <xs:sequence>
+                              <xs:element name="RawData">
+                                 <xs:complexType>
+                                    <xs:attribute name="SignalPropagationDelay" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in 10^-3 s
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:double">
+                                             <xs:minInclusive value="0.0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="BufferSize" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in 10^-3 s
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:double">
+                                             <xs:minInclusive value="0.0"/>
+                                             <xs:maxInclusive value="100000.0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="ConversionFactor" type="xs:double" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in mm/inc
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="InContactThreshold" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in Inc
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:minExclusive value="0"/>
+                                             <xs:maxInclusive value="32768"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="Filter" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:attribute name="Order" use="required">
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:minInclusive value="2"/>
+                                             <xs:maxInclusive value="8"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="Cut-Off-Frequency" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in Hz
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:double">
+                                             <xs:minInclusive value="0.0"/>
+                                             <xs:maxInclusive value="1000.0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="RangeMonitoring" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:attribute name="MinRawValue" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in Inc
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:minExclusive value="0"/>
+                                             <xs:maxInclusive value="32768"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="MaxRawValue" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in Inc
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:maxInclusive value="65536"/>
+                                             <xs:minInclusive value="0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="RelChangeMonitoring" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:attribute name="MinRelChange" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in %
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:double">
+                                             <xs:minInclusive value="-10.0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="MaxRelChange" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in %
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:double">
+                                             <xs:minInclusive value="0.0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="NotchLengthMonitoring" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:attribute name="MaxLengthNotchGround" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in deg
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:double">
+                                             <xs:minExclusive value="0.0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="NotchDetection">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element name="Factor" minOccurs="2" maxOccurs="2">
+                                          <xs:simpleType>
+                                             <xs:restriction base="xs:double">
+                                                <xs:maxInclusive value="0.9"/>
+                                                <xs:minInclusive value="0.1"/>
+                                             </xs:restriction>
+                                          </xs:simpleType>
+                                       </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="MinNotchDepth" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>
+                                             in mm
+                                          </xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:double">
+                                             <xs:minExclusive value="0.0"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="HotConnect" minOccurs="0">
+                                 <xs:complexType>
+                                    <xs:sequence>
+                                       <xs:element name="EMD">
+                                          <xs:complexType>
+                                             <xs:attribute name="VendorID" use="required">
+                                                <xs:simpleType>
+                                                   <xs:restriction base="xs:long">
+                                                      <xs:minInclusive value="0"/>
+                                                   </xs:restriction>
+                                                </xs:simpleType>
+                                             </xs:attribute>
+                                             <xs:attribute name="ProductCode" use="required">
+                                                <xs:simpleType>
+                                                   <xs:restriction base="xs:long">
+                                                      <xs:minInclusive value="0"/>
+                                                   </xs:restriction>
+                                                </xs:simpleType>
+                                             </xs:attribute>
+                                          </xs:complexType>
+                                       </xs:element>
+                                    </xs:sequence>
+                                 </xs:complexType>
+                              </xs:element>
+                           </xs:sequence>
+                           <xs:sequence>
+                              <xs:element name="EdgeType" default="positive">
+                                 <xs:annotation>
+                                    <xs:documentation>
+                                       Edge of reference mark signal which is used for "FM" mastering e.g. "positive" (default), "negative" or "auto"
+                                    </xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                       <xs:enumeration value="positive"/>
+                                       <xs:enumeration value="negative"/>
+                                       <xs:enumeration value="auto"/>
+                                    </xs:restriction>
+                                 </xs:simpleType>
+                              </xs:element>
+                           </xs:sequence>
+                           <xs:sequence>
+                              <xs:element name="NopDummy" minOccurs="0" /> <!-- dummy element to allow empty mastering elements -->
+                           </xs:sequence>
+                           </xs:choice>
+                           <xs:attribute name="Type" type="xs:string" use="required">
+                              <xs:annotation>
+                                 <xs:documentation>
+                                    e.g. "EMD"
+                                 </xs:documentation>
+                              </xs:annotation>
+                           </xs:attribute>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="PositionRangeData">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="PositionRange" minOccurs="0" maxOccurs="8">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="SensorData">
+                                 <xs:complexType>
+                                    <xs:attribute name="MinValue" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>in Inc</xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:minInclusive value="0"/>
+                                             <xs:maxInclusive value="65536"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="MaxValue" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>in Inc</xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:minInclusive value="0"/>
+                                             <xs:maxInclusive value="65536"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="ZeroValue" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>in Inc</xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:minInclusive value="0"/>
+                                             <xs:maxInclusive value="65536"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="ZeroLimit" use="required">
+                                       <xs:annotation>
+                                          <xs:documentation>in Inc</xs:documentation>
+                                       </xs:annotation>
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:integer">
+                                             <xs:minInclusive value="0"/>
+                                             <xs:maxInclusive value="65536"/>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:attribute>
+                                 </xs:complexType>
+                              </xs:element>
+                           </xs:sequence>
+                           <xs:attribute name="Type" type="xs:string" use="required">
+                              <xs:annotation>
+                                 <xs:documentation>e.g. "MMD"</xs:documentation>
+                              </xs:annotation>
+                           </xs:attribute>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="Extrapolation">
+               <xs:complexType>
+                  <xs:attribute name="BusDelayFactor" use="required">
+                     <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                           <xs:minInclusive value="1"/>
+                           <xs:maxInclusive value="5"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="DelayRDC" use="optional">
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="DelayKSP" use="optional">
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="DelayKSPsr" use="optional">
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="Position">
+               <xs:complexType>
+                  <xs:attribute name="TimeSlot" use="required">
+                     <xs:annotation>
+                        <xs:documentation>in 10^-3 s; Timeslot for getting the position at a given time</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:maxInclusive value="20000.0"/>
+                           <xs:minInclusive value="1000.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="TemperatureSensors">
+               <xs:complexType>
+                  <xs:sequence maxOccurs="unbounded">
+                     <xs:choice>
+                        <xs:element name="PTC">
+                           <xs:complexType>
+                              <xs:attribute name="Type" type="xs:string" use="required"/>
+                              <xs:attribute name="R0" type="xs:double" use="required"/>
+                              <xs:attribute name="a" type="xs:double" use="required"/>
+                              <xs:attribute name="b" type="xs:double"/>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="NTC">
+                           <xs:complexType>
+                              <xs:attribute name="Type" type="xs:string" use="required"/>
+                              <xs:attribute name="Rref" type="xs:double" use="required"/>
+                              <xs:attribute name="Tref" type="xs:double" use="required"/>
+                              <xs:attribute name="B" type="xs:double" use="required"/>
+                              <xs:attribute name="Tmin" type="xs:double"/>
+                              <xs:attribute name="Tmax" type="xs:double"/>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Switch">
+                           <xs:complexType>
+                              <xs:attribute name="Type" type="xs:string" use="required"/>
+                              <xs:attribute name="Toff" type="xs:double" use="required"/>
+                           </xs:complexType>
+                        </xs:element>
+                     </xs:choice>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="Monitoring" minOccurs="0">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Threshold" maxOccurs="10">
+                        <xs:complexType>
+                           <xs:attribute name="Name" type="xs:string" use="required"/>
+                           <xs:attribute name="Value" use="required">
+                              <xs:simpleType>
+                                 <xs:restriction base="xs:double">
+                                    <xs:minInclusive value="0.0"/>
+                                 </xs:restriction>
+                              </xs:simpleType>
+                           </xs:attribute>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

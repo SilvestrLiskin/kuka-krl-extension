@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ModuleList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Schemes/Modules.xsd">
+   <Version Label="">
+      <Info Version="KUKA.Platform V3"/>
+      <Schema Version="1"/>
+   </Version>
+   <Module isActive="true" runFaulty="false" Name="HardwareStatusProvider.o" Config="HardwareStatusProvider.xml" DisplayName="HardwareStatusProvider" Prio="186" Stacksize="65536" Affinity="0" />
+</ModuleList>

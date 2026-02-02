@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" vc:minVersion="1.1">
+  <xs:include schemaLocation="Version.xsd"/>
+  <xs:include schemaLocation="Units.xsd"/>
+
+  <xs:element name="EKOData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Version"/>
+        <xs:element ref="Device"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="Device">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Global"/>
+        <xs:element ref="Axis" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="TrafoName" type="tTrafoName" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Global">
+    <xs:complexType>
+      <xs:attribute name="Filter" type="msTimeType" use="required"/>
+      <xs:attribute name="FadeTime" type="msTimeType" use="required"/>
+      <xs:attribute name="UseStaticCorrection" type="xs:boolean" use="required"/>
+    </xs:complexType>
+  </xs:element>  
+
+  <xs:element name="Axis">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Drivetrain"/>
+      </xs:sequence>
+      <xs:attribute name="Active" type="xs:boolean" use="required"/>
+      <xs:attribute name="Number" type="tNumber" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:simpleType name="tTrafoName">
+    <xs:annotation>
+      <xs:documentation xml:lang="DE">Trafo-Name</xs:documentation>
+      <xs:documentation xml:lang="EN">trafo name</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[#\w ]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="Drivetrain">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Motor"/>
+        <xs:element ref="Gear"/>
+        <xs:element ref="Slave" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="tNumber">
+    <xs:annotation>
+      <xs:documentation xml:lang="DE">Achs-Nummer (1-basiert)</xs:documentation>
+      <xs:documentation xml:lang="EN">axis number (1-based)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="Motor">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Friction"/>
+      </xs:sequence>
+      <xs:attribute name="Inertia" type="inertiaType" use="required"/>
+      <xs:attribute name="kTCorrectionFactor" type="xs:double" use="required"/>
+      <xs:attribute name="MaximumTorque" type="torqueType" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="Gear">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Friction"/>
+        <xs:element ref="Damper"/>
+        <xs:element ref="Spring"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Slave">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Motor"/>
+        <xs:element ref="Tension"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Friction">
+    <xs:complexType>
+      <xs:attribute name="Static" type="xs:double" use="required"/>
+      <xs:attribute name="Viscous" type="xs:double" use="required"/>
+      <xs:attribute name="Steepness" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Damper">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Adaption" type="tDamperAdaption" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="Damping" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Spring">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Adaption" type="tSpringAdaption" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="OffsetHighLoad" type="xs:double" use="required"/>
+      <xs:attribute name="StiffnessHighLoad" type="xs:double" use="required"/>
+      <xs:attribute name="StiffnessLowLoad" type="xs:double" use="required"/>
+      <xs:attribute name="WidthSpline" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Tension">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Torque"/>
+        <xs:element ref="Filter"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="tDamperAdaption">
+    <xs:sequence>
+      <xs:element ref="Table"/>
+    </xs:sequence>
+    <xs:attribute name="Type" type="tDamperAdaptionType" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="tSpringAdaption">
+    <xs:sequence>
+      <xs:element ref="StiffnessLowLoad"/>
+    </xs:sequence>
+    <xs:attribute name="Type" type="tSpringAdaptionType" use="required"/>
+    <xs:attribute name="FactorHighLoad" type="xs:double" use="required"/>
+    <xs:attribute name="InertiaCalculation" type="tInertiaCalculation" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="Torque">
+    <xs:complexType>
+      <xs:attribute name="TensionMaximum" type="xs:double" use="required"/>
+      <xs:attribute name="Threshold" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Filter">
+    <xs:complexType>
+      <xs:attribute name="CutoffFrequency" type="xs:double" use="required"/>
+      <xs:attribute name="Damping" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Table">
+    <xs:complexType>
+      <xs:attribute name="Path" type="tTablePath" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="tDamperAdaptionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None"/>
+      <xs:enumeration value="Table"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="StiffnessLowLoad">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="PolynomialCoefficients"/>
+        <xs:element ref="Table"/>
+      </xs:sequence>
+      <xs:attribute name="Max" type="xs:double" use="required"/>
+      <xs:attribute name="Min" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="tSpringAdaptionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None"/>
+      <xs:enumeration value="Table"/>
+      <xs:enumeration value="Polynomial"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tInertiaCalculation">
+    <xs:annotation>
+      <xs:documentation xml:lang="DE">InertiaCalculation Flag</xs:documentation>
+      <xs:documentation xml:lang="EN">InertiaCalculation flag</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tTablePath">
+    <xs:annotation>
+      <xs:documentation xml:lang="DE">Dateiname einer Tabelle mit Interpolator-Stuetzstellen</xs:documentation>
+      <xs:documentation xml:lang="EN">file name of a table with interpolator samples</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:normalizedString">
+      <xs:pattern value="[\w \-_\\/]+\.bin"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="PolynomialCoefficients">
+    <xs:complexType>
+      <xs:attribute name="p11" type="xs:double" use="required"/>
+      <xs:attribute name="p12" type="xs:double" use="required"/>
+      <xs:attribute name="p13" type="xs:double" use="required"/>
+      <xs:attribute name="p14" type="xs:double" use="required"/>
+      <xs:attribute name="p21" type="xs:double" use="required"/>
+      <xs:attribute name="p22" type="xs:double" use="required"/>
+      <xs:attribute name="p23" type="xs:double" use="required"/>
+      <xs:attribute name="p24" type="xs:double" use="required"/>
+      <xs:attribute name="p31" type="xs:double" use="required"/>
+      <xs:attribute name="p32" type="xs:double" use="required"/>
+      <xs:attribute name="p33" type="xs:double" use="required"/>
+      <xs:attribute name="p34" type="xs:double" use="required"/>
+      <xs:attribute name="p41" type="xs:double" use="required"/>
+      <xs:attribute name="p42" type="xs:double" use="required"/>
+      <xs:attribute name="p43" type="xs:double" use="required"/>
+      <xs:attribute name="p44" type="xs:double" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Sensor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../System/Common/Schemes/NGSensor.xsd">
+  <Version Label="">
+    <Info Version="KUKA V8.3"/>
+    <Schema Version="1"/>
+  </Version>
+  <SensorSimulation>Off</SensorSimulation>
+  <EncoderData Available="true" RatioMotorEncoder="[4/1]" Offset="0" />
+</Sensor>

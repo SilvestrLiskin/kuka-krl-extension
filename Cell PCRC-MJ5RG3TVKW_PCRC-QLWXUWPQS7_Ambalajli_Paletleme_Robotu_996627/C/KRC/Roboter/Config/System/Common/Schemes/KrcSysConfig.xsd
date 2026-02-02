@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Version.xsd"/>
+  <xs:element name="ChangedBitSysVar">
+    <xs:complexType>
+      <xs:attribute name="Name" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="KrcSysConfig">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Version" minOccurs="0"/>
+        <xs:element ref="ChangedBitSysVar" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

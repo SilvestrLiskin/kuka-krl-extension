@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="NGVersion.xsd"/>
+	<xs:attribute name="UseForeignEcatRegistry">
+		<xs:simpleType>
+			<xs:annotation>
+				<xs:documentation>Whether a foreign or the own Ecat Registry should be used.</xs:documentation>
+			</xs:annotation>
+			<xs:restriction base="xs:boolean"/>
+		</xs:simpleType>
+	</xs:attribute>
+	<xs:attribute name="UseCoeFiles">
+		<xs:simpleType>
+			<xs:annotation>
+				<xs:documentation>Whether to use EcatDummy/[bus]/Device_[SlaveID]/Coe/CoE.xml to simulate CoE.</xs:documentation>
+			</xs:annotation>
+			<xs:restriction base="xs:boolean"/>
+		</xs:simpleType>
+	</xs:attribute>
+	<xs:attribute name="UseFoeFiles">
+		<xs:simpleType>
+			<xs:annotation>
+				<xs:documentation>Whether to use EcatDummy/[bus]/Device_[SlaveID]/FoE to simulate FoE.</xs:documentation>
+			</xs:annotation>
+			<xs:restriction base="xs:boolean"/>
+		</xs:simpleType>
+	</xs:attribute>
+	<xs:attribute name="UseSlaveInfoFiles">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>Whether to use EcatDummy/[bus]/Device_[SlaveID]/SlaveInfo/SlaveInfo.xml to simulate SlaveInfo.</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:boolean"/>
+      </xs:simpleType>
+   </xs:attribute>
+	<xs:attribute name="BusID">
+		<xs:simpleType>
+			<xs:annotation>
+				<xs:documentation>The unique ID for a certain EtherCAT bus.</xs:documentation>
+			</xs:annotation>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="1"/>
+				<xs:maxLength value="32"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+	<xs:element name="Bus">
+		<xs:complexType>
+			<xs:attribute ref="BusID" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Behaviour">
+		<xs:complexType>
+			<xs:attribute ref="UseForeignEcatRegistry" use="required"/>
+			<xs:attribute ref="UseCoeFiles" use="optional"/>
+			<xs:attribute ref="UseFoeFiles" use="optional"/>
+			<xs:attribute ref="UseSlaveInfoFiles" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BusList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Bus" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="EcatWrapperDummy">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version"/>
+				<xs:element ref="Behaviour"/>
+				<xs:element ref="BusList"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

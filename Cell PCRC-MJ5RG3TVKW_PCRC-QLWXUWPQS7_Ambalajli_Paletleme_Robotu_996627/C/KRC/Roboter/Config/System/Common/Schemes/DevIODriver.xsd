@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Muehlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2008 sp1 (http://www.altova.com) von Florian Steigenberger (KUKA Roboter GmbH) bearbeitet -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="Version.xsd"/>
+	<xs:simpleType name="portType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="65535"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="serverIfType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+			<xs:enumeration value="VNET"/>
+			<xs:enumeration value="KLI"/>
+			<xs:enumeration value="KSB"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="offsetType">
+		<xs:restriction base="xs:nonNegativeInteger"/>
+	</xs:simpleType>
+	<xs:simpleType name="sizeType">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="4000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="deviceNameType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="busNameType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="13"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="halfProcessImageType">
+		<xs:attribute name="offset" type="offsetType" use="required"/>
+		<xs:attribute name="size" type="sizeType" use="required"/>
+		<xs:attribute name="anaStartOffset" type="sizeType" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="Device">
+		<xs:sequence>
+			<xs:element name="Inputs" type="halfProcessImageType"/>
+			<xs:element name="Outputs" type="halfProcessImageType"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="deviceNameType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="BusInstance">
+		<xs:sequence>
+			<xs:element name="Device" type="Device" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="busNameType" use="required"/>
+		<xs:attribute name="size" type="sizeType"/>
+	</xs:complexType>
+	<xs:element name="DevIODriver">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version" minOccurs="0"/>
+				<xs:element name="PortNumber" type="portType" minOccurs="0"/>
+				<xs:element name="ServerIF" type="serverIfType" minOccurs="0"/>
+				<xs:sequence>
+					<xs:element name="BusInstance" type="BusInstance" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

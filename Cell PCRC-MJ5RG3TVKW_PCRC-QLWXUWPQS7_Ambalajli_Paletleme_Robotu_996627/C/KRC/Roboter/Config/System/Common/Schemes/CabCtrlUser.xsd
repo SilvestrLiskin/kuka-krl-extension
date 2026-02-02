@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!-- 23.11.2009 Schröther/Bößenecker  Erstellung wegen Teilung der Konfiguration in System und User -->
+<!-- 12.02.2010 Schröther/Bößenecker  Schalter für ProfiSafeDiag ist nun in der System-Konfiguration und default-mäßig auf "on". -->
+<!-- 29.11.2010 Schröther/Bößenecker  Alle variablen Konfigurationen von Config\System nach Config\User umgezogen. -->
+<!-- 02.10.2012 Schröther/Nagy        Schranktyp kommt von WorkVisual. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <xs:include schemaLocation="Version.xsd"/>
+   <xs:complexType name="BusData">
+      <xs:attribute name="driver" type="xs:string" use="required"/>
+      <xs:attribute name="bus" type="xs:string" use="required"/>
+      <xs:attribute name="bitOffset" type="xs:string" use="required"/>
+   </xs:complexType>
+
+   <xs:element name="CabCtrl">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version"/>
+            <xs:element name="CabinetInformation">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Cabinet">
+                        <xs:complexType>
+                           <xs:attribute name="kind" type="xs:string" use="required" />
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="Operations">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="PowerDownByPLC">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="Input" type="BusData"/>
+                              <xs:element name="Output" type="BusData"/>
+                           </xs:sequence>
+                           <xs:attribute name="activated" type="xs:string" use="required"/>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element name="UserInterface">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="Output" type="BusData"/>
+                           </xs:sequence>
+                           <xs:attribute name="activated" type="xs:string" use="required"/>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element name="ControlOuterFan">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="TrafoTemp">
+                                 <xs:complexType>
+                                    <xs:attribute name="monitoring" type="xs:string" use="required"/>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:element name="ClimateDevice">
+                                 <xs:complexType>
+                                    <xs:attribute name="monitoring" type="xs:string" use="required"/>
+                                 </xs:complexType>
+                              </xs:element>
+                           </xs:sequence>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element name="Retrofit">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="Input" type="BusData"/>
+                           </xs:sequence>
+                           <xs:attribute name="activated" type="xs:string" use="required"/>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

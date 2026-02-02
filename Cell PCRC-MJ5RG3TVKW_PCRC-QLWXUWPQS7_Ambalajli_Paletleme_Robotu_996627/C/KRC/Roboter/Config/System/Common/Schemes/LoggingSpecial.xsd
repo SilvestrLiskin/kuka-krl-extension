@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="Version.xsd"/>
+	<xs:simpleType name="ContextLoggingType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="disabled"/>
+			<xs:enumeration value="enabled"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EnumStrategy">
+	    <xs:restriction base="xs:string">
+		    <xs:pattern value="PureContext|Mixed|PureClass"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EnumFormat">
+	    <xs:restriction base="xs:string">
+		    <xs:pattern value="putty|csv"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ClassLogLevelType">
+		<xs:restriction base="xs:string">
+			<!--xs:enumeration value="disabled" />
+			<xs:enumeration value="fatal" />
+			<xs:enumeration value="error" />
+			<xs:enumeration value="warning" />
+			<xs:enumeration value="basic" />
+			<xs:enumeration value="info" />
+			<xs:enumeration value="debug" />
+			<xs:enumeration value="trace" /-->
+			<xs:pattern value="[0-9]+|disabled|fatal|error|warning|basic|info|debug|trace"/>   <!-- see ILogging.h for log level values -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OfflineLoggingType">
+		<xs:restriction base="xs:string">			
+			<xs:enumeration value="file"/>			
+			<xs:enumeration value="none"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="LoggingStrategy">
+	    <xs:complexType>
+		    <xs:attribute name="Strategy" type="EnumStrategy" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Context">
+		<xs:complexType>
+			<xs:attribute name="Name" type="xs:string" use="required"/>
+			<xs:attribute name="ContextLogging" type="ContextLoggingType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DefaultContextConfig">
+		<xs:complexType>
+			<xs:attribute name="ContextLogging" type="ContextLoggingType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DefaultClassConfig">
+		<xs:complexType>
+			<xs:attribute name="LogLevel" type="ClassLogLevelType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Class">
+		<xs:complexType>
+			<xs:attribute name="Name" type="xs:anyURI" use="required"/>
+			<xs:attribute name="LogLevel" type="ClassLogLevelType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ContextConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DefaultContextConfig" minOccurs="0"/>
+				<xs:element ref="Context" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ClassConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DefaultClassConfig" minOccurs="0"/>
+				<xs:element ref="Class" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LogRegistry">
+		<xs:complexType>
+			<xs:sequence>
+			    <xs:element ref="LoggingStrategy"/>
+				<xs:element ref="ContextConfig"/>
+				<xs:element ref="ClassConfig"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LoggingOptions">
+		<xs:complexType>
+			<xs:attribute name="isActive" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LogFile">
+		<xs:complexType>
+			<xs:attribute name="Name" type="xs:string" use="required"/>
+			<xs:attribute name="Path" type="xs:string" use="required"/>
+			<xs:attribute name="NbrFiles" type="xs:int" use="required"/>
+			<xs:attribute name="FileSize" type="xs:int" use="required"/>
+			<xs:attribute name="FileFormat" type="EnumFormat" use="optional"/>
+			<xs:attribute name="BufferLogs" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LogManager">
+		<xs:complexType>
+			<xs:sequence>
+			    <xs:element ref="Version" minOccurs="0"/>
+				<xs:element ref="LoggingOptions"/>
+				<xs:element ref="LogFile"/>
+				<xs:element ref="LogRegistry"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

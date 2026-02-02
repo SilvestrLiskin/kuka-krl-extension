@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Version.xsd"/>
+
+   <xs:element name="FpExceptions">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version"/>
+            <xs:element ref="UnmaskedExceptions"/>
+            <xs:element ref="SseModes"/>
+            <xs:element ref="DeactivateFpuForNonFpTasks"/>
+            <xs:element ref="SpecialSettings"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="UnmaskedExceptions">
+      <xs:complexType>
+         <xs:attribute ref="InvalidOperation"/>
+         <xs:attribute ref="DenormalizedOperand"/>
+         <xs:attribute ref="ZeroDivide"/>
+         <xs:attribute ref="Overflow"/>
+         <xs:attribute ref="Underflow"/>
+         <xs:attribute ref="Precision"/>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="SseModes">
+      <xs:complexType>
+         <xs:attribute ref="FlushToZero"/>
+         <xs:attribute ref="DenormalsAreZero"/>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="DeactivateFpuForNonFpTasks" type="xs:boolean" default="true"/>
+
+   <xs:element name="SpecialSettings">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Task" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:element name="Task">
+      <xs:complexType>
+         <xs:attribute name="Name" type="xs:string" use="required"/>
+         <xs:attribute ref="InvalidOperation"/>
+         <xs:attribute ref="DenormalizedOperand"/>
+         <xs:attribute ref="ZeroDivide"/>
+         <xs:attribute ref="Overflow"/>
+         <xs:attribute ref="Underflow"/>
+         <xs:attribute ref="Precision"/>
+         <xs:attribute ref="FlushToZero"/>
+         <xs:attribute ref="DenormalsAreZero"/>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:attribute name="InvalidOperation" type="xs:boolean" default="false"/>
+   <xs:attribute name="DenormalizedOperand" type="xs:boolean" default="false"/>
+   <xs:attribute name="ZeroDivide" type="xs:boolean" default="false"/>
+   <xs:attribute name="Overflow" type="xs:boolean" default="false"/>
+   <xs:attribute name="Underflow" type="xs:boolean" default="false"/>
+   <xs:attribute name="Precision" type="xs:boolean" default="false"/>
+   <xs:attribute name="FlushToZero" type="xs:boolean" default="false"/>
+   <xs:attribute name="DenormalsAreZero" type="xs:boolean" default="false"/>
+
+</xs:schema>

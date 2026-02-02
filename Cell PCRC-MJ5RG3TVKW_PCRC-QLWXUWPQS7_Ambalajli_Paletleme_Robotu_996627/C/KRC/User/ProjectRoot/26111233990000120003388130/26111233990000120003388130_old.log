@@ -1,0 +1,8 @@
+09/10/2025 12:50:58.92 [Information] -------------------------------
+09/10/2025 12:50:58.92 [Information] *** Begin Prepare ''!
+09/10/2025 12:50:58.92 [Information] *** Begin prepare project '26111233990000120003388130 V1.25.0.0'!
+09/10/2025 12:50:58.94 [Error] ### Failed to Prepare '26111233990000120003388130 V1.25.0.0'! Reason: Error on controller <?P0>: Installation canceled! The robot interpreter must not be selected when system is in test mode!
+09/10/2025 12:50:58.94 [Warning] *** Start Rollback.
+09/10/2025 12:50:58.94 [Information] Restore current project -> 26111233990000120003388130 V1.22.0
+09/10/2025 12:50:58.94 [Warning] *** End Rollback.
+09/10/2025 12:50:58.94 [Information] #----------------o0o---------------#

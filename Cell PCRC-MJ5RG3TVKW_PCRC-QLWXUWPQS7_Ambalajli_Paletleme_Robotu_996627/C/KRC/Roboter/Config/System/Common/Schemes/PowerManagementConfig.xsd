@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Carola John (KUKA Roboter GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Version.xsd"/>
+   <xs:annotation>
+      <xs:documentation>Standard time restrictions are in ms</xs:documentation>
+   </xs:annotation>
+   <xs:simpleType name="Restrictions600To18000">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="600"/>
+         <xs:maxExclusive value="18000"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions1200To18000">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="1200"/>
+         <xs:maxExclusive value="18000"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions600To1200">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="600"/>
+         <xs:maxExclusive value="1200"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions100To600">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="100"/>
+         <xs:maxExclusive value="600"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions50To100">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="50"/>
+         <xs:maxExclusive value="100"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions1To600">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="1"/>
+         <xs:maxExclusive value="600"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions1To10000">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="1"/>
+         <xs:maxExclusive value="10000"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions1To100">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="1"/>
+         <xs:maxExclusive value="100"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Restrictions1To255">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="1"/>
+         <xs:maxExclusive value="255"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="RestrictionsMin60">
+      <xs:restriction base="xs:integer">
+         <xs:minExclusive value="60"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:element name="PowerManagement">
+      <xs:complexType>
+         <xs:all>
+            <xs:element name="UcpwrTimeouts" minOccurs="0">
+               <xs:annotation>
+                  <xs:documentation>UCPWR time restrictions are in 100 ms</xs:documentation>
+               </xs:annotation>
+               <xs:complexType>
+                  <xs:all>
+                     <xs:element name="SoftRebootWithPowerCycle" type="Restrictions600To18000" minOccurs="0">
+                     <xs:annotation>
+                        <xs:documentation>Correspond from 1 to 30 minutes</xs:documentation>
+                     </xs:annotation>
+                     </xs:element>
+                     <xs:element name="SoftRebootWithoutPowerCycle" type="Restrictions600To18000" minOccurs="0"/>
+                     <xs:element name="SoftPowerDown" type="Restrictions600To18000" minOccurs="0"/>
+                     <xs:element name="PowerFail" type="Restrictions1200To18000" minOccurs="0">
+                     <xs:annotation>
+                        <xs:documentation>Correspond from 2 to 30 minutes</xs:documentation>
+                     </xs:annotation>
+                     </xs:element>
+                     <xs:element name="PowerFailInWaitBoot" type="Restrictions1200To18000" minOccurs="0"/>
+                     <xs:element name="BiosBoot" type="Restrictions100To600" minOccurs="0">
+                     <xs:annotation>
+                        <xs:documentation>Correspond from 10 to 60 seconds</xs:documentation>
+                     </xs:annotation>
+                     </xs:element>
+                     <xs:element name="CpuABoot" type="Restrictions600To1200" minOccurs="0">
+                     <xs:annotation>
+                        <xs:documentation>Correspond from 1 to 2 minutes</xs:documentation>
+                     </xs:annotation>
+                     </xs:element>
+                     <xs:element name="HeartBeat" type="Restrictions50To100" minOccurs="0">
+                     <xs:annotation>
+                        <xs:documentation>Correspond from 5 to 10 seconds</xs:documentation>
+                     </xs:annotation>
+                     </xs:element>
+                     <xs:element name="PowerBack" type="RestrictionsMin60" minOccurs="0">
+                     <xs:annotation>
+                        <xs:documentation>Minimum value is 6 seconds</xs:documentation>
+                     </xs:annotation>
+                     </xs:element>
+                  </xs:all>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="MinUcpwrFwVersion" minOccurs="0">
+               <xs:annotation>
+                  <xs:documentation>Minimum UCPWR firmware version</xs:documentation>
+               </xs:annotation>
+               <xs:complexType>
+                  <xs:all>
+                     <xs:element name="Major" type="xs:unsignedByte" minOccurs="0"/>
+                     <xs:element name="Minor" type="xs:unsignedByte" minOccurs="0"/>
+                     <xs:element name="Revision" type="xs:unsignedByte" minOccurs="0"/>
+                     <xs:element name="Bugfix" type="xs:unsignedByte" minOccurs="0"/>
+                  </xs:all>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="AccuTestCycleTime" type="Restrictions1To600" minOccurs="0"/>
+            <xs:element name="ApplicationCycleTime" type="Restrictions1To10000" minOccurs="0"/>
+            <xs:element name="NumUcpwrLogMsgs" type="Restrictions1To255" minOccurs="0"/>
+            <xs:element name="NumUcpwrLogPastMsgs" type="Restrictions1To100" minOccurs="0"/>
+            <xs:element name="WaitForResponseTime" type="Restrictions1To10000" minOccurs="0"/>
+            <xs:element name="StateMachineCycleTime" type="Restrictions1To10000" minOccurs="0"/>
+            <xs:element name="HardwareObserverCycleTime" type="Restrictions1To10000" minOccurs="0"/>
+            <xs:element name="AccuTestMode" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="AccuOfficeMode" type="xs:boolean" minOccurs="0"/>
+         </xs:all>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

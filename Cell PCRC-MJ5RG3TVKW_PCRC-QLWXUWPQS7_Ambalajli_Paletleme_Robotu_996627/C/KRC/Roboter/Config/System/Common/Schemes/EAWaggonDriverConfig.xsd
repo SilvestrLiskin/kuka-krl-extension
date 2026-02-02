@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="NGVersion.xsd"/>
+   <!--todo <xs:redefine schemaLocation="NGVersion.xsd">-->
+   <!-- *************************************************
+      min- and maxInclusive have to be the same value
+      this value has to be changed on every change of this file !!
+      *************************************************** -->
+   <!--<xs:simpleType name="VersionType">
+         <xs:restriction base="VersionType">
+            <xs:minInclusive value="1"/> 
+            <xs:maxInclusive value="1"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:redefine>-->
+   <xs:include schemaLocation="Units.xsd"/>
+   <xs:include schemaLocation="WaggonDriverCommon.xsd"/>
+   <xs:simpleType name="BitOffsetType">
+      <xs:restriction base="xs:unsignedInt">
+         <xs:minInclusive value="0"/>
+         <xs:maxInclusive value="4095"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:element name="Offset">
+      <xs:complexType>
+         <xs:attribute name="VendorID" type="xs:int" use="required">
+            <xs:annotation>
+               <xs:documentation>Vendor ID of device(s) to use for process data variable mapping from EtherCAT configuration file</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="ProductCode" type="xs:int" use="required">
+            <xs:annotation>
+               <xs:documentation>Product code of device(s) to use for process data variable mapping from EtherCAT configuration file</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="RevisionNo" type="xs:int" use="optional">
+            <xs:annotation>
+               <xs:documentation>Not used any more.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="Occurrence" type="xs:unsignedInt" use="optional" default="0">
+            <xs:annotation>
+               <xs:documentation>Index of occurrence of process data variable in EtherCAT configuration file starting with 0 or "all"</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="VarName" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>Name of process data variable in EtherCAT configuration file</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="ClientOffset" type="xs:unsignedInt" use="optional">
+            <xs:annotation>
+               <xs:documentation>Offset in client image where data is copied to. If available  this value supeseeds the offset in EtherCAT process data.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="Length" type="xs:unsignedInt" use="optional">
+            <xs:annotation>
+               <xs:documentation>Optional length of the data in bytes. If available this value superseeds the length of the configured EtherCAT var.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="BitOffset" type="BitOffsetType" use="optional" default="0">
+            <xs:annotation>
+               <xs:documentation>An optional bit offset to allow waggon drivers to address bits of the process data.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="WDVarDescription" type="xs:string" use="optional">
+            <xs:annotation>
+               <xs:documentation>Optional description of the offset for identification purposes in the waggon driver or connected applications.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="RevisionNoMask" type="xs:unsignedInt" use="optional">
+            <xs:annotation>
+               <xs:documentation>Not used any more.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="DataType" type="xs:string" use="optional">
+            <xs:annotation>
+               <xs:documentation>Data type to override data type from ecat master configuration</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="Multiplicity" type="xs:positiveInteger" use="optional">
+            <xs:annotation>
+               <xs:documentation>Multiplicity for oversampling of input</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="MultiOffset" type="xs:unsignedInt" use="optional">
+            <xs:annotation>
+               <xs:documentation>Offset in bytes for Multiplicities. Default is sizeof(DataType).</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Input">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Offset" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Output">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Offset" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="WaggonDriver">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Input" minOccurs="0"/>
+            <xs:element ref="Output" minOccurs="0"/>
+         </xs:sequence>
+         <xs:attribute ref="ID" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EAWaggonDriverConfig">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version" minOccurs="0"/>
+            <xs:element ref="WaggonDriver" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

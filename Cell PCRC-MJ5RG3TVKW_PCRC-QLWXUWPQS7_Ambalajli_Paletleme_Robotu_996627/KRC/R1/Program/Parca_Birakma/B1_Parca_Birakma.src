@@ -1,0 +1,218 @@
+&ACCESS RVP1
+&REL 176
+&PARAM DISKPATH = KRC:\R1\Program\Parca_Birakma
+DEF  B1_Parca_Birakma ( )
+  ;FOLD INI;%{PE}
+  ;FOLD BASISTECH INI
+  GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS==TRUE DO IR_STOPM ( )
+  INTERRUPT ON 3
+  BAS (#INITMOV,0 )
+  ;ENDFOLD (BASISTECH INI)
+  ;FOLD USER INI
+  ;Make your modifications here
+
+  ;ENDFOLD (USER INI)
+  ;ENDFOLD (INI)
+  CONTINUE
+  WAIT FOR $IN[113]==TRUE
+
+  ; ============================================================
+  ; CALCULATIONS
+  ; ============================================================
+  
+  Parca_Hesaplama()
+  Palet_Dom_Exp_Hesaplama()
+  Pick_Point_Offs()
+  B1_Palet_Hesaplama()
+  Dizilim_B1 = Dizilim
+  Kat_Kontrol_B1()
+
+  ;FOLD SPTP HOME CONT Vel=100 % DEFAULT ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=HOME; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=DEFAULT; Kuka.VelocityPtp=100; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  PDAT_ACT = PDEFAULT
+  FDAT_ACT = FHOME
+  BAS(#PTP_PARAMS, 100.0)
+  SET_CD_PARAMS (0)
+  SPTP XHOME C_SPL
+  ;ENDFOLD
+
+  ; ============================================================
+  ; APPROACH PICK
+  ; ============================================================
+  ;FOLD SPTP Pre_Pick_Point CONT Vel=100 % PDAT2 Tool[1]:Gripper Base[0] ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=Pre_Pick_Point; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT2; Kuka.VelocityPtp=100; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  PDAT_ACT = PPDAT2
+  FDAT_ACT = FPre_Pick_Point
+  BAS(#PTP_PARAMS, 100.0)
+  SET_CD_PARAMS (0)
+  SPTP XPre_Pick_Point C_SPL
+  ;ENDFOLD
+
+  ; ============================================================
+  ; PICK ACTION
+  ; ============================================================
+  TRIGGER WHEN DISTANCE=0 DELAY=-0.5 DO Parca_Agirlik_Ekleme() PRIO=-1
+  ;FOLD SLIN Pick_Point Vel=3.0 m/s CPDAT3 Tool[1]:Gripper Base[0] ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=Pick_Point; Kuka.BlendingEnabled=False; Kuka.MoveDataName=CPDAT3; Kuka.VelocityPath=3.0; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SLIN
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  LDAT_ACT = LCPDAT3
+  FDAT_ACT = FPick_Point
+  BAS(#CP_PARAMS, 3.0)
+  SET_CD_PARAMS (0)
+  ; TRIGGER: Output 189=TRUE (Gripper Open Cmd), 190=FALSE (Gripper Close Cmd)
+  TRIGGER WHEN DISTANCE= 0 DELAY=0 DO $OUT[189]=TRUE
+  TRIGGER WHEN DISTANCE= 0 DELAY=0 DO $OUT[190]=FALSE
+  SLIN XPick_Point
+  ;ENDFOLD
+
+
+   
+  CONTINUE
+  WAIT FOR $IN[39]==TRUE
+  CONTINUE
+  $OUT[189]=FALSE
+  CONTINUE
+  $OUT[44]=TRUE
+  CONTINUE
+  $OUT[57]=TRUE
+
+
+
+  CONTINUE
+  WAIT FOR $IN[114]==TRUE
+  CONTINUE
+  $OUT[57]=FALSE
+  CONTINUE
+  $OUT[153]=FALSE
+
+
+  IF (First_Start_B1==TRUE) THEN
+    Bolge_1_Palet_Ort()
+    First_Start_B1=FALSE
+  ENDIF
+  Parca_Dizilim(B1_ParcaSirasi,B1_ParcaKatSayisi,1)
+  B1_Parca_Konum_Hesaplama()
+
+  ; ============================================================
+  ; TRANSPORT & PLACE APPROACH
+  ; ============================================================
+  ;FOLD SPTP B3_Ara_Nokta CONT Vel=100 % PDAT7 Tool[1]:Gripper Base[0] ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=B3_Ara_Nokta; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT7; Kuka.VelocityPtp=100; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  PDAT_ACT = PPDAT7
+  FDAT_ACT = FB3_Ara_Nokta
+  BAS(#PTP_PARAMS, 100.0)
+  SET_CD_PARAMS (0)
+  SPTP XB3_Ara_Nokta C_SPL
+  ;ENDFOLD
+;FOLD SPTP B1_Ara_Nokta CONT Vel=100 % PDAT22 Tool[1]:Gripper Base[1]:BOLGE_1 ;%{PE}
+;FOLD Parameters ;%{h}
+;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=B1_Ara_Nokta; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT22; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+;ENDFOLD
+SPTP XB1_Ara_Nokta WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FB1_Ara_Nokta), $BASE = SBASE(FB1_Ara_Nokta.BASE_NO), $IPO_MODE = SIPO_MODE(FB1_Ara_Nokta.IPO_FRAME), $LOAD = SLOAD(FB1_Ara_Nokta.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PPDAT22), $APO = SAPO_PTP(PPDAT22), $GEAR_JERK[1] = SGEAR_JERK(PPDAT22), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0) C_Spl
+;ENDFOLD
+;FOLD SPTP B1_Pre_Parca_Birakma CONT Vel=100 % PDAT24 Tool[1]:Gripper Base[1]:BOLGE_1 ;%{PE}
+;FOLD Parameters ;%{h}
+;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=B1_Pre_Parca_Birakma; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT24; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+;ENDFOLD
+SPTP XB1_Pre_Parca_Birakma WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FB1_Pre_Parca_Birakma), $BASE = SBASE(FB1_Pre_Parca_Birakma.BASE_NO), $IPO_MODE = SIPO_MODE(FB1_Pre_Parca_Birakma.IPO_FRAME), $LOAD = SLOAD(FB1_Pre_Parca_Birakma.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PPDAT24), $APO = SAPO_PTP(PPDAT24), $GEAR_JERK[1] = SGEAR_JERK(PPDAT24), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0) C_Spl
+;ENDFOLD
+
+  ; ============================================================
+  ; PLACE ACTION
+  ; ============================================================
+  ;FOLD SLIN B1_Parca_Birakma Vel=3.0 m/s CPDAT3 Tool[1]:Gripper Base[1]:BOLGE_1 ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=B1_Parca_Birakma; Kuka.BlendingEnabled=False; Kuka.MoveDataName=CPDAT3; Kuka.VelocityPath=3.0; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SLIN
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  LDAT_ACT = LCPDAT11
+  FDAT_ACT = FB1_Parca_Birakma
+  BAS(#CP_PARAMS, 3.0)
+  SET_CD_PARAMS (0)
+  ; TRIGGER: Output 190=TRUE (Close), 189=FALSE (Open)
+  ;TRIGGER WHEN DISTANCE= 0 DELAY=0 DO $OUT[190]=TRUE
+  ;TRIGGER WHEN DISTANCE= 0 DELAY=0 DO $OUT[189]=FALSE
+  SLIN XB1_Parca_Birakma
+  ;ENDFOLD
+  $OUT[190]=TRUE
+  $OUT[189]=FALSE
+  ;CONTINUE
+  WAIT FOR $IN[40]==TRUE
+  CONTINUE
+  $OUT[44]=FALSE
+
+
+  ; ============================================================
+  ; DEPART PLACE
+  ; ============================================================
+  ;FOLD SLIN B1_Pre_Parca_Birakma CONT Vel=3 m/s CPDAT2 Tool[1]:Gripper Base[1]:BOLGE_1 ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=B1_Pre_Parca_Birakma; Kuka.BlendingEnabled=True; Kuka.MoveDataName=CPDAT2; Kuka.VelocityPath=3; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SLIN
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  LDAT_ACT = LCPDAT13
+  FDAT_ACT = FB1_Pre_Parca_Birakma
+  BAS(#CP_PARAMS, 3.0)
+  SET_CD_PARAMS (0)
+  TRIGGER WHEN DISTANCE=0 DELAY=-0.5 DO $OUT[58]=TRUE
+  SLIN XB1_Pre_Parca_Birakma C_SPL
+  ;ENDFOLD
+  ;FOLD SPTP B1_Ara_Nokta CONT Vel=100 % PDAT20 Tool[1]:Gripper Base[1]:BOLGE_1 ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=B1_Ara_Nokta; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT20; Kuka.VelocityPtp=100; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  PDAT_ACT = PPDAT20
+  FDAT_ACT = FB1_Ara_Nokta
+  BAS(#PTP_PARAMS, 100.0)
+  SET_CD_PARAMS (0)
+  TRIGGER WHEN DISTANCE=0 DELAY=-1 DO $OUT[190]=FALSE
+  SPTP XB1_Ara_Nokta C_SPL
+  ;ENDFOLD
+
+
+;;FOLD SPTP prehome_bolge1 CONT Vel=100 % PDAT25 Tool[1]:Gripper Base[0] ;%{PE}
+;;FOLD Parameters ;%{h}
+;;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=prehome_bolge1; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT25; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+;;ENDFOLD
+;SPTP Xprehome_bolge1 WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(Fprehome_bolge1), $BASE = SBASE(Fprehome_bolge1.BASE_NO), $IPO_MODE = SIPO_MODE(Fprehome_bolge1.IPO_FRAME), $LOAD = SLOAD(Fprehome_bolge1.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PPDAT25), $APO = SAPO_PTP(PPDAT25), $GEAR_JERK[1] = SGEAR_JERK(PPDAT25), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0) C_Spl
+;;ENDFOLD
+  ;FOLD SPTP pre_home_1 CONT Vel=100 % PDAT21 Tool[1]:Gripper Base[0] ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=pre_home_1; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT21; Kuka.VelocityPtp=100; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  PDAT_ACT = PPDAT21
+  FDAT_ACT = Fpre_home
+  BAS(#PTP_PARAMS, 100.0)
+  SET_CD_PARAMS (0)
+  SPTP Xpre_home C_SPL
+  ;ENDFOLD
+  ;FOLD SPTP HOME Vel=100 % DEFAULT ;%{PE}
+  ;FOLD Parameters ;%{h}
+  ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=HOME; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=DEFAULT; Kuka.VelocityPtp=100; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+  ;ENDFOLD
+  $BWDSTART = FALSE
+  PDAT_ACT = PDEFAULT
+  FDAT_ACT = FHOME
+  BAS(#PTP_PARAMS, 100.0)
+  SET_CD_PARAMS (0)
+  TRIGGER WHEN DISTANCE=0 DELAY=-0.3 DO $OUT[58]=FALSE
+  TRIGGER WHEN DISTANCE=0 DELAY=-0.3 DO $OUT[153]=TRUE
+  SPTP XHOME
+  ;ENDFOLD
+
+B1_Kat_Hesaplama()
+
+END

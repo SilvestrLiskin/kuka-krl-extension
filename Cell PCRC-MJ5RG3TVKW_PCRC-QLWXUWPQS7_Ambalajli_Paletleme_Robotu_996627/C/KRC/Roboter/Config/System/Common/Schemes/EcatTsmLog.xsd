@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Hugo Heine (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Hugo Heine (KUKA Roboter GMBH) -->
+<!--W3C Schema erstellt mit XMLSpy v2007 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="Version.xsd"/>
+	<xs:simpleType name="Access_Byte_Mask">
+		<xs:annotation>
+			<xs:documentation>String with 8 digits in [0, 1]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="8"/>
+			<xs:pattern value="[0-1]{8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="TraceTrigger">
+		<xs:complexType>
+			<xs:attribute name="TriggerOnSlaveErrors" type="xs:boolean" use="required"/>
+			<xs:attribute name="TriggerOnPdoSendToSendLimit_us" type="xs:unsignedLong" use="required"/>
+			<xs:attribute name="TriggerOnPdoSendTimeLimit_us" type="xs:unsignedLong" use="required"/>
+			<xs:attribute name="TriggerOnPdoRecvToRecvLimit_us" type="xs:unsignedLong" use="required"/>
+			<xs:attribute name="TriggerOnPdoRecvTimeLimit_us" type="xs:unsignedLong" use="required"/>
+			<xs:attribute name="TriggerOnFrameResponseError" type="xs:boolean" use="required"/>
+			<xs:attribute name="TriggerOnBusErrors" type="xs:boolean" use="required"/>
+			<xs:attribute name="InstanceHandle" type="Access_Byte_Mask" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SystemTraceOptions">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Events"/>
+				<xs:element ref="TraceTrigger"/>
+			</xs:sequence>
+			<xs:attribute name="Mode" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="off"/>
+						<xs:enumeration value="WindView"/>
+						<xs:enumeration value="TSM"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Interfaces">
+		<xs:complexType>
+			<xs:attribute name="EventWrpSDO" type="xs:boolean" use="required"/>
+			<xs:attribute name="EventWrpPDO" type="xs:boolean" use="required"/>
+			<xs:attribute name="EventWrpNotification" type="xs:boolean" use="required"/>
+			<xs:attribute name="EventWrpMemProvider" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Events">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Interfaces"/>
+			</xs:sequence>
+			<xs:attribute name="InstanceHandle" type="Access_Byte_Mask" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="EcatTsmLog">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version"/>
+				<xs:element ref="SystemTraceOptions"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

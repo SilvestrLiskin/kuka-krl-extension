@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2008 (http://www.altova.com) von Stolte (KUKA Deutschland GmbH) bearbeitet -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="NGVersion.xsd"/>
+	<xs:simpleType name="ValueType">
+		<xs:restriction base="xs:string">
+         <xs:enumeration value="INT8"/>
+         <xs:enumeration value="UINT8"/>
+			<xs:enumeration value="INT16"/>
+			<xs:enumeration value="UINT16"/>
+         <xs:enumeration value="INT32"/>
+         <xs:enumeration value="UINT32"/>
+			<xs:enumeration value="FLOAT32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DestinationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Servo"/>
+			<xs:enumeration value="Supply"/>
+			<xs:enumeration value="PositionSensor"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ServoFile">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version" minOccurs="0" />
+				<xs:sequence>
+					<xs:element name="Parameter" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute name="Index" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:documentation>SDO-Index 0..65535 or 0x0..0x7FFF (uppercase)</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="Relative" type="xs:boolean" use="required">
+								<xs:annotation>
+									<xs:documentation>relative Index for device functionality (e.g. KSP has 3  identical drive segments with different offsets)</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="SubIndex" use="required">
+								<xs:annotation>
+									<xs:documentation>SDO-Subindex 0..255</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0"/>
+										<xs:maxInclusive value="255"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+							<xs:attribute name="Type" type="ValueType" use="required">
+								<xs:annotation>
+									<xs:documentation>supported types: "INT8", "UINT8", "INT16", "UINT16", "INT32", "UINT32", "FLOAT32"</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="Value" type="xs:string" use="required">
+								<xs:annotation>
+									<xs:documentation>value as string, is checked when read</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="Destination" type="DestinationType">
+								<xs:annotation>
+									<xs:documentation>"Servo" (default), "Supply", "PositionSensor"</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

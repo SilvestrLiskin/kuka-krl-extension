@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServoFile xsi:noNamespaceSchemaLocation="../../../System/Common/Schemes/Servofile.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Version Label="">
+      <Info Version="Any"/>
+      <Schema Version="1"/>
+   </Version>
+   <!-- no parameter configured -->
+</ServoFile>

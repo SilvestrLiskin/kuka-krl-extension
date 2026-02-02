@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <xs:include schemaLocation="NGVersion.xsd"/>
+   <xs:simpleType name="MasteringPositionType">
+      <xs:annotation>
+         <xs:documentation xml:lang="DE">Position 64 bit</xs:documentation>
+         <xs:documentation xml:lang="EN">Position 64 bit</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:integer">
+         <xs:minInclusive value="-9223372036854775808"/>
+         <xs:maxInclusive value="9223372036854775807"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <!--<xs:complexType name="MasteringPositionType">
+		<xs:attribute name="HighValue" type="xs:unsignedLong" use="required"/>
+		<xs:attribute name="LowValue" type="xs:unsignedLong" use="required"/>
+	</xs:complexType>-->
+   <xs:complexType name="EncoderMasteringEntryType">
+      <xs:attribute name="ID" type="xs:int" use="required"/>
+      <xs:attribute name="DevPos" type="MasteringPositionType" use="required"/>
+      <xs:attribute name="Pos" type="MasteringPositionType" use="required"/>
+      <xs:attribute name="Mastered" use="required" form="qualified">
+         <xs:simpleType>
+            <xs:restriction base="xs:int">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="1"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="CommOffs" type="xs:integer" use="optional">
+         <xs:annotation>
+            <xs:documentation>obsolete</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="DevID" type="xs:integer" use="required"/>
+   </xs:complexType>
+   <xs:element name="EncoderMastering">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version" minOccurs="0" />
+            <xs:element name="EncoderMasteringEntries">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="EncoderMasteringEntry" type="EncoderMasteringEntryType" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

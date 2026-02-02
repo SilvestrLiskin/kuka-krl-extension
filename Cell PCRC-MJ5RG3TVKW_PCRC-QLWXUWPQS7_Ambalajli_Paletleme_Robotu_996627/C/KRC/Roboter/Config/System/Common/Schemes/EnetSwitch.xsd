@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--W3C Schema erstellt mit XMLSpy v2007 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Version.xsd"/>
+   <xs:element name="EnetSwitch">
+      <xs:complexType>
+         <xs:sequence>
+         <xs:element ref="Version"/>
+         <xs:element ref="general"/>
+         <xs:element ref="vtu"/>
+         <xs:element ref="portsettings"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="general">
+      <xs:complexType>
+         <xs:attribute name="rmuInterface" type="interfaceNameType" use="required"/>
+         <xs:attribute name="loadConfiguration" type="xs:boolean" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="vtu">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="entry" maxOccurs="10" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="portsettings">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="portsetting" maxOccurs="11" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="entry">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="port" maxOccurs="11" minOccurs="0"/>
+         </xs:sequence>
+         <xs:attribute name="vid" type="vlanIdType" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="port">
+      <xs:complexType>
+         <xs:attribute name="id" type="portNumType" use="required"/>
+         <xs:attribute name="tag" type="tagType" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="portsetting">
+      <xs:complexType>
+         <xs:attribute name="port" type="portNumType" use="required"/>
+         <xs:attribute name="dflt_vlan" type="vlanIdType" use="required"/>
+         <xs:attribute name="force_vid" type="xs:boolean" use="required"/>
+         <xs:attribute name="qmode" type="qmodeType" use="required"/>
+         <xs:attribute name="discard_tagged" type="xs:boolean" use="required"/>
+         <xs:attribute name="discard_untagged" type="xs:boolean" use="required"/>
+         <xs:attribute name="vlan_map" use="required">
+         <xs:simpleType> 
+            <xs:restriction base="vlan_member_list"> 
+               <xs:minLength value="0"/>
+               <xs:maxLength value="11"/>
+            </xs:restriction> 
+         </xs:simpleType> 
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:simpleType name="vlan_member_list"> 
+      <xs:list itemType="portNumType"/> 
+   </xs:simpleType>
+   <xs:simpleType name="qmodeType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="disable" />
+         <xs:enumeration value="fallback" />
+         <xs:enumeration value="check" />
+         <xs:enumeration value="secure" />
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="tagType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="no_member" />
+         <xs:enumeration value="tag" />
+         <xs:enumeration value="untag" />
+         <xs:enumeration value="unmod" />
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="portNumType">
+      <xs:restriction base="xs:integer">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="11"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="vlanIdType">
+      <xs:restriction base="xs:integer">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="4096"/>
+      </xs:restriction>
+   </xs:simpleType>
+  <xs:simpleType name="interfaceNameType">
+      <xs:restriction base="xs:string">
+        <xs:minLength value="1"/>
+        <xs:maxLength value="128"/>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

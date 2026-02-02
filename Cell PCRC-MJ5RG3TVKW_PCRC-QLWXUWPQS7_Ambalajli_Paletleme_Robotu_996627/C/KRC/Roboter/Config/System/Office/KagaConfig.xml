@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KagaConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/Roboter/Config/System/Common/Schemes/KagaBaseConfig.xsd">
+   <Version Label="">
+      <Info Version="KUKA V8.3"/>
+      <Schema Version="1"/>
+   </Version>
+   <PriorityConfig NetTaskPriority="181" ipdhcpcPriority="241" ipdhcpsPriority="250" ipcom_syslogdPriority="241" ipcom_telnetdPriority="241" lwIPPriority="131"/>
+   <Debugging Debugging="off" KLIIfName="virtual" KLIIfUnit="5" KSBIfName="mirror" KSBIfUnit="0"/>
+   <PublicBus BlockTelnet="false" BusId="NETWORK_CONFIG_KUKA_LINE_INTERFACE" NumSystemNatRules="3" IcmpBlockFilter="128"/>
+   <PublicBus BlockTelnet="false" BusId="NETWORK_CONFIG_KUKA_OPTION_NETWORK_INTERFACE" NumSystemNatRules="3" IcmpBlockFilter="128"/>
+   <GeneralSettings SetHostname="true" AddBridgeInterface="false"/>
+   <Configuration Type="Standard">
+      <Bus ConfigFile="KEIConfig.xml" Id="NETWORK_CONFIG_EXTENSION_INTERFACE" NetworkInterface="KUKA_NETIF_4" Path="XML_SYSCOMMON" Mainboard="KUKA SYBperf"/>
+      <Bus ConfigFile="KSBConfig.xml" Id="NETWORK_CONFIG_SYSTEMBUS" NetworkInterface="KUKA_NETIF_2" Path="XML_SYSCOMMON"/>
+      <Bus ConfigFile="KONIConfig.xml" Id="NETWORK_CONFIG_KUKA_OPTION_NETWORK_INTERFACE" NetworkInterface="KUKA_NETIF_3" Path="XML_USERCOMMON"/>
+      <Bus ConfigFile="KLIConfig.xml" Id="NETWORK_CONFIG_KUKA_LINE_INTERFACE" NetworkInterface="KUKA_NETIF_1" Path="XML_USERCOMMON" isBroadcastDetectionActive="true" PacketLimit="20000" BandwidthLimit="6553600"/>
+   </Configuration>
+   <Configuration Type="RoboTeam">
+      <Bus ConfigFile="KEIConfig.xml" Id="NETWORK_CONFIG_EXTENSION_INTERFACE" NetworkInterface="KUKA_NETIF_4" Path="XML_SYSCOMMON" Mainboard="KUKA SYBperf"/>
+      <Bus ConfigFile="KSBConfig_VLAN.xml" Id="NETWORK_CONFIG_SYSTEMBUS" NetworkInterface="KUKA_NETIF_2" Path="XML_SYSCOMMON"/>
+      <Bus ConfigFile="KONIConfig.xml" Id="NETWORK_CONFIG_KUKA_OPTION_NETWORK_INTERFACE" NetworkInterface="KUKA_NETIF_3" Path="XML_USERCOMMON"/>
+      <Bus ConfigFile="KLIConfig.xml" Id="NETWORK_CONFIG_KUKA_LINE_INTERFACE" NetworkInterface="KUKA_NETIF_1" Path="XML_USERCOMMON" isBroadcastDetectionActive="true" PacketLimit="20000" BandwidthLimit="6553600"/>
+   </Configuration>
+   <BandwidthLimitSettings>
+      <BandwidthLimit Id="BANDWIDTH_VERY_LOW" Timeout="1" Bandwidth="10" Limit="1500"/>
+      <BandwidthLimit Id="BANDWIDTH_LOW" Timeout="1" Bandwidth="25" Limit="3000"/>
+      <BandwidthLimit Id="BANDWIDTH_MEDIUM" Timeout="1" Bandwidth="35" Limit="4500"/>
+   </BandwidthLimitSettings>
+   <SystemNATConfigs>
+      <SystemNAT BusId="NETWORK_CONFIG_KUKA_LINE_INTERFACE">
+         <NATRule>map [GlobalNatInterface] [host:WINDOWS] -&gt; 0/32 portmap tcp/udp 18000:18999</NATRule>
+         <NATRule>map [GlobalNatInterface] [host:WINDOWS] -&gt; 0/32 icmpidmap icmp 19000:19999</NATRule>
+         <NATRule>rdr [GlobalNatInterface] [addr] port 3389 -&gt; [host:WINDOWS] port 3389 tcp proxy RemoteIP</NATRule>
+         <NATRule>rdr [GlobalNatInterface] [addr] port 54250 -&gt; [host:WINDOWS] port 54250 tcp proxy RemoteIP</NATRule>
+      </SystemNAT>
+      <SystemNAT BusId="NETWORK_CONFIG_KUKA_OPTION_NETWORK_INTERFACE">
+         <NATRule>map [GlobalNatInterface] [host:WINDOWS] -&gt; 0/32 portmap tcp/udp 18000:18999</NATRule>
+         <NATRule>map [GlobalNatInterface] [host:WINDOWS] -&gt; 0/32 icmpidmap icmp 19000:19999</NATRule>
+         <NATRule>rdr [GlobalNatInterface] [addr] port 3389 -&gt; [host:WINDOWS] port 3389 tcp proxy RemoteIP</NATRule>
+         <NATRule>rdr [GlobalNatInterface] [addr] port 54250 -&gt; [host:WINDOWS] port 54250 tcp proxy RemoteIP</NATRule>
+      </SystemNAT>
+   </SystemNATConfigs>
+</KagaConfig>

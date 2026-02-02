@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LogManager xsi:noNamespaceSchemaLocation="/Roboter/Config/System/Common/Schemes/LoggingSpecial.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Version Label="">
+		<Info Version="KUKA V8.5"/>
+		<Schema Version="100"/>
+	</Version>
+   <LoggingOptions isActive="true"/>
+   <LogFile Name="PowerManagement" Path="Log/PowerManagement" NbrFiles="5" FileSize="200000" FileFormat="putty" BufferLogs="false" />
+   <LogRegistry>
+      <LoggingStrategy Strategy="PureClass"/>
+      <ContextConfig>
+         <DefaultContextConfig ContextLogging="enabled"/>
+         <Context Name="tSystem" ContextLogging="disabled"/>
+         <Context Name="tSysBoot" ContextLogging="disabled"/>
+      </ContextConfig>
+      <ClassConfig>
+         <DefaultClassConfig LogLevel="disabled"/>
+         <Class Name="PMMUcpwr" LogLevel="info"/>
+      </ClassConfig>
+   </LogRegistry>
+</LogManager>

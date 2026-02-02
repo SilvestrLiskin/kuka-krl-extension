@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="NGVersion.xsd"/>
+   <xs:include schemaLocation="Units.xsd"/>
+   <xs:element name="Motor">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version" minOccurs="0"/>
+            <xs:element ref="MotorData"/>
+            <xs:element ref="SpeedTorqueData"/>
+            <xs:element name="StopSpeedTorqueData" minOccurs="0">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="SpeedTorque" type="SpeedTorque" maxOccurs="unbounded"/>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element ref="BrakeData"/>
+            <xs:element ref="EncoderData"/>
+            <xs:element ref="SpeedCurrentDataAccelerate" minOccurs="0"/>
+            <xs:element ref="SpeedCurrentDataDecelerate" minOccurs="0"/>
+            <xs:element ref="IntermediateCircuitVoltage" minOccurs="0"/>
+            <xs:element ref="KT-Characteristic" minOccurs="0">
+               <xs:annotation>
+                  <xs:documentation>M = (a1 * I + a3 * I³) * (1 + b1 * deltaT)
+falls T_ref nicht belegt gilt: T_ref = 343 K
+         </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+            <xs:element ref="EnergyData" minOccurs="0"/>
+            <xs:element name="TemperatureData" minOccurs="0">
+               <xs:complexType>
+                  <xs:attribute name="SensorType" type="xs:string" use="required"/>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="TemperatureModel" minOccurs="0">
+               <xs:complexType>
+                  <xs:attribute name="Version" type="xs:int" use="required"/>
+                  <xs:attribute name="a11" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Temperaturmatrixelement</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="a12" type="xs:double" use="required"/>
+                  <xs:attribute name="a13" type="xs:double" use="required"/>
+                  <xs:attribute name="a21" type="xs:double" use="required"/>
+                  <xs:attribute name="a22" type="xs:double" use="required"/>
+                  <xs:attribute name="a23" type="xs:double" use="required"/>
+                  <xs:attribute name="a31" type="xs:double" use="required"/>
+                  <xs:attribute name="a32" type="xs:double" use="required"/>
+                  <xs:attribute name="a33" type="xs:double" use="required"/>
+                  <xs:attribute name="b11" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Leistungsmatrixelement</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="b12" type="xs:double" use="required"/>
+                  <xs:attribute name="b13" type="xs:double" use="required"/>
+                  <xs:attribute name="b21" type="xs:double" use="required"/>
+                  <xs:attribute name="b22" type="xs:double" use="required"/>
+                  <xs:attribute name="b23" type="xs:double" use="required"/>
+                  <xs:attribute name="b31" type="xs:double" use="required"/>
+                  <xs:attribute name="b32" type="xs:double" use="required"/>
+                  <xs:attribute name="b33" type="xs:double" use="required"/>
+                  <xs:attribute name="c1" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Anteil Wicklungstemperatur</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="c2" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Anteil Umgebungstemperatur</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="c3" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Anteil Bremsentemperatur</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="d1" type="xs:double" use="required"/>
+                  <xs:attribute name="d2" type="xs:double" use="required"/>
+                  <xs:attribute name="n0" type="xs:double" use="required"/>
+                  <xs:attribute name="n1" type="xs:double" use="required"/>
+                  <xs:attribute name="n2" type="xs:double" use="required"/>
+                  <xs:attribute name="RMot" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Strangwiderstand bei 20°C</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="PBrake" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Bremsenverlustleistung bei 20°C</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="alphaCu" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Waermeleitkoeffizient Kupfer</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="TCurrent" type="xs:double" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Zeitkonstante fuer Stromfilter</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="CycleTime" type="xs:int" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Modelltakt [ms]</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <!-- Declaration of the various sub elements -->
+   <xs:element name="MotorData">
+      <xs:complexType>
+         <xs:attribute name="ID" type="xs:string" use="required"/>
+         <xs:attribute name="Vendor" type="xs:string" use="required"/>
+         <xs:attribute name="MaximalCurrent" use="required">
+            <xs:annotation>
+               <xs:documentation>in A</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="MaximalCurrentTime" use="optional">
+            <xs:annotation>
+               <xs:documentation>Time-intervall in s for I^2*t-monitoring of maximal current overload</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="HoldingCurrent" use="required">
+            <xs:annotation>
+               <xs:documentation>in A</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="HoldingCurrentTime" use="optional">
+            <xs:annotation>
+               <xs:documentation>Time-intervall in s for I^2*t-monitoring of holding current overload</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="UseStatorCurrent" type="xs:boolean" use="optional">
+            <xs:annotation>
+               <xs:documentation>true = if possible use the (calculated) stator current Is in the monitoring of maximal current overload
+                                 false = default: use the measured (torque-generating) current Iq</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="NominalCurrent" use="required">
+            <xs:annotation>
+               <xs:documentation>in A</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="RampUpTime" use="required">
+            <xs:annotation>
+               <xs:documentation>in 10^-3 s</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+                  <xs:maxInclusive value="10000.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="KT-Factor" use="required">
+            <xs:annotation>
+               <xs:documentation>in Nm/A</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="KT0-Factor" use="required">
+            <xs:annotation>
+               <xs:documentation>in Nm/A</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="BackEMF" use="required">
+            <xs:annotation>
+               <xs:documentation>in V (at 1000 UpM)</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="MaximalTemperature" use="required">
+            <xs:annotation>
+               <xs:documentation>in K</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="273"/>
+                  <xs:maxInclusive value="424"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="TorqueOfInertia" use="required">
+            <xs:annotation>
+               <xs:documentation>in kgm^2</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="WindingInductance" use="required">
+            <xs:annotation>
+               <xs:documentation>in H (phase to phase /2)</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="WindingResistance" use="required">
+            <xs:annotation>
+               <xs:documentation>in Ohm (phase to phase /2)</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="PolePairNumber" type="xs:int" use="required">
+            <xs:annotation>
+               <xs:documentation>-</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="Type" type="xs:string" default="Rotator">
+            <xs:annotation>
+               <xs:documentation>type of motor: "Rotator" (default), "RotatorInv", "Translator"
+</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="BrakeData">
+      <xs:complexType>
+         <xs:sequence minOccurs="0" maxOccurs="2">
+            <xs:element name="MinHoldingTorque">
+               <xs:complexType>
+                  <xs:attribute name="Torque" use="required">
+                     <xs:annotation>
+                        <xs:documentation>in Nm</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minExclusive value="0.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="Temperature" use="required">
+                     <xs:annotation>
+                        <xs:documentation>in K</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minInclusive value="270"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="Available" type="xs:boolean" use="required"/>
+         <xs:attribute name="OpenTime" use="required">
+            <xs:annotation>
+               <xs:documentation>in 10^-3 s</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+                  <xs:maxInclusive value="10000.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="CloseTime" use="required">
+            <xs:annotation>
+               <xs:documentation>in 10^-3 s</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+                  <xs:maxInclusive value="10000.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="CoolOffCoeff" use="required">
+            <xs:annotation>
+               <xs:documentation>in J/s (0 disables monitoring)</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="MaximalEnergy" use="required">
+            <xs:annotation>
+               <xs:documentation>in J (0 disables monitoring)</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="HoldingTorque" use="required">
+            <xs:annotation>
+               <xs:documentation>Nominal holding torque in Nm</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minExclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="Torque" use="required">
+            <xs:annotation>
+               <xs:documentation>in Nm</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="MaxHoldingTorque">
+            <xs:annotation>
+               <xs:documentation>in Nm</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="PowerSaveVoltage">
+            <xs:annotation>
+               <xs:documentation>in V</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="PowerSaveDelay">
+            <xs:annotation>
+               <xs:documentation>in s</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="MaxPermanentVoltage">
+            <xs:annotation>
+               <xs:documentation>in V</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="0.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SpeedTorqueData">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="SpeedTorque" type="SpeedTorque" maxOccurs="unbounded"/>
+            <xs:element name="OperatingPoint" type="SpeedTorque"/>
+            <xs:element name="HoldingTorque" type="SpeedTorque"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:complexType name="SpeedTorque">
+      <xs:attribute name="Speed" use="required">
+         <xs:annotation>
+            <xs:documentation>in rpm</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double">
+               <xs:minInclusive value="0.0"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="Torque" use="required">
+         <xs:annotation>
+            <xs:documentation>in Nm</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double">
+               <xs:minInclusive value="0.0"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:element name="EncoderData">
+      <xs:complexType>
+         <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="RefSine">
+               <xs:complexType>
+                  <xs:attribute name="MinAmplitude" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Minimum reference sine amplitude in [V]</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minInclusive value="0"/>
+                           <xs:maxInclusive value="23.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="MinPhase1" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Minimum reference sine phase shift at minimum amplitude in [deg]</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minInclusive value="-46.0"/>
+                           <xs:maxInclusive value="46.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="MaxPhase1" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Maximum reference sine phase shift at minimum amplitude in [deg]</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minInclusive value="-46.0"/>
+                           <xs:maxInclusive value="46.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="MaxAmplitude" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Maximum reference sine amplitude in [V]</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minInclusive value="0"/>
+                           <xs:maxInclusive value="23.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="MinPhase2" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Minimum reference sine phase shift at maximum amplitude in [deg]</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minInclusive value="-46.0"/>
+                           <xs:maxInclusive value="46.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="MaxPhase2" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Maximum reference sine phase shift at maximum amplitude in [deg]</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:double">
+                           <xs:minInclusive value="-46.0"/>
+                           <xs:maxInclusive value="46.0"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="Available" type="xs:boolean" use="required"/>
+         <xs:attribute name="RatioMotorEncoder" type="fractionType" use="required">
+            <xs:annotation>
+               <xs:documentation>[x/y]</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="Offset" use="required">
+            <xs:annotation>
+               <xs:documentation>in deg</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:double">
+                  <xs:minInclusive value="-180.0"/>
+                  <xs:maxInclusive value="180.0"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SpeedCurrentDataAccelerate">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="SpeedCurrent" type="SpeedCurrent" minOccurs="5" maxOccurs="5"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SpeedCurrentDataDecelerate">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="SpeedCurrent" type="SpeedCurrent" minOccurs="6" maxOccurs="6"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:complexType name="SpeedCurrent">
+      <xs:attribute name="Speed" use="required">
+         <xs:annotation>
+            <xs:documentation>in rpm</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double"/>
+         </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="Current" use="required">
+         <xs:annotation>
+            <xs:documentation>in A</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double"/>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:element name="IntermediateCircuitVoltage">
+      <xs:complexType>
+         <xs:attribute name="UzkRef" type="xs:double" use="required"/>
+         <xs:attribute name="UzkMax" type="xs:double" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="KT-Characteristic">
+      <xs:annotation>
+         <xs:documentation>M = (a1 * I + a3 * I³) * (1 + b1 * (T-T_ref))
+                          falls T_ref nicht belegt gilt: T_ref = 343 K
+         </xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:attribute name="a1" type="xs:double" use="required"/>
+         <xs:attribute name="a3" type="xs:double" use="required"/>
+         <xs:attribute name="b0" type="xs:double">
+            <xs:annotation>
+               <xs:documentation>obsolete; will be ignored</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="b1" type="xs:double" use="required"/>
+         <xs:attribute name="T_ref" type="xs:double" use="optional" default="343">
+            <xs:annotation>
+               <xs:documentation>in K</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EnergyData">
+      <xs:complexType>
+         <xs:sequence minOccurs="9" maxOccurs="unbounded">
+            <xs:element name="k">
+               <xs:complexType>
+                  <xs:attribute name="i" type="xs:integer" use="required"/>
+                  <xs:attribute name="value" type="xs:double" use="required"/>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="d1" type="xs:double" use="required"/>
+         <xs:attribute name="d2" type="xs:double" use="required"/>
+         <xs:attribute name="d3" type="xs:double" use="required"/>
+         <xs:attribute name="d4" type="xs:double" use="optional"/>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

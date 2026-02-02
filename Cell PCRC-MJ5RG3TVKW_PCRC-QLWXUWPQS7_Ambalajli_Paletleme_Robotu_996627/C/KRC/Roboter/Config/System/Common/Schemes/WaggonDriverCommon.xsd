@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:simpleType name="tWaggonDriverID">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="[0-9]+|WdRdc|WdKsp|WdPosEnc|WdIBit|WdOBit|WdKpp|WdDataProvider|WdMultiplex1Bit|WdMultiplex16Bit|WdFileWriter|WdFsoeDriveSimu|WdFsoeSimu|WdForce|WdEndat|WdPosInc5021|WdArbitrary"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:attribute name="ID" type="tWaggonDriverID"/>
+   <xs:attribute name="ConfigFile" type="xs:string"/>
+   <xs:attribute name="Bus" type="xs:string"/>
+   <xs:attribute name="BusDriver" type="xs:string"/>
+   <xs:attribute name="BusInstance" type="xs:string"/>
+</xs:schema>

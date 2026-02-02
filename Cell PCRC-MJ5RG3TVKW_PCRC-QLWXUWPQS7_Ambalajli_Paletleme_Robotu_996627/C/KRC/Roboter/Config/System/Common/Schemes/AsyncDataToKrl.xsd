@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <xs:include schemaLocation="Version.xsd"/>
+   <xs:simpleType name="vioBool">
+      <xs:restriction base="xs:string"/>
+   </xs:simpleType>
+   <xs:element name="OpenIoCtlCmd">
+      <xs:complexType>
+         <xs:attribute name="drvArg" type="xs:unsignedInt" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Application">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version" minOccurs="0"/>
+            <xs:element name="IODriver">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element ref="OpenIoCtlCmd" minOccurs="0" maxOccurs="10"/>
+                  </xs:sequence>
+                  <xs:attribute name="IODrvName" use="required">
+                     <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                           <xs:minLength value="1"/>
+                           <xs:maxLength value="255"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="ReceiveQueue">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="Elements">
+                        <xs:complexType>
+                           <xs:attribute name="NrOfElements" type="xs:unsignedInt" use="required"/>
+                        </xs:complexType>
+                     </xs:element>
+                     <xs:element name="QueueBehaviour">
+                        <xs:complexType>
+                           <xs:attribute name="DeleteOnIoReconfig" type="vioBool" use="required"/>
+                           <xs:attribute name="DeleteOnCClose" type="vioBool" use="required"/>
+                           <xs:attribute name="OverwriteOldData" type="vioBool" use="required"/>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="Debug" minOccurs="0">
+               <xs:complexType>
+                  <xs:attribute name="PrintToTelnet" type="vioBool" use="required"/>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute name="kukaVersion" type="xs:string" use="optional"/>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

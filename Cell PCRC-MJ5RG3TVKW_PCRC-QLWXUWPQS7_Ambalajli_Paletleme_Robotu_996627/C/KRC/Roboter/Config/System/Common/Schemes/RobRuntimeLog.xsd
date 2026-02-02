@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <xs:element name="RobRuntimeLog">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="RobRuntime" minOccurs="0" maxOccurs="unbounded">
+               <xs:complexType>
+                  <xs:attribute name="Date" type="xs:string" use="optional"/>
+                  <xs:attribute name="SerialNo" type="xs:unsignedInt" use="optional"/>
+                  <xs:attribute name="Runtime" type="xs:unsignedInt" use="optional"/>
+               </xs:complexType>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

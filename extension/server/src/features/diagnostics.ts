@@ -1484,7 +1484,7 @@ export class DiagnosticsProvider {
     const diagnostics: Diagnostic[] = [];
 
     // Паттерны для "легальных" строк
-    const REGEX_HEADER_CTRL = /^\s*&/i;
+    const REGEX_HEADER_CTRL = /^\s*&/i; // &ACCESS, &REL, &PARAM
     // Allow system variables starting with $ on LHS of assignment
     const REGEX_ASSIGNMENT = /^\s*(?:\$?[a-zA-Z0-9_]+)(?:\[[^\]]*\])?(?:\.\w+)*\s*=\s*/i;
     const REGEX_PROC_CALL = /^\s*(?:\$|\w+)\s*\(.*\)/i;
@@ -1494,6 +1494,11 @@ export class DiagnosticsProvider {
     const REGEX_RESUME = /^\s*RESUME\b/i;
     const REGEX_CONFIRM = /^\s*CONFIRM\b/i;
     const REGEX_PULSE = /^\s*PULSE\b/i;
+    const REGEX_CONTINUE = /^\s*CONTINUE\b/i;
+    const REGEX_EXIT_CTRL = /^\s*(?:EXIT|HALT|RETURN)\b/i;
+    const REGEX_TRIGGER = /^\s*TRIGGER\b/i;
+    const REGEX_COMM = /^\s*(?:CWRITE|CREAD|SWRITE|SREAD|CAST_TO|CAST_FROM)\b/i;
+    const REGEX_ANIN = /^\s*(?:ANIN|DIGIN)\b/i;
     const REGEX_IF_INLINE = /^\s*IF\s+.*THEN\s+\w+/i;
     const REGEX_FOLD_B = /^\s*;FOLD\b/i;
     const REGEX_FOLD_E = /^\s*;ENDFOLD\b/i;
@@ -1529,6 +1534,11 @@ export class DiagnosticsProvider {
         REGEX_RESUME.test(trimmedCode) ||
         REGEX_CONFIRM.test(trimmedCode) ||
         REGEX_PULSE.test(trimmedCode) ||
+        REGEX_CONTINUE.test(trimmedCode) ||
+        REGEX_EXIT_CTRL.test(trimmedCode) ||
+        REGEX_TRIGGER.test(trimmedCode) ||
+        REGEX_COMM.test(trimmedCode) ||
+        REGEX_ANIN.test(trimmedCode) ||
         REGEX_IF_INLINE.test(trimmedCode) ||
         REGEX_FOLD_B.test(trimmedCode) ||
         REGEX_FOLD_E.test(trimmedCode) ||

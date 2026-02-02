@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:include schemaLocation="Version.xsd"/>
+   <xs:element name="DriverInstance">
+      <xs:complexType>
+         <xs:attribute name="testOfficeRAM" type="xs:boolean" use="optional"/>
+         <xs:attribute name="sensorLogCycle" type="xs:integer" use="optional"/>
+         <xs:attribute name="cycleTime" type="xs:integer" use="required"/>
+         <xs:attribute name="busInstanceName" type="xs:string" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Driver">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version" minOccurs="0"/>
+            <xs:element ref="DriverInstance"/>
+         </xs:sequence>
+         <xs:attribute name="fileVersion" type="xs:integer" use="required"/>
+         <xs:attribute name="busName" type="xs:string" use="required"/>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

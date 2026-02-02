@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:simpleType name="CPUIndex">
+      <xs:annotation>
+         <xs:documentation>The index of a CPU core.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:nonNegativeInteger">
+         <xs:minInclusive value="0"/>
+         <xs:maxInclusive value="1023"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:attribute name="TimestampType">
+      <xs:annotation>
+         <xs:documentation>Type of timestamp</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+         <xs:restriction base="xs:string">
+            <xs:enumeration value="TIMESTAMP_ISR_START">
+               <xs:annotation>
+                  <xs:documentation>Offset from IRQ to ISR</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TIMESTAMP_CYCLE_START">
+               <xs:annotation>
+                  <xs:documentation>Offset from IRQ to cycle start</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TIMESTAMP_ECAT_T1_SEND">
+               <xs:annotation>
+                  <xs:documentation>Offset from IRQ to T1 telegram send</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TIMESTAMP_TICK_CYCLE_END">
+               <xs:annotation>
+                  <xs:documentation>Offset from IRQ to control-cycle end</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TIMESTAMP_TOCK_CYCLE_END">
+               <xs:annotation>
+                  <xs:documentation>Offset from IRQ to communication-cycle end or each cycle end without Tick-Tock-Mode</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="Fraction">
+      <xs:annotation>
+         <xs:documentation>Fraction type between 0.0 and 1.0</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+         <xs:restriction base="xs:double">
+            <xs:minInclusive value="0.0"/>
+            <xs:maxInclusive value="1.0"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="ThreadCount">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>Number of threads</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:int">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="64"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="TaskFrequency">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>Task frequency in Hz</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:int">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="8000"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="TaskPriority">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>Task priority</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="254"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="TaskPriorityLevel">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>Task priority level from 0 (lowest) through (low, lowMed, medium, medHigh, high) to 6 (highest)</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="6"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="TimerSource">
+      <xs:annotation>
+         <xs:documentation>Type of a timer source.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+         <xs:restriction base="xs:string">
+            <xs:enumeration value="DCM">
+               <xs:annotation>
+                  <xs:documentation>Timer source is DCM.</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DCMHW">
+               <xs:annotation>
+                  <xs:documentation>Timer source is DCM with HW intialization.</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SysSched">
+               <xs:annotation>
+                  <xs:documentation>Timer source is system scheduler.</xs:documentation>
+               </xs:annotation>
+            </xs:enumeration>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="CPUMask">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>The mask of CPU cores. One bit per CPU core.</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:nonNegativeInteger">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="4294967295"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="StackSize">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>The stack size of a task/thread in bytes.</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:nonNegativeInteger">
+            <xs:minInclusive value="4096"/>
+            <xs:maxInclusive value="1048576"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="TaskAffinityIndex">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>The task affinity index defines on which CPU core the task should run.</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:nonNegativeInteger">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="31"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="IntraSchedulerTask">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>Whether the task should be scheduled in the context of the scheduler task or as a separate Task.</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:boolean"/>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="Enabled">
+      <xs:simpleType>
+         <xs:annotation>
+            <xs:documentation>Whether something is enabled or not.</xs:documentation>
+         </xs:annotation>
+         <xs:restriction base="xs:boolean"/>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="CycleTime">
+      <xs:annotation>
+         <xs:documentation>The cylce time in seconds.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+         <xs:restriction base="xs:double">
+            <xs:minInclusive value="0.5"/>
+            <xs:maxInclusive value="10.0"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="CycleOffset">
+      <xs:annotation>
+         <xs:documentation>The cylce offset in cycles related to the cyclic frequency.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+         <xs:restriction base="xs:nonNegativeInteger">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="7999999"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="ID" type="xs:int">
+      <xs:annotation>
+         <xs:documentation>ID of the driver which is used for creation.</xs:documentation>
+      </xs:annotation>
+   </xs:attribute>
+   <xs:attribute name="DeviceType" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>Must map to a device type which is specified under DeviceTypes.</xs:documentation>
+      </xs:annotation>
+   </xs:attribute>
+   <xs:attribute name="BusId" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>ID (name) of the bus (see BusConfig).</xs:documentation>
+      </xs:annotation>
+   </xs:attribute>
+   <xs:attribute name="FilePath">
+      <xs:annotation>
+         <xs:documentation>filesystem path</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+         <xs:restriction base="xs:string">
+            <xs:pattern value="[\w \-_./]+"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="TargetMask">
+      <xs:simpleType>
+         <xs:restriction base="xs:nonNegativeInteger">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="7"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="PreserveFileCount">
+      <xs:simpleType>
+         <xs:restriction base="xs:nonNegativeInteger">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="256"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="EntryCountThreshold">
+      <xs:simpleType>
+         <xs:restriction base="xs:nonNegativeInteger">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="65536"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="Active">
+      <xs:simpleType>
+         <xs:restriction base="xs:boolean"/>
+      </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="Occurrence" type="xs:nonNegativeInteger">
+      <xs:annotation>
+         <xs:documentation>Select a certain device 0..n if there a more than one devices of the same type.</xs:documentation>
+      </xs:annotation>
+   </xs:attribute>
+   <xs:element name="TimestampThreshold">
+      <xs:complexType>
+         <xs:annotation>
+            <xs:documentation>Timestamp threshold as fraction or absolute time</xs:documentation>
+         </xs:annotation>
+         <xs:attribute ref="TimestampType" use="required"/>
+         <xs:attribute name="Type" use="required">
+            <xs:annotation>
+               <xs:documentation>Type of timestamp threshold for out of bound check</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="ABS">
+                     <xs:annotation>
+                        <xs:documentation>Absolute threshold</xs:documentation>
+                     </xs:annotation>
+                  </xs:enumeration>
+                  <xs:enumeration value="REL">
+                     <xs:annotation>
+                        <xs:documentation>Relative threshold</xs:documentation>
+                     </xs:annotation>
+                  </xs:enumeration>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="Value" type="xs:float" use="required">
+            <xs:annotation>
+               <xs:documentation>Value for out of bounds check. Meaning depends on Type (ABS or REL)</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EtherCAT">
+      <xs:complexType>
+         <xs:attribute name="BusId" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>ID (name) of the bus.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="ConfigFile" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>EtherCAT bus configuration file.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeviceType">
+      <xs:complexType>
+         <xs:attribute name="Name" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>Name of device type according to device config file.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="VendorId" type="xs:int" use="required">
+            <xs:annotation>
+               <xs:documentation>VendorId of device type according to device config file.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="ProductCode" type="xs:int" use="required">
+            <xs:annotation>
+               <xs:documentation>ProductCode of device type according to device config file.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DriverEntry">
+      <xs:complexType>
+         <xs:attribute ref="ID">
+            <xs:annotation>
+               <xs:documentation>obsolete</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="CycleTime">
+            <xs:annotation>
+               <xs:documentation>obsolete</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="CycleOffset">
+            <xs:annotation>
+               <xs:documentation>obsolete</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="DeviceType">
+            <xs:annotation>
+               <xs:documentation>obsolete</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="BusId">
+            <xs:annotation>
+               <xs:documentation>obsolete</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ThreadPool">
+      <xs:annotation>
+         <xs:documentation>obsolete</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:attribute ref="ThreadCount" use="required"/>
+         <xs:attribute ref="TaskPriorityLevel" use="required"/>
+         <xs:attribute ref="StackSize" use="required"/>
+         <xs:attribute ref="TaskAffinityIndex" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeviceDiagnostic">
+      <xs:complexType>
+         <xs:attribute ref="FilePath" use="optional">
+            <xs:annotation>
+               <xs:documentation>File system path.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="PreserveFileCount" use="optional">
+            <xs:annotation>
+               <xs:documentation>The number of device diagnostic data files to preserve.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="TargetMask" use="optional">
+            <xs:annotation>
+               <xs:documentation>Target mask for device diagnostic data. 1 = logger, 2 = file, 4 = message.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="EntryCountThreshold" use="optional">
+            <xs:annotation>
+               <xs:documentation>Threshold for the maximum number of entries that will be accepted at once.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute ref="Active" use="optional">
+            <xs:annotation>
+               <xs:documentation>Explicitly enable (true) or disable (false). If omitted, this will be decided automatically.</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Timestamp">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="TimestampThreshold" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="BusConfig">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="EtherCAT" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeviceTypes">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="DeviceType" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyclicDrivers">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="ThreadPool" minOccurs="0"/>
+            <xs:element ref="DeviceDiagnostic" minOccurs="0"/>
+            <xs:element ref="DriverEntry" minOccurs="0" maxOccurs="unbounded">
+               <xs:annotation>
+                  <xs:documentation>obsolete</xs:documentation>
+               </xs:annotation>
+            </xs:element>
+         </xs:sequence>
+         <xs:attribute ref="Enabled" use="optional"/>
+         <xs:attribute ref="TaskFrequency" use="optional"/>
+         <xs:attribute ref="CycleTime" use="optional"/>
+         <xs:attribute ref="TaskPriority" use="optional"/>
+         <xs:attribute ref="TaskAffinityIndex" use="optional"/>
+         <xs:attribute ref="IntraSchedulerTask" use="optional"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Scheduler">
+      <xs:complexType>
+         <xs:attribute ref="TimerSource" use="required"/>
+         <xs:attribute ref="CPUMask" use="required"/>
+         <xs:attribute name="MainSchedulerCPUIndex" type="CPUIndex" use="required"/>
+         <xs:attribute name="AllwaysUsePrimaryTimerSource" type="xs:boolean"/>
+         <xs:attribute ref="StackSize" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Monitoring">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Timestamp"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeviceMapping">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="BusConfig"/>
+            <xs:element ref="DeviceTypes"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Drivers">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="CyclicDrivers" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="NGShared">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Scheduler"/>
+            <xs:element ref="Monitoring"/>
+            <xs:element ref="DeviceMapping"/>
+            <xs:element ref="Drivers" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="BusDriver">
+      <xs:complexType>
+         <xs:attribute name="id" type="xs:int"/>
+         <xs:attribute name="name" type="xs:string"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="BusDrivers">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="BusDriver" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="BusDriverOverride">
+      <xs:complexType>
+         <xs:attribute name="bus" type="xs:string"/>
+         <xs:attribute name="driver" type="xs:string"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="BusDriverOverrides">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="BusDriverOverride" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="BusConsistency">
+      <xs:complexType>
+         <xs:attribute name="bus" type="xs:string" use="required"/>
+         <xs:attribute name="userConfigFile" type="xs:string" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="BusConsistencies">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="BusConsistency" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="AsyncChannel">
+      <xs:complexType>
+         <xs:attribute name="name" type="xs:string" use="required"/>
+         <xs:attribute name="bus" type="xs:string" use="required"/>
+         <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+         <xs:attribute name="stub" type="xs:boolean" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="AsyncChannels">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="AsyncChannel" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="LogSetting">
+      <xs:complexType>
+         <xs:attribute name="name" type="xs:string" use="required"/>
+         <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="LogSettings">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="LogSetting" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="Synchronization">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="IoLock"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="IoLock">
+      <xs:complexType>
+         <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SpIoMultiplexer">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="BusDrivers"/>
+            <xs:element ref="BusDriverOverrides"/>
+            <xs:element ref="BusConsistencies"/>
+            <xs:element ref="AsyncChannels"/>
+            <xs:element ref="LogSettings" minOccurs="0"/>
+            <xs:element ref="Synchronization" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Dominik Wenger (KUKA Roboter GMBH) -->
+<!--W3C Schema erstellt mit XMLSpy v2007 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Stop" type="xs:byte"/>
+	<xs:element name="Start" type="xs:byte"/>
+	<xs:element name="SofMap">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DrivesOn"/>
+				<xs:element ref="DrivesOff"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SofBase" type="xs:byte"/>
+	<xs:element name="SafMap">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Emergency"/>
+				<xs:element ref="Edit"/>
+				<xs:element ref="Conf1"/>
+				<xs:element ref="Panic1"/>
+				<xs:element ref="Conf2"/>
+				<xs:element ref="Panic2"/>
+				<xs:element ref="Conf3"/>
+				<xs:element ref="Panic3"/>
+				<xs:element ref="Disconnect"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SafBase" type="xs:byte"/>
+	<xs:element name="KCPValidOffset" type="xs:int"/>
+	<xs:element name="VRPValidOffset" type="xs:int"/>
+	<xs:element name="Menu" type="xs:byte"/>
+	<xs:element name="Right" type="xs:byte"/>
+	<xs:element name="ProcessData">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Driver"/>
+				<xs:element ref="CtrlBlk"/>
+				<xs:element ref="Buttons"/>
+				<xs:element ref="Analog"/>
+				<xs:element ref="Meta"/>
+				<xs:element ref="KCPValidOffset"/>
+				<xs:element ref="VRPValidOffset"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Pos8" type="xs:byte"/>
+	<xs:element name="Pos7" type="xs:byte"/>
+	<xs:element name="Pos6" type="xs:byte"/>
+	<xs:element name="Pos5" type="xs:byte"/>
+	<xs:element name="Pos4" type="xs:byte"/>
+	<xs:element name="Pos3" type="xs:byte"/>
+	<xs:element name="Pos2" type="xs:byte"/>
+	<xs:element name="Pos1" type="xs:byte"/>
+	<xs:element name="Panic3" type="xs:byte"/>
+	<xs:element name="Panic2" type="xs:byte"/>
+	<xs:element name="Panic1" type="xs:byte"/>
+	<xs:element name="Neg8" type="xs:byte"/>
+	<xs:element name="Neg7" type="xs:byte"/>
+	<xs:element name="Neg6" type="xs:byte"/>
+	<xs:element name="Neg5" type="xs:byte"/>
+	<xs:element name="Neg4" type="xs:byte"/>
+	<xs:element name="Neg3" type="xs:byte"/>
+	<xs:element name="Neg2" type="xs:byte"/>
+	<xs:element name="Neg1" type="xs:byte"/>
+	<xs:element name="Meta">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ByteSize"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Menu4" type="xs:byte"/>
+	<xs:element name="Menu3" type="xs:byte"/>
+	<xs:element name="Menu2" type="xs:byte"/>
+	<xs:element name="Menu1" type="xs:byte"/>
+	<xs:element name="Map">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="SafBase"/>
+				<xs:element ref="DigBase"/>
+				<xs:element ref="SofBase"/>
+				<xs:element ref="SafMap"/>
+				<xs:element ref="DigMap"/>
+				<xs:element ref="SofMap"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Left" type="xs:byte"/>
+	<xs:element name="Disconnect" type="xs:byte"/>
+	<xs:element name="DrivesOn" type="xs:byte"/>
+	<xs:element name="DrivesOff" type="xs:byte"/>
+	<xs:element name="Esc" type="xs:byte"/>
+	<xs:element name="Emergency" type="xs:byte"/>
+	<xs:element name="Edit" type="xs:byte"/>
+	<xs:element name="Driver">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="instance" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DigMap">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Left"/>
+				<xs:element ref="Stop"/>
+				<xs:element ref="Right"/>
+				<xs:element ref="Esc"/>
+				<xs:element ref="Menu1"/>
+				<xs:element ref="Menu2"/>
+				<xs:element ref="Menu3"/>
+				<xs:element ref="Menu4"/>
+				<xs:element ref="Start"/>
+				<xs:element ref="Keyboard"/>
+				<xs:element ref="Neg1"/>
+				<xs:element ref="Pos1"/>
+				<xs:element ref="Neg2"/>
+				<xs:element ref="Pos2"/>
+				<xs:element ref="Neg3"/>
+				<xs:element ref="Pos3"/>
+				<xs:element ref="Neg4"/>
+				<xs:element ref="Pos4"/>
+				<xs:element ref="Neg5"/>
+				<xs:element ref="Pos5"/>
+				<xs:element ref="Neg6"/>
+				<xs:element ref="Pos6"/>
+				<xs:element ref="Neg7"/>
+				<xs:element ref="Pos7"/>
+				<xs:element ref="Neg8"/>
+				<xs:element ref="Pos8"/>
+				<xs:element ref="Menu"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DigBase" type="xs:byte"/>
+	<xs:element name="CtrlBlk">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ByteSize"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Keyboard" type="xs:byte"/>
+	<xs:element name="Conf3" type="xs:byte"/>
+	<xs:element name="Conf2" type="xs:byte"/>
+	<xs:element name="Conf1" type="xs:byte"/>
+	<xs:element name="ByteSize" type="xs:byte"/>
+	<xs:element name="Buttons">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ByteSize"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Application">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ProcessData"/>
+				<xs:element ref="Map"/>
+			</xs:sequence>
+			<xs:attribute name="kukaVersion" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Analog">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ByteSize"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

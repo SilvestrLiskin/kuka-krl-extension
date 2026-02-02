@@ -1,0 +1,189 @@
+<ArchiveInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="KUKARoboter.Contracts.Archive">
+  <Archive>
+    <Date>2026-01-29T08:26:45.8888682+03:00</Date>
+    <Id>161f89ca-7242-48f8-8850-36155a48cc7a</Id>
+    <ArchivePath>C:\Windows\TEMP\tmpED26.tmp</ArchivePath>
+    <Configuration>
+      <Name>All</Name>
+      <Description>Configuration "All" from registry. Converted at 1/29/2026 8:26:41 AM.</Description>
+      <EmbeddedLogFile>true</EmbeddedLogFile>
+      <FileConfig>
+        <DefaultExcludeFilters />
+        <FileSources>
+          <FileSource>
+            <Path>KRC:\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\User\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Mada\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Init\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Ir_Spec\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Template\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Rdc\</Path>
+          </FileSource>
+          <FileSource>
+            <ExcludeFilter>\User\ProjectRoot\*\*</ExcludeFilter>
+            <Path>\User\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\log\Mastery.log</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\CabCtrl.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\ConfigXML.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Ctrl_MDL_A1.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Ctrl_MDL_A23456.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Ctrl_MDL_DAT.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Ctrl_VMV_std.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\KRC.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\NextGen.xml</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Motor\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Servofile\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Supply\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Common\Schemes\</Path>
+          </FileSource>
+          <FileSource>
+            <Path>\Roboter\Config\System\Office\</Path>
+          </FileSource>
+        </FileSources>
+      </FileConfig>
+      <LogConfig>
+        <ProtokollNames>
+          <string>KrcLog</string>
+          <string>KrcLogI</string>
+          <string>KrcLogU</string>
+          <string>KrcLogS</string>
+          <string>KrcLogP</string>
+          <string>KrcLogB</string>
+          <string>KrcLogC</string>
+        </ProtokollNames>
+      </LogConfig>
+      <ProjectConfig>
+        <ProjectFilter>Aktive</ProjectFilter>
+      </ProjectConfig>
+      <RegistryConfig>
+        <RegistryKeys>
+          <string>HKEY_LOCAL_MACHINE\SOFTWARE\KUKA ROBOTER GMBH\KUKA BOF\OCX Control's\FileHandler</string>
+          <string>HKEY_LOCAL_MACHINE\SOFTWARE\KUKA ROBOTER GMBH\WorkVisual</string>
+          <string>HKEY_LOCAL_MACHINE\SOFTWARE\KUKA Roboter GmbH\Performance\</string>
+        </RegistryKeys>
+      </RegistryConfig>
+      <StoreIncremental>false</StoreIncremental>
+      <IsComplete>true</IsComplete>
+    </Configuration>
+  </Archive>
+  <Roboter>
+    <Name>Ambalajli_Paletleme_Robotu</Name>
+    <Serialnumber>996627</Serialnumber>
+    <Runtime>3550</Runtime>
+    <Type>#KR470PA_2 S C4 FLR</Type>
+    <IsPrecisionRobot>false</IsPrecisionRobot>
+  </Roboter>
+  <System>
+    <Description />
+    <DeviceID>PCRC-QLWXUWPQS7</DeviceID>
+    <InstallationType>Cabinet</InstallationType>
+    <InstallationDate>Date(MMDDYYYY): 6-26-2025    Time: 19:43:42</InstallationDate>
+    <Version>V8.7.8</Version>
+    <Build>671</Build>
+    <Type>KR C</Type>
+    <ActiveProject>26111233990000120003388130 1.25.0</ActiveProject>
+  </System>
+  <Options>
+    <OptionData Name="DiagnosisSafety">
+      <UserAccessibleDirs />
+      <Version Build="4" Major="3" Minor="2" Revision="84" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="DiagnosisServiceEtherCAT">
+      <UserAccessibleDirs />
+      <Version Build="4" Major="1" Minor="0" Revision="187" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="KUKA.BoardPackage">
+      <UserAccessibleDirs />
+      <Version Build="4" Major="3" Minor="6" Revision="3" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="KUKA.DeviceConnector pre-installed">
+      <UserAccessibleDirs />
+      <Version Build="13" Major="2" Minor="1" Revision="17" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="KUKA.PROFINET MS">
+      <UserAccessibleDirs />
+      <Version Build="8" Major="6" Minor="0" Revision="45" />
+      <InstalledIntegrated>true</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="KUKA.SoftwarePackage smartPAD-2">
+      <UserAccessibleDirs />
+      <Version Build="5" Major="1" Minor="1" Revision="1" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="KUKA.UpdatePackageFirmware">
+      <UserAccessibleDirs />
+      <Version Build="2" Major="1" Minor="2" Revision="69" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="KUKA.UpdateService">
+      <UserAccessibleDirs />
+      <Version Build="24" Major="1" Minor="1" Revision="822" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+    <OptionData Name="KUKA.UpdateServiceConfiguration">
+      <UserAccessibleDirs />
+      <Version Build="14" Major="1" Minor="0" Revision="269" />
+      <InstalledIntegrated>false</InstalledIntegrated>
+      <Dependencies />
+      <GenerateMd5>false</GenerateMd5>
+    </OptionData>
+  </Options>
+</ArchiveInformation>

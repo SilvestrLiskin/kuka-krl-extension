@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2008 (http://www.altova.com) von Karsten Stolte (KUKA Deutschland GmbH) bearbeitet -->
+<!-- edited with XMLSpy v2006 rel. 3 sp2 (http://www.altova.com) by Stolte (KUKA Deutschland GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="NGVersion.xsd"/>
+   <xs:include schemaLocation="Units.xsd"/>
+   <xs:element name="CoupleData">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version" minOccurs="0" />
+            <xs:element name="Check">
+               <xs:complexType>
+                  <xs:attribute name="CRC" use="required">
+                     <xs:annotation>
+                        <xs:documentation>CRC over valid data entries</xs:documentation>
+                     </xs:annotation>
+                     <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                           <xs:minInclusive value="0"/>
+                           <xs:maxInclusive value="65535"/>
+                        </xs:restriction>
+                     </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="Num" type="xs:unsignedLong" use="required">
+                     <xs:annotation>
+                        <xs:documentation>Save counter</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+            <xs:sequence>
+               <xs:element name="Data" maxOccurs="unbounded" minOccurs="0">
+                  <xs:complexType>
+                     <xs:attribute name="DriveID" use="required">
+                        <xs:annotation>
+                           <xs:documentation>DriveID in NextgenDriveTech.xml</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                           <xs:restriction base="xs:short">
+                              <xs:minInclusive value="0"/>
+                              <xs:maxInclusive value="255"/>
+                           </xs:restriction>
+                        </xs:simpleType>
+                     </xs:attribute>
+                     <xs:attribute name="Motor" use="required">
+                        <xs:annotation>
+                           <xs:documentation>Index of motor (0 based)</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                           <xs:restriction base="xs:short">
+                              <xs:minInclusive value="0"/>
+                              <xs:maxInclusive value="15"/>
+                           </xs:restriction>
+                        </xs:simpleType>
+                     </xs:attribute>
+                     <xs:attribute name="PosAbs" type="xs:double" use="required"/>
+                     <xs:attribute name="PosEnc" type="xs:long" use="required"/>
+                     <xs:attribute name="State" use="required">
+                        <xs:annotation>
+                           <xs:documentation>0 = decoupled, 1 = coupled</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                           <xs:restriction base="xs:short">
+                              <xs:minInclusive value="0"/>
+                              <xs:maxInclusive value="1"/>
+                           </xs:restriction>
+                        </xs:simpleType>
+                     </xs:attribute>
+                     <xs:attribute name="Valid" use="required">
+                        <xs:simpleType>
+                           <xs:restriction base="xs:short">
+                              <xs:minInclusive value="0"/>
+                              <xs:maxInclusive value="1"/>
+                           </xs:restriction>
+                        </xs:simpleType>
+                     </xs:attribute>
+                     <xs:attribute name="Num" type="xs:unsignedLong" use="required"/>
+                  </xs:complexType>
+               </xs:element>
+            </xs:sequence>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

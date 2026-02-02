@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Graf Stefan (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Graf Stefan (KUKA Roboter GMBH) -->
+<!--W3C Schema erstellt mit XMLSpy v2007 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Version.xsd"/>
+  <xs:element name="NO_RESET_RESTORE">
+    <xs:complexType>
+      <xs:attribute name="StartIdx" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="8192"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="EndIdx">
+        <xs:simpleType>
+          <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="8192"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="KrcDryRun">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Version" minOccurs="0"/>
+        <xs:element ref="Customer_VW"/>
+        <xs:element ref="Customer_KUKA"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FLAG">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NO_RESET_RESTORE" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EXCEPTIONS_RESET_RESTORE">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="DIG_OUT" minOccurs="0"/>
+        <xs:element ref="FLAG" minOccurs="0"/>
+        <xs:element ref="ANA_OUT" minOccurs="0"/>
+        <xs:element ref="CYCFLAG" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DRY_RUN">
+    <xs:complexType>
+      <xs:attribute name="OPTION" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DIG_OUT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NO_RESET_RESTORE" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Customer_VW">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="DRY_RUN"/>
+        <xs:element ref="EXCEPTIONS_RESET_RESTORE"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Customer_KUKA">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="DRY_RUN"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ANA_OUT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NO_RESET_RESTORE" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CYCFLAG">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NO_RESET_RESTORE" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

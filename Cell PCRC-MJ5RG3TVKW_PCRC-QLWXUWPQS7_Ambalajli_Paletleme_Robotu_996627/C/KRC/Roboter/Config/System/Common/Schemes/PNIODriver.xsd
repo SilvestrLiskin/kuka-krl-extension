@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2008 sp1 (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) bearbeitet -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Eveline Mühlbauer (KUKA Roboter GMBH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="Version.xsd"/>
+	<xs:element name="PEMode">
+		<xs:complexType>
+			<xs:attribute name="ID" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="TimeToPause" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="TimeToOperate" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="TimeMinLengthOfStay" type="xs:unsignedInt" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PROFIenergy">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PEMode" maxOccurs="256"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Swap">
+		<xs:complexType>
+			<xs:attribute name="Offset" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="Length" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="IsInput" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Driver">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version" minOccurs="0"/>
+				<xs:element ref="PROFINET"/>
+				<xs:element ref="DeviceInstance" minOccurs="0"/>
+				<xs:element ref="ControllerInstance" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="kukaVersion" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:byte"/>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PROFINET">
+		<xs:complexType>
+			<xs:attribute name="PNIODeviceName" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="0"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="DeviceID" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="SNMP_Password" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="0"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="SNMP_Password_Read" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="0"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="SNMP_Enable" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:boolean">
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="DefaultGatewayWriteProtect" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:boolean"/>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DeviceInstance">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PROFIenergy" minOccurs="0"/>
+				<xs:element ref="Swap" minOccurs="0" maxOccurs="256"/>
+			</xs:sequence>
+			<xs:attribute name="Name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="32"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="busTimeout" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="busCycleTime" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="OutputDataLength" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="InputDataLength" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="DiagnosticAlarmActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="ProfinetVersion" type="xs:string" use="optional"/>
+			<xs:attribute name="EnableBusErrorBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="InvertBusErrorBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="BusErrorBitOffset" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="EnableMaintenanceRequestBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="InvertMaintenanceRequestBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="MaintenanceRequestBitOffset" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="EnableMaintenanceDemandBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="InvertMaintenanceDemandBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="MaintenanceDemandBitOffset" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="EnableDiagnosticAlarmBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="InvertDiagnosticAlarmBit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="DiagnosticAlarmBitOffset" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="NestedAlarmActive" type="xs:boolean" use="optional"/>
+			<xs:attribute name="DiagnosticBitAlarmActive" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Device">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Swap" minOccurs="0" maxOccurs="64"/>
+			</xs:sequence>
+			<xs:attribute name="Name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="ARUserID" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="InputDataLength" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="OutputDataLength" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="DiagnosticAlarmActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="TopologyAlarmActive" type="xs:boolean" use="optional"/>
+			<xs:attribute name="IsActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="DeleteARPCache" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ControllerInstance">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Device" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="Name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="32"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="busTimeout" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="busCycleTime" type="xs:unsignedInt" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

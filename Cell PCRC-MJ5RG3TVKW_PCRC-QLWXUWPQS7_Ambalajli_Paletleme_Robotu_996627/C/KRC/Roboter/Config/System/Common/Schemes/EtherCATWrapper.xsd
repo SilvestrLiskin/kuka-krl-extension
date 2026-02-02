@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="FrequencyType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="1"/>
+			<xs:maxInclusive value="16000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RegularTaskPriority">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="1"/>
+			<xs:maxInclusive value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MasterStackDebugLevel">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="7"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Scheduling">
+		<xs:complexType>
+			<xs:attribute name="Offset">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="11"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Mode" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="DcmSem"/>
+						<xs:enumeration value="OsDelay"/>
+						<xs:enumeration value="SysMgrSched"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="CycleMs" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Cycle">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Scheduling" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="BusFrequency" type="FrequencyType"/>
+			<xs:attribute name="DcmCtlSetValue" type="xs:integer"/>
+			<xs:attribute name="TimerTaskPriority" type="RegularTaskPriority"/>
+			<xs:attribute name="BusLockTO" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Behavior">
+		<xs:complexType>
+			<xs:attribute name="ExternalTrigger" type="xs:boolean" use="required"/>
+			<xs:attribute name="DistributedClock" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="true"/>
+						<xs:enumeration value="false"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="DistributedClockDeviationTimeLimit" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="DistributedClockSettleTime" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="DistributedClockBustBulk" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="DistributedClockBurtsCycles" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="RestartMode" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="manual"/>
+						<xs:enumeration value="auto"/>
+						<xs:enumeration value="kcp"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="MultiFrameLossLimit" type="xs:unsignedInt"/>
+			<xs:attribute name="MultiCycCmdWkcErrLimit" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="CheckKSB" type="xs:boolean" use="optional"/>
+			<xs:attribute name="CheckSwitchPortUplink" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="7"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="ConnectToDiagMgr" type="xs:boolean" use="optional"/>
+			<xs:attribute name="MaxBusSlaves">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="256"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="CrossedLineCheck" type="xs:boolean" use="optional"/>
+			<xs:attribute name="SlavePreOpErrorRetryLimit" type="xs:unsignedInt" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Timeout">
+		<xs:complexType>
+			<xs:attribute name="EcatCmdTimeout" type="xs:integer" use="required"/>
+			<xs:attribute name="EcatCmdMaxRetries" type="xs:integer" use="required"/>
+			<xs:attribute name="EoeTimeout" type="xs:integer" use="required"/>
+			<xs:attribute name="FoeBusyTimeout" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Queue">
+		<xs:complexType>
+			<xs:attribute name="MaxSentQueuedFramesPerCyc" type="xs:integer" use="required"/>
+			<xs:attribute name="MaxQueuedEthFrames" type="xs:integer" use="required"/>
+			<xs:attribute name="MaxSlaveCmdPerFrame" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="MasterStackDebug">
+		<xs:complexType>
+			<xs:attribute name="LogToShell" type="xs:boolean" use="optional"/>
+			<xs:attribute name="LogToLinkLayer" type="xs:boolean" use="optional"/>
+			<xs:attribute name="LogLevel" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="7"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="WrapperStackDebug">
+		<xs:complexType>
+			<xs:attribute name="StopAtemJobsAtError" type="xs:boolean" use="optional"/>
+			<xs:attribute name="LogNotifyMsg" type="xs:boolean" use="optional"/>
+			<xs:attribute name="LogBusErrMsg" type="xs:boolean" use="optional"/>
+			<xs:attribute name="LogEcCmdMsg" type="xs:boolean" use="optional"/>
+			<xs:attribute name="LogClkCycleStart" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BootInitParam">
+		<xs:complexType>
+			<xs:attribute name="TimeoutIsNetworkConnected" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TimeoutEnableDistributedClock" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TimeoutDoBusScan" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TimeoutSetMasterModeInit" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TimeoutSetMasterModeInitBusRestart" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TimeoutRetrieveSlaveInfo" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TimeoutSetMasterModeOp" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TimeoutSetSlaveModeBootStrap" type="xs:unsignedLong" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BusPowerOnTimeouts">
+		<xs:complexType>
+			<xs:attribute name="WaitBeforeBusScan" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="10000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="WaitBeforeStartStack_FirstBusScanOK" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="10000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="WaitBeforeStartStack_FirstBusScanNotOK" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="10000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="WaitAfterStartStack" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="10000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="HotConnect">
+		<xs:complexType>
+			<xs:attribute name="AutomaticMode" type="xs:boolean" use="optional"/>
+			<xs:attribute name="HcMode" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="automatic"/>
+						<xs:enumeration value="manual"/>
+						<xs:enumeration value="full_manual"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="BorderClose" type="xs:boolean" use="optional"/>
+			<xs:attribute name="DetectionTimeout" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TopologyChangeTimeout" type="xs:unsignedLong" use="optional"/>
+			<xs:attribute name="TopologyChangeDelay" type="xs:unsignedLong"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BusAnomalyDetection">
+		<xs:complexType>
+			<xs:attribute name="FeatureActivated" type="xs:boolean"/>
+			<xs:attribute name="CheckIntervalMs">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedLong">
+						<xs:minInclusive value="10000"/>
+						<xs:maxInclusive value="600000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="MaxCyclesWithErrInSequence">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedLong">
+						<xs:minInclusive value="2"/>
+						<xs:maxInclusive value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="MaxCycWkcDeltaCnt">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedLong">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="25"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="MaxLostFramesDeltaCnt">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedLong">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="25"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="MaxRxCntDeltaCnt">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedLong">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="25"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="PhyRxReqToCollectTimeMs">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedLong">
+						<xs:minInclusive value="10"/>
+						<xs:maxInclusive value="1000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="NetworkCfg">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Mainboard" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Mainboard">
+		<xs:complexType>
+			<xs:attribute name="Name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="64"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="NetDevice" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="2"/>
+						<xs:maxLength value="32"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="UseNativeLayer" type="xs:boolean" use="required"/>
+			<xs:attribute name="VLanID" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt"/>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="PortCheck" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="32"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="EtherCAT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="NetworkCfg"/>
+				<xs:element ref="Cycle"/>
+				<xs:element ref="Behavior"/>
+				<xs:element name="TaskSettings" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="CpuAffinity" type="xs:unsignedInt"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="Timeout"/>
+				<xs:element ref="Queue"/>
+				<xs:element ref="MasterStackDebug"/>
+				<xs:element ref="WrapperStackDebug" minOccurs="0"/>
+				<xs:element ref="BootInitParam" minOccurs="0"/>
+				<xs:element ref="BusPowerOnTimeouts" minOccurs="0"/>
+				<xs:element ref="HotConnect" minOccurs="0"/>
+				<xs:element ref="BusAnomalyDetection" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="ConfigFile" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="127"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="EcatWrapper">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="EtherCAT"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Version.xsd"/>
+
+   <xs:complexType name="tNewMotionAcc">
+      <xs:attribute name="CPAcceleration" use="required">
+         <xs:annotation>
+            <xs:documentation>Max. CP-Beschleunigung für die Planung in [m/s^2]</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double">
+               <xs:minInclusive value="0"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+
+   <xs:complexType name="tNewMotionFlt">
+      <xs:attribute name="Filter" use="required">
+         <xs:annotation>
+            <xs:documentation>Neuer Verfahrbereich: Länge Bahnparameterfilter [ms]</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:int">
+               <xs:minInclusive value="0"/>
+               <xs:maxInclusive value="2411"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>   
+   </xs:complexType>
+
+   <xs:complexType name="tTorqueCharLine">
+      <xs:annotation>
+         <xs:documentation>Getriebekennlinie</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="x-Axis">
+         <xs:annotation>
+            <xs:documentation>Achsgeschwindigkeiten [rad/s]</xs:documentation>
+         </xs:annotation>
+            <xs:complexType>
+               <xs:attribute name="x1" use="required">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="x2" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="x3" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="x4" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="x5" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="x6" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="x7" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="y-Axis">
+         <xs:annotation>
+            <xs:documentation>Momente [Nm]</xs:documentation>
+         </xs:annotation>
+            <xs:complexType>
+               <xs:attribute name="y1" use="required">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="y2" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="y3" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="y4" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="y5" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                         <xs:minInclusive value="0.0" />
+                      </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="y6" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="y7" use="optional" default="0.0">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                     </xs:restriction>
+                  </xs:simpleType>
+               </xs:attribute>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="tFriction">
+      <xs:attribute name="Static" use="optional">
+         <xs:annotation>
+            <xs:documentation>Haftreibung</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double"/>
+         </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="Steepness" use="optional">
+         <xs:annotation>
+            <xs:documentation>Steilheit der Reibung im Haftbereich</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double"/>
+         </xs:simpleType>
+      </xs:attribute>
+	  <xs:attribute name="Viscous" use="optional">
+         <xs:annotation>
+            <xs:documentation>Gleitreibung</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:double"/>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+
+   <xs:simpleType name="tDamperAdaptionType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="None"/>
+         <xs:enumeration value="Table"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="tSpringAdaptionType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="None"/>
+         <xs:enumeration value="Polynomial"/>
+         <xs:enumeration value="Table"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:complexType name="tStiffnessLowLoad">
+      <xs:attribute name="Max" type="xs:double" use="required"/>
+      <xs:attribute name="Min" type="xs:double" use="required"/>
+   </xs:complexType>
+
+   <xs:simpleType name="tInertiaCalculation">
+      <xs:restriction base="xs:integer">
+         <xs:enumeration value="0"/>
+         <xs:enumeration value="1"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:complexType name="tSpringAdaption">
+      <xs:sequence>
+         <xs:element name="StiffnessLowLoad" type="tStiffnessLowLoad" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="Type" type="tSpringAdaptionType" use="required"/>
+      <xs:attribute name="FactorHighLoad" type="xs:double" use="required"/>
+      <xs:attribute name="InertiaCalculation" type="tInertiaCalculation" use="required"/>
+   </xs:complexType>
+
+   <xs:complexType name="tSpring">
+      <xs:sequence>
+         <xs:element name="Adaption" type="tSpringAdaption" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="OffsetHighLoad" type="xs:double" use="optional"/>
+      <xs:attribute name="StiffnessHighLoad" type="xs:double" use="optional"/>
+      <xs:attribute name="StiffnessLowLoad" type="xs:double" use="optional"/>
+      <xs:attribute name="WidthSpline" type="xs:double" use="optional"/>
+   </xs:complexType>
+
+   <xs:complexType name="tDamper">
+       <xs:sequence>
+         <xs:element name="Adaption" minOccurs="0" maxOccurs="1">
+            <xs:complexType>  
+               <xs:attribute name="Type" type="tDamperAdaptionType" use="required">
+                  <xs:annotation>
+                     <xs:documentation>A1-Dämpfung None|TABLE</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+            </xs:complexType>  
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Damping" type="xs:double" use="optional"/>
+   </xs:complexType>
+
+   <xs:simpleType name="tReduction">
+      <xs:restriction base="xs:int">
+         <xs:minInclusive value="1"/>
+         <xs:maxInclusive value="100"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:complexType name="tEcoLevel">
+      <xs:attribute name="Velocity" type="tReduction" use="required"/>
+      <xs:attribute name="Acceleration" type="tReduction" use="required"/>
+   </xs:complexType>
+
+
+   <xs:complexType name="tMotionModePath">
+      <xs:sequence>
+         <xs:element name="NewMotionAcc" type="tNewMotionAcc" minOccurs="0" maxOccurs="1"/>
+         <xs:element name="NewMotionFlt" type="tNewMotionFlt" minOccurs="0" maxOccurs="1"/>
+         <xs:element name="SpecialControl" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:attribute name="ActivationT1" use="required">
+                  <xs:annotation>
+                     <xs:documentation>Aktivierung des Simulink-Reglers in T1</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                     <xs:restriction base="xs:boolean"/>
+                  </xs:simpleType>
+               </xs:attribute>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="Axis" minOccurs="0" maxOccurs="12">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="Gear" minOccurs="0" maxOccurs="1" >
+                     <xs:complexType>
+                        <xs:sequence>
+                           <xs:element name="Friction" type="tFriction" minOccurs="0" maxOccurs="1"/>
+                           <xs:element name="Damper" type="tDamper" minOccurs="0" maxOccurs="1" />
+                           <xs:element name="Spring" type="tSpring" minOccurs="0" maxOccurs="1" />
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Motor" minOccurs="0" maxOccurs="1" >
+                     <xs:complexType>
+                        <xs:sequence>
+                           <xs:element name="Friction" type="tFriction" minOccurs="0" maxOccurs="1"/>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+               <xs:attribute name="Number" type="xs:unsignedLong" use="required" />
+			   <xs:attribute name="EKOActive" use="optional">
+                  <xs:simpleType>
+                     <xs:restriction base="xs:boolean"/>
+                  </xs:simpleType>
+               </xs:attribute>
+            </xs:complexType>   
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Supported" use="optional">
+         <xs:annotation>
+            <xs:documentation>MotionMode wird unterstützt</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:boolean"/>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+
+   <xs:complexType name="tMotionModeDynamic">
+      <xs:sequence>
+         <xs:element name="NewMotionFlt" type="tNewMotionFlt" minOccurs="0" maxOccurs="1"/>
+         <xs:element name="OldMotion"  minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="FIRFilter"  minOccurs="0" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:sequence>
+                           <xs:element name="FilterWeight" minOccurs="1" maxOccurs="201">
+                              <xs:complexType>
+                                 <xs:attribute name="Index" use="required">
+                                    <xs:annotation>
+                                       <xs:documentation>Index des Elements im FIR-Filter</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                       <xs:restriction base="xs:int">
+                                          <xs:minInclusive value="1"/>
+                                          <xs:maxInclusive value="201"/>
+                                       </xs:restriction>
+                                    </xs:simpleType>
+                                 </xs:attribute>
+                                 <xs:attribute name="Weight" use="required">
+                                    <xs:annotation>
+                                       <xs:documentation>Gewicht des Elements im FIR-Filter</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                       <xs:restriction base="xs:double"/>
+                                    </xs:simpleType>
+                                 </xs:attribute>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="Axis" minOccurs="0" maxOccurs="12">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="Gear" minOccurs="0" maxOccurs="1" >
+                     <xs:complexType>
+                        <xs:sequence>
+                           <xs:element name="TorqueCharLine" type="tTorqueCharLine" minOccurs="0" maxOccurs="1"/>
+                           <xs:element name="Damper" type="tDamper" minOccurs="0" maxOccurs="1" />
+                           <xs:element name="Spring" type="tSpring" minOccurs="0" maxOccurs="1" />
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Motor" minOccurs="0" maxOccurs="1" >
+                     <xs:complexType>
+                        <xs:sequence>
+                           <xs:element name="DynamicLimits" minOccurs="0" maxOccurs="1" >
+                              <xs:complexType>
+                                 <xs:attribute name="S" use="optional">
+                                    <xs:annotation>
+                                       <xs:documentation>Sicherheitsfaktor Motormomente</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                       <xs:restriction base="xs:double">
+                                          <xs:minExclusive value="0.0"/>
+                                          <xs:maxInclusive value="1.0"/>
+                                       </xs:restriction>
+                                    </xs:simpleType>
+                                 </xs:attribute>
+                              </xs:complexType>  
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+               <xs:attribute name="Number" type="xs:unsignedLong" use="required" />
+            </xs:complexType>   
+         </xs:element>       
+      </xs:sequence>
+      <xs:attribute name="Supported" use="optional">
+         <xs:annotation>
+            <xs:documentation>MotionMode wird unterstützt</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:boolean"/>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+
+   <xs:complexType name="tMotionModeEco">
+      <xs:sequence>
+         <xs:element name="Axis" minOccurs="0" maxOccurs="12">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="Scaling" minOccurs="0" maxOccurs="1" >
+                     <xs:complexType>
+                        <xs:sequence>
+                           <xs:element name="ReductionLevelEco" type="tEcoLevel" minOccurs="0" maxOccurs="1"/>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+               <xs:attribute name="Number" type="xs:unsignedLong" use="required" />
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Supported" use="optional">
+         <xs:annotation>
+            <xs:documentation>MotionMode wird unterstützt</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:boolean"/>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+
+   <xs:element name="MotionModes">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version"/>
+            <xs:element name="Device" minOccurs="0" maxOccurs="1">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="MotionModePath"    type="tMotionModePath" minOccurs="0" maxOccurs="1" />
+                     <xs:element name="MotionModeDynamic" type="tMotionModeDynamic" minOccurs="0" maxOccurs="1" />
+                     <xs:element name="MotionModeEco"     type="tMotionModeEco" minOccurs="0" maxOccurs="1" />
+                  </xs:sequence>
+                  <xs:attribute name="TrafoName" type="xs:string" use="required" />
+               </xs:complexType>   
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+
+</xs:schema>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="NGVersion.xsd"/>
+   <xs:element name="Supply">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:choice>
+               <xs:sequence>
+                  <xs:annotation>
+                     <xs:documentation>revised config</xs:documentation>
+                  </xs:annotation>
+                  <xs:element name="Info">
+                     <xs:complexType>
+                        <xs:attribute name="Device" type="xs:string" use="required"/>
+                        <xs:attribute name="PrimaryVoltage">
+                           <xs:annotation>
+                              <xs:documentation>Reference voltage [V]</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="BallastPower" use="required">
+                           <xs:annotation>
+                              <xs:documentation>[W]</xs:documentation>
+                           </xs:annotation>
+                           <xs:simpleType>
+                              <xs:restriction base="xs:double">
+                                 <xs:minInclusive value="0.0"/>
+                              </xs:restriction>
+                           </xs:simpleType>
+                        </xs:attribute>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="SupplyModes">
+                     <xs:complexType>
+                        <xs:sequence>
+                           <xs:element name="SupplyMode" maxOccurs="unbounded">
+                              <xs:complexType>
+                                 <xs:sequence>
+                                    <xs:element name="CurrentMonitoring">
+                                       <xs:complexType>
+                                          <xs:sequence>
+                                             <xs:element name="Monitor" maxOccurs="3">
+                                                <xs:complexType>
+                                                   <xs:attribute name="MaxCurrent" use="required">
+                                                      <xs:annotation>
+                                                         <xs:documentation>[A]</xs:documentation>
+                                                      </xs:annotation>
+                                                      <xs:simpleType>
+                                                         <xs:restriction base="xs:double">
+                                                            <xs:minExclusive value="0.0"/>
+                                                         </xs:restriction>
+                                                      </xs:simpleType>
+                                                   </xs:attribute>
+                                                   <xs:attribute name="Time" use="required">
+                                                      <xs:annotation>
+                                                         <xs:documentation>[s]</xs:documentation>
+                                                      </xs:annotation>
+                                                      <xs:simpleType>
+                                                         <xs:restriction base="xs:double">
+                                                            <xs:minExclusive value="0.0"/>
+                                                         </xs:restriction>
+                                                      </xs:simpleType>
+                                                   </xs:attribute>
+                                                </xs:complexType>
+                                             </xs:element>
+                                          </xs:sequence>
+                                       </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Config">
+                                       <xs:complexType>
+                                          <xs:attribute name="ServoFile" type="xs:string" use="required"/>
+                                       </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="EnergyData">
+                                       <xs:complexType>
+                                          <xs:sequence>
+                                             <xs:element name="b" maxOccurs="unbounded">
+                                                <xs:complexType>
+                                                   <xs:attribute name="i" use="required">
+                                                      <xs:simpleType>
+                                                         <xs:restriction base="xs:int">
+                                                            <xs:minInclusive value="1"/>
+                                                         </xs:restriction>
+                                                      </xs:simpleType>
+                                                   </xs:attribute>
+                                                   <xs:attribute name="value" type="xs:double" use="required"/>
+                                                </xs:complexType>
+                                             </xs:element>
+                                          </xs:sequence>
+                                       </xs:complexType>
+                                    </xs:element>
+                                 </xs:sequence>
+                                 <xs:attribute name="Setup" type="xs:string" use="required">
+                                    <xs:annotation>
+                                       <xs:documentation>AC/DC/...</xs:documentation>
+                                    </xs:annotation>
+                                 </xs:attribute>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+               <xs:sequence>
+                  <xs:annotation>
+                     <xs:documentation>legacy config</xs:documentation>
+                  </xs:annotation>
+                  <xs:element ref="Version" minOccurs="0"/>
+                  <xs:element name="Current">
+                     <xs:complexType>
+                        <xs:attribute name="MaxCurrent1s" use="required">
+                           <xs:annotation>
+                              <xs:documentation>in A</xs:documentation>
+                           </xs:annotation>
+                           <xs:simpleType>
+                              <xs:restriction base="xs:double">
+                                 <xs:minExclusive value="0.0"/>
+                              </xs:restriction>
+                           </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="MaxCurrent30s" use="required">
+                           <xs:annotation>
+                              <xs:documentation>in A</xs:documentation>
+                           </xs:annotation>
+                           <xs:simpleType>
+                              <xs:restriction base="xs:double">
+                                 <xs:minExclusive value="0.0"/>
+                              </xs:restriction>
+                           </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="MaxCurrent60s" use="required">
+                           <xs:annotation>
+                              <xs:documentation>in A</xs:documentation>
+                           </xs:annotation>
+                           <xs:simpleType>
+                              <xs:restriction base="xs:double">
+                                 <xs:minExclusive value="0.0"/>
+                              </xs:restriction>
+                           </xs:simpleType>
+                        </xs:attribute>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Config">
+                     <xs:complexType>
+                        <xs:attribute name="ServoFile" type="xs:string" use="required">
+                           <xs:annotation>
+                              <xs:documentation>"Servo"-File with parameters for supply object-dictionary.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="SimuSupplyVoltage" type="xs:int" use="optional">
+                           <xs:annotation>
+                              <xs:documentation>Intermediate-circuit-voltage in [V] that shall be used for supply-simulation in Dummy-Supply-WD and Simu-Prefilter.
+No default-value in scheme to detect and handle missing value in code.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Properties" minOccurs="0">
+                     <xs:complexType>
+                        <xs:attribute name="Capacity" type="xs:double" use="required">
+                           <xs:annotation>
+                              <xs:documentation>in [F]</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="EnergyData" minOccurs="0">
+                     <xs:complexType>
+                        <xs:attribute name="b1" type="xs:double" use="required"/>
+                        <xs:attribute name="b2" type="xs:double" use="required"/>
+                        <xs:attribute name="b3" type="xs:double" use="required"/>
+                        <xs:attribute name="b4" type="xs:double" use="required"/>
+                        <xs:attribute name="b5" type="xs:double" use="required"/>
+                        <xs:attribute name="b6" type="xs:double" use="optional"/>
+                        <xs:attribute name="b7" type="xs:double" use="optional"/>
+                        <xs:attribute name="b8" type="xs:double" use="optional"/>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:choice>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

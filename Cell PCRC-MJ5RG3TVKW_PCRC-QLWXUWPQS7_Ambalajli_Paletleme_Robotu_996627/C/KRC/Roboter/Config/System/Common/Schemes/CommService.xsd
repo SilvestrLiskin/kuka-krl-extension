@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2007 sp1 bearbeitet (http://www.altova.com) von Dominik Wenger (KUKA Roboter GMBH) -->
+<!--W3C Schema erstellt mit XMLSpy v2007 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Version">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Info"/>
+				<xs:element ref="Schema"/>
+			</xs:sequence>
+			<xs:attribute name="Label" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value=""/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CommService">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version"/>
+				<xs:element ref="Config"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PersistThreadPrio" type="xs:int"/>
+	<xs:element name="PersistSoapPort" type="xs:int"/>
+	<xs:element name="Schema">
+		<xs:complexType>
+			<xs:attribute name="Version" type="xs:byte" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Info">
+		<xs:complexType>
+			<xs:attribute name="Version" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PersistThreadPrio"/>
+				<xs:element ref="PersistSoapPort"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

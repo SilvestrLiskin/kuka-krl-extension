@@ -1,0 +1,1761 @@
+&ACCESS RVO2
+&REL 10
+DEF  Alt_Programlar ( )
+   ;FOLD INI;%{PE}
+      ;FOLD BASISTECH INI
+         GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS==TRUE DO IR_STOPM ( )
+         INTERRUPT ON 3
+         BAS (#INITMOV,0 )
+      ;ENDFOLD (BASISTECH INI)
+      ;FOLD USER INI
+         ;Make your modifications here
+         
+      ;ENDFOLD (USER INI)
+   ;ENDFOLD (INI)
+   
+   ;FOLD SPTP HOME Vel=100 % DEFAULT ;%{PE}
+      ;FOLD Parameters ;%{h}
+         ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=HOME; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=DEFAULT; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+      ;ENDFOLD
+      SPTP XHOME WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FHOME), $BASE = SBASE(FHOME.BASE_NO), $IPO_MODE = SIPO_MODE(FHOME.IPO_FRAME), $LOAD = SLOAD(FHOME.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PDEFAULT), $APO = SAPO_PTP(PDEFAULT), $GEAR_JERK[1] = SGEAR_JERK(PDEFAULT), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+   ;ENDFOLD
+   
+   ;FOLD SPTP HOME Vel=100 % DEFAULT ;%{PE}
+      ;FOLD Parameters ;%{h}
+         ;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=HOME; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=DEFAULT; Kuka.VelocityPtp=100; Kuka.VelocityFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+      ;ENDFOLD
+      SPTP XHOME WITH $VEL_AXIS[1] = SVEL_JOINT(100.0), $TOOL = STOOL2(FHOME), $BASE = SBASE(FHOME.BASE_NO), $IPO_MODE = SIPO_MODE(FHOME.IPO_FRAME), $LOAD = SLOAD(FHOME.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PDEFAULT), $APO = SAPO_PTP(PDEFAULT), $GEAR_JERK[1] = SGEAR_JERK(PDEFAULT), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+   ;ENDFOLD
+   
+END
+
+GLOBAL DEF init_io()
+   
+   go_Rezerve_1=0
+   go_Rezerve_2=0
+   go_Rezerve_3=0
+   
+   $OUT[25]=FALSE
+   $OUT[28]=FALSE
+   $OUT[33]=FALSE
+   $OUT[34]=FALSE
+   $OUT[35]=FALSE
+   $OUT[36]=FALSE
+   $OUT[44]=FALSE
+   $OUT[57]=FALSE
+   $OUT[58]=FALSE
+   $OUT[59]=FALSE
+   $OUT[60]=FALSE
+   $OUT[61]=FALSE
+   $OUT[62]=FALSE
+   $OUT[63]=FALSE
+   $OUT[64]=FALSE
+   $OUT[65]=FALSE
+   $OUT[66]=FALSE
+   $OUT[67]=FALSE
+   $OUT[68]=FALSE
+   $OUT[69]=FALSE
+   $OUT[70]=FALSE
+   $OUT[71]=FALSE
+   $OUT[72]=FALSE
+   $OUT[73]=FALSE
+   $OUT[74]=FALSE
+   $OUT[75]=FALSE
+   $OUT[76]=FALSE
+   $OUT[77]=FALSE
+   $OUT[78]=FALSE
+   $OUT[79]=FALSE
+   $OUT[80]=FALSE
+   $OUT[81]=FALSE
+   $OUT[82]=FALSE
+   $OUT[83]=FALSE
+   $OUT[84]=FALSE
+   $OUT[85]=FALSE
+   $OUT[86]=FALSE
+   $OUT[87]=FALSE
+   $OUT[88]=FALSE
+   $OUT[89]=FALSE
+   $OUT[90]=FALSE
+   $OUT[91]=FALSE
+   $OUT[92]=FALSE
+   $OUT[93]=FALSE
+   $OUT[94]=FALSE
+   $OUT[95]=FALSE
+   $OUT[96]=FALSE
+   $OUT[97]=FALSE
+   $OUT[98]=FALSE
+   $OUT[99]=FALSE
+   $OUT[100]=FALSE
+   $OUT[101]=FALSE
+   $OUT[102]=FALSE
+   $OUT[103]=FALSE
+   $OUT[104]=FALSE
+   $OUT[105]=FALSE
+   $OUT[106]=FALSE
+   $OUT[107]=FALSE
+   $OUT[108]=FALSE
+   $OUT[109]=FALSE
+   $OUT[110]=FALSE
+   $OUT[111]=FALSE
+   $OUT[112]=FALSE
+   $OUT[113]=FALSE
+   $OUT[114]=FALSE
+   $OUT[115]=FALSE
+   $OUT[116]=FALSE
+   $OUT[117]=FALSE
+   $OUT[118]=FALSE
+   $OUT[119]=FALSE
+   $OUT[120]=FALSE
+   $OUT[121]=FALSE
+   $OUT[122]=FALSE
+   $OUT[123]=FALSE
+   $OUT[124]=FALSE
+   $OUT[125]=FALSE
+   $OUT[126]=FALSE
+   $OUT[127]=FALSE
+   $OUT[128]=FALSE
+   $OUT[129]=FALSE
+   $OUT[130]=FALSE
+   $OUT[131]=FALSE
+   $OUT[132]=FALSE
+   $OUT[133]=FALSE
+   $OUT[134]=FALSE
+   $OUT[135]=FALSE
+   $OUT[136]=FALSE
+   $OUT[137]=FALSE
+   $OUT[138]=FALSE
+   $OUT[139]=FALSE
+   $OUT[140]=FALSE
+   $OUT[141]=FALSE
+   $OUT[142]=FALSE
+   $OUT[143]=FALSE
+   $OUT[144]=FALSE
+   $OUT[145]=FALSE
+   $OUT[146]=FALSE
+   $OUT[147]=FALSE
+   $OUT[148]=FALSE
+   $OUT[149]=FALSE
+   $OUT[150]=FALSE
+   $OUT[151]=FALSE
+   $OUT[152]=FALSE
+   $OUT[153]=TRUE
+   $OUT[154]=TRUE
+   $OUT[155]=TRUE
+   $OUT[156]=TRUE
+   $OUT[157]=TRUE
+   $OUT[158]=TRUE
+   $OUT[159]=TRUE
+   $OUT[160]=TRUE
+   $OUT[161]=TRUE
+   $OUT[162]=TRUE
+   $OUT[163]=TRUE
+   $OUT[164]=TRUE
+   $OUT[165]=TRUE
+   $OUT[166]=TRUE
+   $OUT[167]=TRUE
+   $OUT[168]=TRUE
+   $OUT[189]=FALSE
+   $OUT[190]=FALSE
+   $OUT[235]=FALSE
+   First_Start_B1=TRUE
+   First_Start_B2=TRUE
+   First_Start_B3=TRUE
+   First_Start_B4=TRUE
+   
+END
+
+GLOBAL DEF Gripper_Ac()
+   $Out[190]=TRUE
+   $Out[189]=FALSE
+   CONTINUE
+   WAIT FOR $IN[40]==TRUE
+   CONTINUE
+   $OUT[44]=FALSE
+END
+
+GLOBAL DEF Gripper_Kapat()
+   ;$OUT[190]=FALSE
+   $OUT[189]=TRUE
+   CONTINUE
+   WAIT FOR $IN[39]==TRUE
+   CONTINUE
+   $OUT[189]=FALSE
+   CONTINUE
+   $OUT[44]=TRUE
+END
+
+GLOBAL DEF Parca_Hesaplama()
+   
+   ParcaGenislik=GI_ProductWith
+   ParcaUzunluk=GI_ProductLenght
+   ParcaTip=GI_ProductType
+   ParcaZOffset=GI_DropOFfs
+   
+   
+   IF (ParcaTip==10) or (ParcaTip==11) or (ParcaTip==21) THEN
+      
+      ParcaKalinlik=80
+      
+   ENDIF
+   
+   IF (ParcaTip==20) or (ParcaTip==22) THEN
+      
+      ParcaKalinlik=115
+      
+   ENDIF
+   
+   IF (ParcaTip==33) THEN
+      
+      ParcaKalinlik=169
+      
+   ENDIF
+   
+   
+   
+END
+
+GLOBAL DEF Pick_Point_Offs()
+   
+   XPick_Point=Pick_Point_Ref
+   
+   IF ( ParcaUzunluk==400 )THEN
+      
+      XPick_Point.X=XPick_Point.X
+      ParcaXOffset = 72
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==500 )THEN
+      
+      XPick_Point.X=XPick_Point.X
+      ParcaXOffset = 22
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==600 )THEN
+      
+      XPick_Point.X=XPick_Point.X
+      ParcaXOffset = -28
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==700 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 120
+      ParcaXOffset = 42
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==800 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 120
+      
+      ParcaXOffset = -8
+   ENDIF
+   
+   IF ( ParcaUzunluk==900 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 120
+      ParcaXOffset = -58
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1000 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 240
+      ParcaXOffset = 12
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1100 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 240
+      ParcaXOffset = -38
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1200 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 360
+      ParcaXOffset = 32
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1300 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 360
+      ParcaXOffset = -18
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1400 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 480
+      ParcaXOffset = 52
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1500 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 480
+      ParcaXOffset = 2
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1600 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 480
+      ParcaXOffset = -48
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1700 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 600
+      ParcaXOffset = 22
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1800 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 600
+      ParcaXOffset = -28
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==1900 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 720
+      ParcaXOffset = 42
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2000 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 720
+      ParcaXOffset = -8
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2100 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 720
+      ParcaXOffset = -58
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2200 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 840
+      ParcaXOffset = 12
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2300 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 840
+      ParcaXOffset = -38
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2400 )THEN
+      
+      IF (Dizilim==4) AND ($OUT[235]==TRUE) THEN
+         
+         XPick_Point.X=XPick_Point.X + 720
+         ParcaXOffset = -208
+      ELSE
+         XPick_Point.X=XPick_Point.X + 960
+         ParcaXOffset = 32
+      ENDIF
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2500 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 960
+      ParcaXOffset = -18
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2600 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 1080
+      ParcaXOffset = 52
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2700 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 1080
+      ParcaXOffset = 2
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2800 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 1080
+      ParcaXOffset = -48
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==2900 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 1200
+      ParcaXOffset = 22
+      
+   ENDIF
+   
+   IF ( ParcaUzunluk==3000 )THEN
+      
+      XPick_Point.X=XPick_Point.X + 1200
+      ParcaXOffset = -28
+      
+   ENDIF
+   
+   XPre_Pick_Point = XPick_Point
+   XPre_Pick_Point.z = XPick_Point.Z + 200
+   
+END
+
+GLOBAL DEF B1_Palet_Hesaplama()
+   
+   IF $IN[41]==TRUE THEN
+      Export_Palet()
+   ELSE
+      Domestic_Palet()
+   ENDIF
+   
+END
+
+GLOBAL DEF B2_Palet_Hesaplama()
+   
+   IF $IN[42]==TRUE THEN
+      Export_Palet()
+   ELSE
+      Domestic_Palet()
+   ENDIF
+   
+END
+
+GLOBAL DEF B3_Palet_Hesaplama()
+   
+   IF $IN[43]==TRUE THEN
+      Export_Palet()
+   ELSE
+      Domestic_Palet()
+   ENDIF
+   
+END
+
+GLOBAL DEF B4_Palet_Hesaplama()
+   
+   IF $IN[44]==TRUE THEN
+      Export_Palet()
+   ELSE
+      Domestic_Palet()
+   ENDIF
+   
+END
+
+GLOBAL DEF Export_Palet()
+   
+   IF ParcaGenislik==900  THEN
+      
+      IF (ParcaUzunluk>=400) AND (ParcaUzunluk<=1000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk*2)+40
+         PaletGenislik=(ParcaGenislik)+40
+         Dizilim=6
+      ENDIF
+      
+      IF (ParcaUzunluk>=1100) AND (ParcaUzunluk<=3000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik)+40
+         Dizilim=5
+      ENDIF
+      
+   ENDIF
+   
+   IF ParcaGenislik<>900 THEN
+      PaletUzunluk=(ParcaUzunluk)+40
+      PaletGenislik=(ParcaGenislik*2)+40
+      Dizilim=1
+   ENDIF
+   
+END
+
+GLOBAL DEF Domestic_Palet()
+   IF ParcaGenislik==200  THEN
+      
+      IF (ParcaUzunluk>=400) AND (ParcaUzunluk<=600) THEN
+         
+         PaletUzunluk=(ParcaUzunluk*2)+40
+         PaletGenislik=(ParcaGenislik*3)+40
+         Dizilim = 2
+      ENDIF
+      
+      IF (ParcaUzunluk>=700) AND (ParcaUzunluk<=3000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik*4)+100
+         Dizilim=4
+      ENDIF
+      
+   ENDIF
+   
+   IF ParcaGenislik==300  THEN
+      
+      IF (ParcaUzunluk>=400) AND (ParcaUzunluk<=600) THEN
+         
+         PaletUzunluk=(ParcaUzunluk*2)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=3
+      ENDIF
+      
+      IF (ParcaUzunluk>=700) AND (ParcaUzunluk<=2400) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik*4)+100
+         Dizilim=4
+      ENDIF
+      
+      IF (ParcaUzunluk>=2500) AND (ParcaUzunluk<=3000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=1
+      ENDIF
+      
+   ENDIF
+   
+   IF ParcaGenislik==400  THEN
+      
+      IF (ParcaUzunluk>=400) AND (ParcaUzunluk<=600) THEN
+         
+         PaletUzunluk=(ParcaUzunluk*2)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=3
+      ENDIF
+      
+      IF (ParcaUzunluk>=700) AND (ParcaUzunluk<=2400) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik*3)+40
+         Dizilim=7
+      ENDIF
+      
+      IF (ParcaUzunluk>=2500) AND (ParcaUzunluk<=3000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=1
+      ENDIF
+      
+   ENDIF
+   
+   IF ParcaGenislik==500  THEN
+      
+      IF (ParcaUzunluk>=400) AND (ParcaUzunluk<=600) THEN
+         
+         PaletUzunluk=(ParcaUzunluk*2)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=3
+      ENDIF
+      
+      IF (ParcaUzunluk>=700) AND (ParcaUzunluk<=3000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=1
+      ENDIF
+      
+   ENDIF
+   
+   IF ParcaGenislik==600  THEN
+      
+      IF (ParcaUzunluk>=400) AND (ParcaUzunluk<=600) THEN
+         
+         PaletUzunluk=(ParcaUzunluk*2)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=3
+      ENDIF
+      
+      IF (ParcaUzunluk>=700) AND (ParcaUzunluk<=3000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik*2)+40
+         Dizilim=1
+      ENDIF
+      
+   ENDIF
+   
+   IF ParcaGenislik==900  THEN
+      
+      IF (ParcaUzunluk>=400) AND (ParcaUzunluk<=1000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk*2)+40
+         PaletGenislik=(ParcaGenislik)+40
+         Dizilim=6
+      ENDIF
+      
+      IF (ParcaUzunluk>=1100) AND (ParcaUzunluk<=3000) THEN
+         
+         PaletUzunluk=(ParcaUzunluk)+40
+         PaletGenislik=(ParcaGenislik)+40
+         Dizilim=5
+      ENDIF
+      
+   ENDIF
+END
+
+GLOBAL DEF Parca_Dizilim(ParcaSirasi:IN,ParcaKatSayisi:IN,BolgeNo:IN)
+   
+   DECL INT ParcaSirasi
+   DECL INT ParcaKatSayisi
+   DECL INT BolgeNo
+   
+   IF (Dizilim==1) THEN
+      
+      SWITCH ParcaSirasi
+         
+         Case 1
+            ParcaX=0+ParcaXOffset
+            ParcaY=(ParcaGenislik/2)+13
+            ParcaAci=0
+         Case 2
+            ParcaX=0 - ParcaXOffset
+            ParcaY=(-ParcaGenislik/2)-13
+            ParcaAci=180
+         DEFAULT
+            
+      ENDSWITCH
+   ENDIF
+   
+   IF (Dizilim==2) THEN
+      
+      IF (BolgeNo <= 2) THEN
+         
+      SWITCH ParcaSirasi
+         
+         Case 1
+            ParcaX=(-ParcaUzunluk/2)+ParcaXOffset-10
+            ParcaY=ParcaGenislik+90
+            ParcaAci=0
+         Case 2
+             ParcaX=(ParcaUzunluk/2)+ParcaXOffset+12
+            ParcaY=ParcaGenislik+90
+            ParcaAci=0
+         Case 3
+            ParcaX=(-ParcaUzunluk/2)+ParcaXOffset-10
+            ParcaY=+50
+            ParcaAci=0
+         Case 4
+            ParcaX=(ParcaUzunluk/2)+ParcaXOffset+12
+            ParcaY=+50
+            ParcaAci=0
+         Case 5
+            ParcaX=(ParcaUzunluk/2)-ParcaXOffset+12
+            ParcaY=(-ParcaGenislik)
+            ParcaAci=180
+         Case 6
+            ParcaX=(-ParcaUzunluk/2)-ParcaXOffset-10
+            ParcaY=(-ParcaGenislik)
+            ParcaAci=180
+         DEFAULT
+            
+      ENDSWITCH
+      
+      ELSE
+         
+         SWITCH ParcaSirasi
+         
+         Case 1
+            ParcaX=(-ParcaUzunluk/2)+ParcaXOffset-10
+            ParcaY=ParcaGenislik
+            ParcaAci=0
+         Case 2
+             ParcaX=(ParcaUzunluk/2)+ParcaXOffset+12
+            ParcaY=ParcaGenislik
+            ParcaAci=0
+         Case 3
+            ParcaX=(-ParcaUzunluk/2)+ParcaXOffset-10
+            ParcaY=-50
+            ParcaAci=0
+         Case 4
+            ParcaX=(ParcaUzunluk/2)+ParcaXOffset+12
+            ParcaY=-50
+            ParcaAci=0
+         Case 5
+            ParcaX=(ParcaUzunluk/2)-ParcaXOffset+12
+            ParcaY=(-ParcaGenislik)-90
+            ParcaAci=180
+         Case 6
+            ParcaX=(-ParcaUzunluk/2)-ParcaXOffset-10
+            ParcaY=(-ParcaGenislik)-90
+            ParcaAci=180
+         DEFAULT
+            
+      ENDSWITCH
+         
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==3) THEN
+      
+      SWITCH ParcaSirasi
+         
+         Case 1
+            ParcaX=(-ParcaUzunluk/2)+(ParcaXOffset) -10 ;-10
+            ParcaY=(ParcaGenislik/2)+16
+            ParcaAci=0
+         Case 2
+            ParcaX=(ParcaUzunluk/2)+(ParcaXOffset) + 12 ;+10
+            ParcaY=(ParcaGenislik/2)+16
+            ParcaAci=0
+         Case 3
+            ParcaX=(ParcaUzunluk/2)-(ParcaXOffset) + 12  ;+10
+            ParcaY=(-ParcaGenislik/2)-16
+            ParcaAci=180
+         Case 4
+            ParcaX=(-ParcaUzunluk/2)-(ParcaXOffset) -10 ;-10
+            ParcaY=(-ParcaGenislik/2)-16
+            ParcaAci=180
+         DEFAULT
+            
+      ENDSWITCH
+   ENDIF
+   
+   IF (Dizilim==4) THEN
+      
+      SWITCH ParcaSirasi
+         
+         CASE 1
+            ParcaX = 0 + ParcaXOffset
+            ParcaY = (ParcaGenislik * 1.5) + 38
+            ParcaAci = 0
+         CASE 2
+            ParcaX = 0 - (ParcaXOffset)
+            ParcaY = (ParcaGenislik/2) + 12
+            ParcaAci = 180
+         CASE 3
+            ParcaX = 0 + (ParcaXOffset)
+            ParcaY = (-ParcaGenislik/2) - 12
+            ParcaAci = 0
+         CASE 4
+            ParcaX = 0 - (ParcaXOffset)
+            ParcaY = (-ParcaGenislik * (1.5)) - 36
+            ParcaAci = 180
+         DEFAULT
+            
+      ENDSWITCH
+   ENDIF
+   
+   IF (Dizilim==5) THEN
+      
+      SWITCH ParcaSirasi
+         
+         Case 1
+            ParcaX=0+ParcaXOffset
+            ParcaY=0
+            ParcaAci=0
+            
+         DEFAULT
+            
+      ENDSWITCH
+   ENDIF
+   
+   IF (Dizilim==6) THEN
+      
+      SWITCH ParcaSirasi
+         
+         Case 1
+            ParcaX=(ParcaUzunluk/2) + ParcaXOffset +13
+            ParcaY=0
+            ParcaAci=0
+         Case 2
+            ParcaX=(-ParcaUzunluk/2) - ParcaXOffset-13
+            ParcaY=0
+            ParcaAci=180
+            
+         DEFAULT
+            
+      ENDSWITCH
+      
+   ENDIF
+   
+   IF (Dizilim==7) THEN
+      
+      SWITCH ParcaSirasi
+         
+         Case 1
+            ParcaX=0+ParcaXOffset
+            ParcaY=ParcaGenislik+26
+            ParcaAci=0
+         Case 2
+            ParcaX=0-ParcaXOffset
+            ParcaY=0
+            ParcaAci=180
+         Case 3
+            ParcaX=0-ParcaXOffset
+            ParcaY=(-ParcaGenislik)-26
+            ParcaAci=180
+         DEFAULT
+            
+      ENDSWITCH
+   ENDIF
+   
+   ParcaZ=(ParcaKatSayisi-1)*(ParcaKalinlik)+GI_DropOffs
+   
+END
+
+GLOBAL DEF B1_Kat_Hesaplama()
+   
+   B1_ParcaSirasi=B1_ParcaSirasi+1
+   
+   IF (Dizilim==1) THEN
+      IF B1_ParcaSirasi==3 THEN
+         B1_ParcaSirasi=1
+         B1_ParcaKatSayisi=B1_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==2) THEN
+      IF B1_ParcaSirasi==7 THEN
+         B1_ParcaSirasi=1
+         B1_ParcaKatSayisi=B1_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==3) THEN
+      IF B1_ParcaSirasi==5 THEN
+         B1_ParcaSirasi=1
+         B1_ParcaKatSayisi=B1_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==4) THEN
+      IF B1_ParcaSirasi==5 THEN
+         B1_ParcaSirasi=1
+         B1_ParcaKatSayisi=B1_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==5) THEN
+      IF B1_ParcaSirasi==2 THEN
+         B1_ParcaSirasi=1
+         B1_ParcaKatSayisi=B1_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==6) THEN
+      IF B1_ParcaSirasi==3 THEN
+         B1_ParcaSirasi=1
+         B1_ParcaKatSayisi=B1_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==7) THEN
+      IF B1_ParcaSirasi==4 THEN
+         B1_ParcaSirasi=1
+         B1_ParcaKatSayisi=B1_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   GO_B1_Kat_Sayisi=B1_ParcaKatSayisi-1
+END
+
+GLOBAL DEF B2_Kat_Hesaplama()
+   
+   B2_ParcaSirasi=B2_ParcaSirasi+1
+   
+   IF (Dizilim==1) THEN
+      IF B2_ParcaSirasi==3 THEN
+         B2_ParcaSirasi=1
+         B2_ParcaKatSayisi=B2_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==2) THEN
+      IF B2_ParcaSirasi==7 THEN
+         B2_ParcaSirasi=1
+         B2_ParcaKatSayisi=B2_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==3) THEN
+      IF B2_ParcaSirasi==5 THEN
+         B2_ParcaSirasi=1
+         B2_ParcaKatSayisi=B2_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==4) THEN
+      IF B2_ParcaSirasi==5 THEN
+         B2_ParcaSirasi=1
+         B2_ParcaKatSayisi=B2_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==5) THEN
+      IF B2_ParcaSirasi==2 THEN
+         B2_ParcaSirasi=1
+         B2_ParcaKatSayisi=B2_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==6) THEN
+      IF B2_ParcaSirasi==3 THEN
+         B2_ParcaSirasi=1
+         B2_ParcaKatSayisi=B2_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==7) THEN
+      IF B2_ParcaSirasi==4 THEN
+         B2_ParcaSirasi=1
+         B2_ParcaKatSayisi=B2_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   GO_B2_Kat_Sayisi=B2_ParcaKatSayisi-1
+   
+END
+
+GLOBAL DEF B3_Kat_Hesaplama()
+   
+   B3_ParcaSirasi=B3_ParcaSirasi+1
+   
+   IF (Dizilim==1) THEN
+      IF B3_ParcaSirasi==3 THEN
+         B3_ParcaSirasi=1
+         B3_ParcaKatSayisi=B3_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==2) THEN
+      IF B3_ParcaSirasi==7 THEN
+         B3_ParcaSirasi=1
+         B3_ParcaKatSayisi=B3_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==3) THEN
+      IF B3_ParcaSirasi==5 THEN
+         B3_ParcaSirasi=1
+         B3_ParcaKatSayisi=B3_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==4) THEN
+      IF B3_ParcaSirasi==5 THEN
+         B3_ParcaSirasi=1
+         B3_ParcaKatSayisi=B3_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==5) THEN
+      IF B3_ParcaSirasi==2 THEN
+         B3_ParcaSirasi=1
+         B3_ParcaKatSayisi=B3_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==6) THEN
+      IF B3_ParcaSirasi==3 THEN
+         B3_ParcaSirasi=1
+         B3_ParcaKatSayisi=B3_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==7) THEN
+      IF B3_ParcaSirasi==4 THEN
+         B3_ParcaSirasi=1
+         B3_ParcaKatSayisi=B3_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   GO_B3_Kat_Sayisi=B3_ParcaKatSayisi-1
+   
+END
+
+GLOBAL DEF B4_Kat_Hesaplama()
+   
+   B4_ParcaSirasi=B4_ParcaSirasi+1
+   
+   IF (Dizilim==1) THEN
+      IF B4_ParcaSirasi==3 THEN
+         B4_ParcaSirasi=1
+         B4_ParcaKatSayisi=B4_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==2) THEN
+      IF B4_ParcaSirasi==7 THEN
+         B4_ParcaSirasi=1
+         B4_ParcaKatSayisi=B4_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==3) THEN
+      IF B4_ParcaSirasi==5 THEN
+         B4_ParcaSirasi=1
+         B4_ParcaKatSayisi=B4_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==4) THEN
+      IF B4_ParcaSirasi==5 THEN
+         B4_ParcaSirasi=1
+         B4_ParcaKatSayisi=B4_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==5) THEN
+      IF B4_ParcaSirasi==2 THEN
+         B4_ParcaSirasi=1
+         B4_ParcaKatSayisi=B4_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==6) THEN
+      IF B4_ParcaSirasi==3 THEN
+         B4_ParcaSirasi=1
+         B4_ParcaKatSayisi=B4_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   IF (Dizilim==7) THEN
+      IF B4_ParcaSirasi==4 THEN
+         B4_ParcaSirasi=1
+         B4_ParcaKatSayisi=B4_ParcaKatSayisi+1
+      ENDIF
+   ENDIF
+   
+   GO_B4_Kat_Sayisi=B4_ParcaKatSayisi-1
+   
+END
+
+GLOBAL DEF B1_Parca_Konum_Hesaplama()
+   
+   DECL BOOL ST_OK  ; S,T optimizasyonu basarili mi?
+   DECL FRAME SavedBase  ; Mevcut Base'i kaydet
+   DECL FRAME SavedTool  ; Mevcut Tool'u kaydet
+   DECL E6POS pTemp
+   
+   ; Mevcut Base ve Tool'u yedekle
+   SavedBase = $BASE
+   SavedTool = $TOOL
+   
+   ; B1 icin dogru koordinat sistemini ayarla (Tool 1, Base 1)
+   $TOOL = TOOL_DATA[1]
+   $BASE = BASE_DATA[1]
+   
+   XB1_Parca_Birakma.x=ParcaX
+   XB1_Parca_Birakma.y=ParcaY
+   XB1_Parca_Birakma.z=ParcaZ
+   XB1_Parca_Birakma.a=ParcaAci
+   
+   XB1_Pre_Parca_Birakma.x=XB1_Parca_Birakma.x
+   XB1_Pre_Parca_Birakma.y=XB1_Parca_Birakma.y
+   XB1_Pre_Parca_Birakma.z=XB1_Parca_Birakma.z+250
+   XB1_Pre_Parca_Birakma.a=XB1_Parca_Birakma.a
+   
+   XB1_Ara_Nokta.z=XB1_Parca_Birakma.z+250
+   IF (XB1_Ara_Nokta.z <= 1250) THEN
+      XB1_Ara_Nokta.z=1250
+   ENDIF
+   IF (XB1_Ara_Nokta.z >= 1800) THEN
+      XB1_Ara_Nokta.z=2145
+   ENDIF
+   XB1_Ara_Nokta.x=XB1_Parca_Birakma.x
+   XB1_Ara_Nokta.y=XB1_Parca_Birakma.y
+   IF (ParcaUzunluk==400) AND (B1_ParcaSirasi==4) THEN
+      XB1_Ara_Nokta.y = XB1_Ara_Nokta.y + 250
+      XB1_Ara_Nokta.X = XB1_Ara_Nokta.X + 250
+   ENDIF
+   IF (ParcaUzunluk==2400) AND (B1_ParcaSirasi==1) AND (B1_Parcakatsayisi==15) THEN
+      XB1_Ara_Nokta.y = XB1_Ara_Nokta.y -90
+      
+   ENDIF
+   XB1_Ara_Nokta.a=XB1_Parca_Birakma.a
+   
+   XB3_Ara_Nokta.x= XPick_Point.x
+   XB3_Ara_Nokta.y=XPick_Point.y
+   pTemp = BASE_DATA[1] : XB1_Ara_Nokta
+   ;XB3_Ara_Nokta.z=920
+   XB3_Ara_Nokta.Z = pTemp.Z
+   
+   ST_OK = Find_Optimal_ST(XB1_Ara_Nokta)
+   ST_OK = Find_Optimal_ST(XB1_Pre_Parca_Birakma)
+   
+   ;IF ( ParcaUzunluk==2400 ) AND ( Dizilim==4) THEN
+   ;XB3_Ara_Nokta.x=XB3_Ara_Nokta.x+240
+   
+   ;XB1_Ara_Nokta.x= XB1_Ara_Nokta.x - 100
+   ;ENDIF
+   
+END
+
+GLOBAL DEF B2_Parca_Konum_Hesaplama()
+   
+   DECL BOOL ST_OK  ; S,T optimizasyonu basarili mi?
+   DECL FRAME SavedBase  ; Mevcut Base'i kaydet
+   DECL FRAME SavedTool  ; Mevcut Tool'u kaydet
+   
+   ; Mevcut Base ve Tool'u yedekle
+   SavedBase = $BASE
+   SavedTool = $TOOL
+   
+   ; B1 icin dogru koordinat sistemini ayarla (Tool 1, Base 1)
+   $TOOL = TOOL_DATA[1]
+   $BASE = BASE_DATA[2]
+   
+   XB2_Parca_Birakma.x=ParcaX
+   XB2_Parca_Birakma.y=ParcaY
+   XB2_Parca_Birakma.z=ParcaZ
+   XB2_Parca_Birakma.a=ParcaAci
+   
+   XB2_Pre_Parca_Birakma.x=XB2_Parca_Birakma.x
+   XB2_Pre_Parca_Birakma.y=XB2_Parca_Birakma.y
+   XB2_Pre_Parca_Birakma.z=XB2_Parca_Birakma.z+250
+   XB2_Pre_Parca_Birakma.a=XB2_Parca_Birakma.a
+   
+   XB2_Ara_Nokta.x=XB2_Parca_Birakma.x
+   XB2_Ara_Nokta.y=XB2_PARCA_BIRAKMA.y
+   IF (Dizilim==4) AND (ParcaGenislik==300) AND (B2_ParcaSirasi==1) THEN
+      XB2_Ara_Nokta.y = XB2_Ara_Nokta.y - 40
+   ENDIF
+   XB2_Ara_Nokta.a=XB2_Parca_Birakma.a
+   XB2_Ara_Nokta.z=2145
+   
+   XB5_PRE_PARCA_BIRAKMA.x=XPick_Point.x
+   XB5_PRE_PARCA_BIRAKMA.y=XPick_Point.Y
+   XB5_PRE_PARCA_BIRAKMA.z=950
+   
+   Xaranokta_pickk2.x=XPick_Point.x
+   Xaranokta_pickk2.y=250
+   Xaranokta_pickk2.a=XB2_Parca_Birakma.a
+   Xaranokta_pickk2.z=2145
+   
+   ST_OK = Find_Optimal_ST(Xaranokta_pickk2)
+   
+   ;XB2_Ara_Nokta.S=Xaranokta_pickk2.S
+   ;XB2_Ara_Nokta.T=Xaranokta_pickk2.T
+   
+    ST_OK = Find_Optimal_ST(XB2_Ara_Nokta)
+   
+   ;IF ( ParcaUzunluk==2400 ) AND ( Dizilim==4) THEN
+   ;XB5_PRE_PARCA_BIRAKMA.x=XB5_PRE_PARCA_BIRAKMA.x+240
+   ;Xaranokta_pickk2.x=Xaranokta_pickk2.x+240
+   ;XB2_Ara_Nokta.x=XB2_Ara_Nokta.x + 100
+   ;
+   ;ENDIF
+   
+END
+
+GLOBAL DEF B3_Parca_Konum_Hesaplama()
+   
+   DECL BOOL ST_OK  ; S,T optimizasyonu basarili mi?
+   DECL FRAME SavedBase  ; Mevcut Base'i kaydet
+   DECL FRAME SavedTool  ; Mevcut Tool'u kaydet
+   DECL E6POS pTemp
+   
+   ; Mevcut Base ve Tool'u yedekle
+   SavedBase = $BASE
+   SavedTool = $TOOL
+   
+   ; B1 icin dogru koordinat sistemini ayarla (Tool 1, Base 1)
+   $TOOL = TOOL_DATA[1]
+   $BASE = BASE_DATA[3]
+   
+   XB3_Parca_Birakma.x=ParcaX
+   XB3_Parca_Birakma.y=ParcaY
+   XB3_Parca_Birakma.z=ParcaZ
+   XB3_Parca_Birakma.a=ParcaAci
+   
+   XB3_Pre_Parca_Birakma.x=XB3_Parca_Birakma.x
+   XB3_Pre_Parca_Birakma.y=XB3_Parca_Birakma.y
+   IF (Dizilim==1) AND (ParcaGenislik==600) AND (B3_ParcaSirasi==2) AND ((B3_Parcakatsayisi==16) OR (B3_Parcakatsayisi==17)) THEN
+      XB3_Pre_Parca_Birakma.y = XB3_Pre_Parca_Birakma.y + 140
+   ENDIF
+   XB3_Pre_Parca_Birakma.z=XB3_Parca_Birakma.z+250
+   XB3_Pre_Parca_Birakma.a=XB3_Parca_Birakma.a
+   
+   XB3_ARA_NOKT.a=XB3_Parca_Birakma.a
+   XB3_ARA_NOKT.z=XB3_Parca_Birakma.z+250
+   IF (XB3_ARA_NOKT.z <= 1250) THEN
+      XB3_ARA_NOKT.z=1250
+   ENDIF
+   IF (XB3_ARA_NOKT.z >= 1800) THEN
+      XB3_ARA_NOKT.z=2145
+   ENDIF
+   XB3_ARA_NOKT.x=XB3_Parca_Birakma.x
+   XB3_ARA_NOKT.y=XB3_Parca_Birakma.y
+   IF (Dizilim==4) AND (ParcaGenislik==300) AND (B3_ParcaSirasi==4) THEN
+      XB3_ARA_NOKT.y = XB3_ARA_NOKT.y + 85
+   ENDIF
+   IF (Dizilim==1) AND (ParcaGenislik==600) AND (B3_ParcaSirasi==2) THEN
+      XB3_ARA_NOKT.y = XB3_ARA_NOKT.y + 140
+   ENDIF
+   
+   XB5_PARCA_BIRAKMA.x=XPick_Point.x
+   XB5_PARCA_BIRAKMA.y=XPick_Point.y
+   pTemp = BASE_DATA[3] : XB3_ARA_NOKT
+   XB5_PARCA_BIRAKMA.Z = pTemp.Z
+   
+   ST_OK = Find_Optimal_ST(XB3_ARA_NOKT)
+   ST_OK = Find_Optimal_ST(XB3_Pre_Parca_Birakma)
+   
+   
+   ;Xb3_arankta.x=XPick_Point.x
+   ;Xb3_arankta.y=XPick_Point.y-200
+   ;Xb3_arankta.z=920
+   
+   ;IF ( ParcaUzunluk==2400 ) AND ( Dizilim==4) THEN
+   ;XB5_PARCA_BIRAKMA.x=XB5_PARCA_BIRAKMA.x+240
+   ;Xb3_arankta.x=Xb3_arankta.x+240
+   ;XB3_ARA_NOKT.x=XB3_ARA_NOKT.x - 100
+   ;ENDIF
+   
+END
+
+GLOBAL DEF B4_Parca_Konum_Hesaplama()
+
+   DECL BOOL ST_OK  ; S,T optimizasyonu basarili mi?
+   DECL FRAME SavedBase  ; Mevcut Base'i kaydet
+   DECL FRAME SavedTool  ; Mevcut Tool'u kaydet
+   
+   ; Mevcut Base ve Tool'u yedekle
+   SavedBase = $BASE
+   SavedTool = $TOOL
+   
+   ; B1 icin dogru koordinat sistemini ayarla (Tool 1, Base 1)
+   $TOOL = TOOL_DATA[1]
+   $BASE = BASE_DATA[4]
+   
+   XB4_PARCA_BIRAKMA.x=ParcaX
+   XB4_PARCA_BIRAKMA.y=ParcaY
+   XB4_PARCA_BIRAKMA.z=ParcaZ
+   XB4_PARCA_BIRAKMA.a=ParcaAci
+   
+   XB4_PARCA_BIRAKMA.S=$POS_ACT.S
+   XB4_PARCA_BIRAKMA.T=$POS_ACT.T
+   
+   IF (ABS(XB4_PARCA_BIRAKMA.a) > 179.0) THEN
+      XB4_PARCA_BIRAKMA.a = -180
+      XB4_PARCA_BIRAKMA.T = XB4_PARCA_BIRAKMA.T B_OR 32
+   ENDIF
+   
+   XB4_PRE_PARCA_BIRAKMA.x=XB4_PARCA_BIRAKMA.x
+   XB4_PRE_PARCA_BIRAKMA.y=XB4_PARCA_BIRAKMA.y
+   XB4_PRE_PARCA_BIRAKMA.z=XB4_PARCA_BIRAKMA.z+230
+   IF (Dizilim==1) AND (ParcaGenislik==600) AND (B4_ParcaSirasi==2) AND (B4_Parcakatsayisi==17) THEN
+      XB4_PRE_PARCA_BIRAKMA.y = XB4_PRE_PARCA_BIRAKMA.y + 40
+   ENDIF
+   XB4_PRE_PARCA_BIRAKMA.a=XB4_PARCA_BIRAKMA.a
+   
+   XB4_PRE_PARCA_BIRAKMA.S=XB4_PARCA_BIRAKMA.S
+   XB4_PRE_PARCA_BIRAKMA.T=XB4_PARCA_BIRAKMA.T
+   
+   XB4_ARA_NOKTA.a=XB4_PARCA_BIRAKMA.a
+   XB4_ARA_NOKTA.x=XB4_PARCA_BIRAKMA.x
+   XB4_ARA_NOKTA.y=XB4_PARCA_BIRAKMA.y
+   IF (Dizilim==1) AND (ParcaGenislik==600) AND (B4_ParcaSirasi==2) THEN
+      XB4_ARA_NOKTA.y = XB4_ARA_NOKTA.y + 90
+   ENDIF
+   XB4_ARA_NOKTA.z=2145
+   
+   ;XB4_ARA_NOKTA.S=XB4_PARCA_BIRAKMA.S
+   ;XB4_ARA_NOKTA.T=XB4_PARCA_BIRAKMA.T
+   ST_OK = Find_Optimal_ST(XB4_ARA_NOKTA)
+   
+   Xb4_pickup.x=XPick_Point.x
+   Xb4_pickup.y=XPick_Point.y
+   Xb4_pickup.z=940
+   
+   Xb4_pickup.S=$POS_ACT.S
+   Xb4_pickup.T=$POS_ACT.T
+   Xb4_pickup.a=XB4_PARCA_BIRAKMA.a
+   
+   IF (ABS(Xb4_pickup.a) > 179.0) THEN
+      Xb4_pickup.a = -180
+      Xb4_pickup.T = Xb4_pickup.T B_OR 32
+   ENDIF
+   
+   Xb4_home_aranokta.a=XB4_Parca_Birakma.a
+   Xb4_home_aranokta.x=XPick_Point.x
+   Xb4_home_aranokta.y=XB4_PARCA_BIRAKMA.y
+   Xb4_home_aranokta.z=2145
+   
+   Xb4_home_aranokta.S=XB4_PARCA_BIRAKMA.S
+   Xb4_home_aranokta.T=XB4_PARCA_BIRAKMA.T
+   
+   IF ( ParcaUzunluk==2400 ) AND ( Dizilim==4) THEN
+      Xb4_pickup.x=Xb4_pickup.x+240
+      Xb4_home_aranokta.x=Xb4_home_aranokta.x+240
+      
+      XB4_ARA_NOKTA.x = XB4_ARA_NOKTA.x + 100
+      
+   ENDIF
+   
+   ;ST_OK = Find_Optimal_ST(Xb4_home_aranokta)
+   ;
+   ;XB4_ARA_NOKTA.S=Xb4_home_aranokta.S
+   ;XB4_ARA_NOKTA.T=Xb4_home_aranokta.T
+   
+END
+
+GLOBAL DEF Parca_Agirlik_Ekleme()
+   
+   IF (ParcaGenislik==200) AND (ParcaTip==10) THEN
+      ParcaAgirlik=15
+   ENDIF
+   IF (ParcaGenislik==200) AND (ParcaTip==11) THEN
+      ParcaAgirlik=15
+   ENDIF
+   IF (ParcaGenislik==200) AND (ParcaTip==20) THEN
+      ParcaAgirlik=30
+   ENDIF
+   IF (ParcaGenislik==200) AND (ParcaTip==21) THEN
+      ParcaAgirlik=30
+   ENDIF
+   IF (ParcaGenislik==200) AND (ParcaTip==22) THEN
+      ParcaAgirlik=30
+   ENDIF
+   IF (ParcaGenislik==200) AND (ParcaTip==33) THEN
+      ParcaAgirlik=40
+   ENDIF
+   
+   IF (ParcaGenislik==300) AND (ParcaTip==10) THEN
+      ParcaAgirlik=25
+   ENDIF
+   IF (ParcaGenislik==300) AND (ParcaTip==11) THEN
+      ParcaAgirlik=25
+   ENDIF
+   IF (ParcaGenislik==300) AND (ParcaTip==20) THEN
+      ParcaAgirlik=40
+   ENDIF
+   IF (ParcaGenislik==300) AND (ParcaTip==21) THEN
+      ParcaAgirlik=40
+   ENDIF
+   IF (ParcaGenislik==300) AND (ParcaTip==22) THEN
+      ParcaAgirlik=45
+   ENDIF
+   IF (ParcaGenislik==300) AND (ParcaTip==33) THEN
+      ParcaAgirlik=65
+   ENDIF
+   
+   IF (ParcaGenislik==400) AND (ParcaTip==10) THEN
+      ParcaAgirlik=30
+   ENDIF
+   IF (ParcaGenislik==400) AND (ParcaTip==11) THEN
+      ParcaAgirlik=30
+   ENDIF
+   IF (ParcaGenislik==400) AND (ParcaTip==20) THEN
+      ParcaAgirlik=46
+   ENDIF
+   IF (ParcaGenislik==400) AND (ParcaTip==21) THEN
+      ParcaAgirlik=46
+   ENDIF
+   IF (ParcaGenislik==400) AND (ParcaTip==22) THEN
+      ParcaAgirlik=60
+   ENDIF
+   IF (ParcaGenislik==400) AND (ParcaTip==33) THEN
+      ParcaAgirlik=90
+   ENDIF
+   
+   IF (ParcaGenislik==500) AND (ParcaTip==10) THEN
+      ParcaAgirlik=40
+   ENDIF
+   
+   IF (ParcaGenislik==500) AND (ParcaTip==11) THEN
+      ParcaAgirlik=40
+   ENDIF
+   IF (ParcaGenislik==500) AND (ParcaTip==20)  THEN
+      ParcaAgirlik=66
+   ENDIF
+   IF (ParcaGenislik==500) AND  (ParcaTip==21) THEN
+      ParcaAgirlik=66
+   ENDIF
+   IF (ParcaGenislik==500) AND (ParcaTip==22) THEN
+      ParcaAgirlik=75
+   ENDIF
+   IF (ParcaGenislik==500) AND (ParcaTip==33) THEN
+      ParcaAgirlik=110
+   ENDIF
+   
+   IF (ParcaGenislik==600) AND (ParcaTip==10) THEN
+      ParcaAgirlik=45
+   ENDIF
+   IF (ParcaGenislik==600) AND (ParcaTip==11) THEN
+      ParcaAgirlik=45
+   ENDIF
+   IF (ParcaGenislik==600) AND (ParcaTip==20)  THEN
+      ParcaAgirlik=80
+   ENDIF
+   IF (ParcaGenislik==600) AND (ParcaTip==21) THEN
+      ParcaAgirlik=80
+   ENDIF
+   IF (ParcaGenislik==600) AND (ParcaTip==22) THEN
+      ParcaAgirlik=90
+   ENDIF
+   IF (ParcaGenislik==600) AND (ParcaTip==33) THEN
+      ParcaAgirlik=135
+   ENDIF
+   
+   IF (ParcaGenislik==900) AND (ParcaTip==10) THEN
+      ParcaAgirlik=55
+   ENDIF
+   IF (ParcaGenislik==900) AND (ParcaTip==11) THEN
+      ParcaAgirlik=70
+   ENDIF
+   IF (ParcaGenislik==900) AND (ParcaTip==20) THEN
+      ParcaAgirlik=105
+   ENDIF
+   IF (ParcaGenislik==900) AND (ParcaTip==21) THEN
+      ParcaAgirlik=120
+   ENDIF
+   IF (ParcaGenislik==900) AND (ParcaTip==22) THEN
+      ParcaAgirlik=135
+   ENDIF
+   IF (ParcaGenislik==900) AND (ParcaTip==33) THEN
+      ParcaAgirlik=200
+   ENDIF
+   LOAD_DATA[1].m=130+ParcaAgirlik
+END
+
+GLOBAL DEF Safe_Go_Home()
+   
+   DECL E6POS UpPos
+   DECL E6POS PreHomePos
+   DECL E6POS HomeCartPos
+   DECL INT ErrStatus
+   
+   BAS(#INITMOV,0)
+   BAS(#TOOL, 1)
+   BAS(#BASE, 0)
+   
+   ErrStatus = 0
+   
+   IF $IN_HOME THEN
+      MsgNotify("Robot is already at Home", "SafeHome")
+      RETURN
+   ENDIF
+   
+   MsgNotify("Moving Home via Safe Height...", "SafeHome")
+   
+   HomeCartPos = FORWARD(XHOME, ErrStatus)
+   
+   IF ErrStatus == 0 THEN
+      
+      PTP $POS_ACT
+      
+      UpPos = $POS_ACT
+      
+      UpPos.Z = 1200
+      
+      IF $POS_ACT.Z < 1200 THEN
+         
+         LIN UpPos
+      ENDIF
+      
+      PreHomePos = HomeCartPos
+      
+      PreHomePos.Z = 1200
+      
+      PTP PreHomePos
+      
+      PTP XHOME
+      
+      MsgNotify("Robot Home reached successfully", "SafeHome")
+      
+   ELSE
+      
+      MsgNotify("Error calc Home pos. Moving PTP XHOME direct.", "Error")
+      
+      PTP XHOME
+   ENDIF
+   
+END
+
+GLOBAL DEF Palet_Dom_Exp_Hesaplama()
+   
+   IF ($IN[41]==TRUE) or ($IN[42]==TRUE) or ($IN[43]==TRUE) or ($IN[44]==TRUE) THEN
+      Export_Palet()
+   ELSE
+      Domestic_Palet()
+   ENDIF
+   
+END
+
+GLOBAL DEFFCT BOOL Find_Optimal_ST(TargetPos :OUT)
+   
+   DECL E6POS TargetPos        ; Hedef pozisyon (S,T guncellenecek)
+   DECL E6POS TestPos          ; Test icin kullanilacak kopya
+   DECL E6AXIS RefAxis         ; Referans eksen acilari (mevcut pozisyon)
+   DECL E6AXIS CalcAxis        ; Hesaplanan eksen acilari
+   DECL INT nErr               ; INVERSE hata kodu
+   DECL INT S_Test             ; Test edilecek S degeri (0-7)
+   DECL INT T_Test             ; Test edilecek T degeri (0-63)
+   DECL INT Best_S             ; En iyi S degeri
+   DECL INT Best_T             ; En iyi T degeri
+   DECL REAL AxisDistance      ; Mevcut konfigurasyonun eksen mesafesi
+   DECL REAL MinDistance       ; Minimum bulunan mesafe
+   DECL BOOL FoundValid        ; Gecerli konfigurasyon bulundu mu?
+   DECL BOOL WithinLimits      ; Eksen limitleri icinde mi?
+   
+   ;Baslangic degerleri
+   RefAxis = $AXIS_ACT         ; Mevcut eksen acilarini referans al
+   MinDistance = 999999.0      ; Cok buyuk bir degerle basla
+   FoundValid = FALSE
+   Best_S = 2                  ; Varsayilan degerler (orijinal)
+   Best_T = 42                 ; Yuksek pozisyon icin T=42
+   
+   ;Test pozisyonunu hazirla (orijinali kopyala)
+   TestPos = TargetPos
+   
+   ;-----------------------------------------------------------
+   ;TUM S,T KOMBINASYONLARINI DENE
+   ;-----------------------------------------------------------
+   FOR S_Test = 0 TO 7
+      FOR T_Test = 0 TO 63
+         
+         ;Test pozisyonuna S,T degerlerini ata
+         TestPos.S = S_Test
+         TestPos.T = T_Test
+         
+         ;INVERSE ile erisilebilirlik kontrolu
+         nErr = 0
+         CalcAxis = INVERSE(TestPos, RefAxis, nErr)
+         
+         ;Eger INVERSE basarili ise
+         IF nErr == 0 THEN
+            
+            ;----------------------------------------------------
+            ;YAZILIM LIMIT KONTROLU (Software Limits)
+            ;ONEMLI: 5 derece buffer ile limit kontrolu yapilir
+            ;Bu sayede trajektori sirasinda limite carpilmaz
+            ;----------------------------------------------------
+            WithinLimits = TRUE
+            
+            ;A1 limitleri (5 derece buffer)
+            IF (CalcAxis.A1 < ($SOFTN_END[1] + 5.0)) OR (CalcAxis.A1 > ($SOFTP_END[1] - 5.0)) THEN
+               WithinLimits = FALSE
+            ENDIF
+            
+            ;A2 limitleri (5 derece buffer)
+            IF (CalcAxis.A2 < ($SOFTN_END[2] + 5.0)) OR (CalcAxis.A2 > ($SOFTP_END[2] - 5.0)) THEN
+               WithinLimits = FALSE
+            ENDIF
+            
+            ;A3 limitleri (5 derece buffer)
+            IF (CalcAxis.A3 < ($SOFTN_END[3] + 5.0)) OR (CalcAxis.A3 > ($SOFTP_END[3] - 5.0)) THEN
+               WithinLimits = FALSE
+            ENDIF
+            
+            ;A4 limitleri (5 derece buffer)
+            IF (CalcAxis.A4 < ($SOFTN_END[4] + 5.0)) OR (CalcAxis.A4 > ($SOFTP_END[4] - 5.0)) THEN
+               WithinLimits = FALSE
+            ENDIF
+            
+            ;A5 limitleri (5 derece buffer)
+            IF (CalcAxis.A5 < ($SOFTN_END[5] + 5.0)) OR (CalcAxis.A5 > ($SOFTP_END[5] - 5.0)) THEN
+               WithinLimits = FALSE
+            ENDIF
+            
+            ;A6 limitleri (5 derece buffer)
+            IF (CalcAxis.A6 < ($SOFTN_END[6] + 5.0)) OR (CalcAxis.A6 > ($SOFTP_END[6] - 5.0)) THEN
+               WithinLimits = FALSE
+            ENDIF
+            
+            ;Sadece limitler icinde olan konfigurasyonlari kabul et
+            IF WithinLimits THEN
+               ;Eksen acilarinin MEVCUT POZISYONA olan toplam mesafesini hesapla
+               ;Bu sayede robot minimum hareket yapar (360 derece donmez)
+               AxisDistance = ABS(CalcAxis.A1 - RefAxis.A1) + ABS(CalcAxis.A2 - RefAxis.A2) + ABS(CalcAxis.A3 - RefAxis.A3) + ABS(CalcAxis.A4 - RefAxis.A4) + ABS(CalcAxis.A5 - RefAxis.A5) + ABS(CalcAxis.A6 - RefAxis.A6)
+               
+               ;Bu konfigurasyon daha iyi mi?
+               IF AxisDistance < MinDistance THEN
+                  MinDistance = AxisDistance
+                  Best_S = S_Test
+                  Best_T = T_Test
+                  FoundValid = TRUE
+               ENDIF
+            ENDIF
+            
+         ENDIF
+         
+      ENDFOR
+   ENDFOR
+   
+   ;-----------------------------------------------------------
+   ;SONUC: EN IYI KONFIGURASYONU UYGULA
+   ;-----------------------------------------------------------
+   IF FoundValid THEN
+      TargetPos.S = Best_S
+      TargetPos.T = Best_T
+      RETURN TRUE
+   ELSE
+      ;Hicbir konfigurasyon bulunamadi - varsayilan degerleri kullan
+      TargetPos.S = 2
+      TargetPos.T = 42
+      RETURN FALSE
+   ENDIF
+   
+ENDFCT
+
+GLOBAL DEF Kat_Kontrol_B1()
+   B1_Early_Layer_Check = TRUE
+IF (GI_FloorNmber > 0) THEN
+      IF (B1_ParcaSirasi >= B1_MaxParcaInLayer) THEN
+      IF (B1_ParcaKatSayisi >= GI_FloorNmber) THEN
+         MsgLoop("HATA: Bolge 1 dolu! PLC Kat Limiti Asildi.")
+         B1_Zone_Full = TRUE
+         $OUT[33]=TRUE
+      ENDIF
+      ENDIF
+   ELSE
+     
+     IF (B1_ParcaSirasi >= B1_MaxParcaInLayer) THEN
+         IF $IN[41]==TRUE THEN  ; ihracat
+          IF (B1_ParcaKatSayisi == 17) OR ((B1_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+            MsgLoop("HATA: Bolge 1 dolu! MAX kat asildi. PLC reset bekleniyor.")
+            B1_Zone_Full = TRUE
+            $OUT[33]=TRUE
+          ENDIF
+          GOTO B1NOKTASI
+          ENDIF
+      
+            ;ELSE  ; yurtici
+       
+          IF (B1_ParcaKatSayisi == 15) OR ((B1_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+            MsgLoop("HATA: Bolge 1 dolu! MAX kat asildi. PLC reset bekleniyor.")
+            B1_Zone_Full = TRUE
+            $OUT[33]=TRUE 
+          ENDIF
+      ENDIF
+       B1NOKTASI:
+  ENDIF 
+END
+
+GLOBAL DEF Kat_Kontrol_B2()
+
+  B2_Early_Layer_Check = TRUE
+ IF (GI_FloorNmber > 0) THEN
+      IF (B2_ParcaSirasi >= B2_MaxParcaInLayer) THEN
+      IF (B2_ParcaKatSayisi == GI_FloorNmber) THEN
+         MsgLoop("HATA: Bolge 1 dolu! PLC Kat Limiti Asildi.")
+         B1_Zone_Full = TRUE
+         $OUT[34]=TRUE
+      ENDIF
+      ENDIF
+   ELSE
+    
+    IF (B2_ParcaSirasi >= B2_MaxParcaInLayer) THEN
+      IF $IN[42]==TRUE THEN  ; ihracat
+         IF (B2_ParcaKatSayisi == 17) OR ((B2_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+            MsgLoop("HATA: Bolge 2 dolu! MAX kat asildi. PLC reset bekleniyor.")
+            B2_Zone_Full = TRUE
+            $OUT[34]=TRUE
+         ENDIF
+         GOTO B2NOKTASI
+       ENDIF
+      ;ELSE  ; yurtici
+         IF (B2_ParcaKatSayisi == 15) OR ((B2_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+            MsgLoop("HATA: Bolge 2 dolu! MAX kat asildi. PLC reset bekleniyor.")
+            B2_Zone_Full = TRUE
+            $OUT[34]=TRUE
+         ENDIF
+         
+       ENDIF
+         B2NOKTASI:
+    ENDIF
+         
+END
+
+GLOBAL DEF Kat_Kontrol_B3()
+   
+   B3_Early_Layer_Check = TRUE
+  IF (GI_FloorNmber > 0) THEN
+      IF (B3_ParcaSirasi >= B3_MaxParcaInLayer) THEN
+      IF (B3_ParcaKatSayisi == GI_FloorNmber) THEN
+         MsgLoop("HATA: Bolge 1 dolu! PLC Kat Limiti Asildi.")
+         B1_Zone_Full = TRUE
+         $OUT[35]=TRUE
+      ENDIF
+      ENDIF
+   ELSE
+     
+     IF (B3_ParcaSirasi >= B3_MaxParcaInLayer) THEN
+      IF $IN[43]==TRUE THEN  ; ihracat
+         IF (B3_ParcaKatSayisi == 17) OR ((B3_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+            MsgLoop("HATA: Bolge 3 dolu! MAX kat asildi. PLC reset bekleniyor.")
+            B3_Zone_Full = TRUE
+            $OUT[35]=TRUE
+         ENDIF
+         GOTO B3NOKTASI
+       ENDIF
+      ;ELSE  ; yurtici
+         IF (B3_ParcaKatSayisi == 15) OR ((B3_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+            MsgLoop("HATA: Bolge 3 dolu! MAX kat asildi. PLC reset bekleniyor.")
+            B3_Zone_Full = TRUE
+            $OUT[35]=TRUE
+         ENDIF
+        ENDIF
+         B3NOKTASI:
+    ENDIF 
+         
+END
+
+GLOBAL DEF Kat_Kontrol_B4()
+ 
+B4_Early_Layer_Check = TRUE  
+IF (GI_FloorNmber > 0) THEN
+      IF (B4_ParcaSirasi >= B4_MaxParcaInLayer) THEN
+      IF (B4_ParcaKatSayisi == GI_FloorNmber) THEN
+         MsgLoop("HATA: Bolge 1 dolu! PLC Kat Limiti Asildi.")
+         B1_Zone_Full = TRUE
+         $OUT[36]=TRUE
+      ENDIF
+      ENDIF
+   ELSE
+ 
+ 
+   IF (B4_ParcaSirasi >= B4_MaxParcaInLayer) THEN
+     IF $IN[44]==TRUE THEN  ; ihracat
+       IF (B4_ParcaKatSayisi == 17) OR ((B4_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+         MsgLoop("HATA: Bolge 4 dolu! MAX kat asildi. PLC reset bekleniyor.")
+         B4_Zone_Full = TRUE
+         $OUT[36]=TRUE
+       ENDIF
+       GOTO B4NOKTASI
+       ENDIF
+       
+         ;ELSE  ; yurtici
+    
+       IF (B4_ParcaKatSayisi == 15) OR ((B4_ParcaKatSayisi == 10) AND (ParcaTip==33)) THEN
+         MsgLoop("HATA: Bolge 4 dolu! MAX kat asildi. PLC reset bekleniyor.")
+         B4_Zone_Full = TRUE
+         $OUT[36]=TRUE
+       ENDIF
+      
+     ENDIF
+       B4NOKTASI: 
+   ENDIF  
+     
+END
+
+GLOBAL DEF Gripper_Kapat_Cmd()
+  $OUT[189]=TRUE  ; Kapat bobini AKTIF
+  $OUT[190]=FALSE ; Ac bobini PASIF
+  
+  ; Yuku tanimla (Simulasyon ve tork takibi icin)
+  Parca_Agirlik_Ekleme() 
+END
+
+GLOBAL DEF Parca_Alindi_Sinyalleri()
+  $OUT[189]=FALSE 
+  $OUT[44]=TRUE   
+END

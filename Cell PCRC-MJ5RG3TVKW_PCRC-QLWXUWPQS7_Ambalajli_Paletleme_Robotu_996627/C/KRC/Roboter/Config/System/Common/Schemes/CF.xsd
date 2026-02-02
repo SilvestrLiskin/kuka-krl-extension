@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="NGVersion.xsd"/>
+   <xs:include schemaLocation="Units.xsd"/>
+   <xs:complexType name="tCFComponent">
+      <xs:attribute name="TaskFreq" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="TaskOffsetNanoseconds" type="xs:unsignedLong" use="optional" default="0"/>
+      <xs:attribute name="TaskPrio" type="xs:unsignedShort" use="required">
+         <xs:annotation>
+            <xs:documentation>Taskprioritaet. 0 fuer hoechste Prioritaet</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ConfigFile" type="strFileNameOrEmptyType" use="required"/>
+      <xs:attribute name="Inline" type="xs:boolean">
+         <xs:annotation>
+            <xs:documentation>Soll die Komponente als echte Task oder Inline-Task betrieben werden? Muss von der Komponente unterstuetzt werden. Standard: Inline-Task.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:simpleType name="tCycleOffsetForward">
+      <xs:restriction base="xs:integer">
+         <xs:minInclusive value="0"/>
+         <xs:maxInclusive value="256"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="tCycleOffsetBackward">
+      <xs:restriction base="xs:integer">
+         <xs:minInclusive value="-256"/>
+         <xs:maxInclusive value="0"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="tCyclic">
+      <xs:attribute name="OffsetSyncToAT" type="tCycleOffsetBackward" use="optional">
+         <xs:annotation>
+            <xs:documentation>Obsolet: Der Datenuebernahme-Zeitpunkt vom CF zum AT soll nicht mehr konfiguriert, sondern im Code bestimmt werden.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="OffsetDataFromAT" type="tCycleOffsetForward" use="required"/>
+   </xs:complexType>
+   <xs:simpleType name="tModuleType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="CFCore"/>
+         <xs:enumeration value="EtherCATAgent"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="tModule">
+      <xs:sequence>
+         <xs:element name="Cyclic" type="tCyclic"/>
+         <xs:element name="Component" type="tCFComponent"/>
+         <xs:element name="Dispatcher" type="tCFComponent" minOccurs="0"/>
+         <xs:element name="EA" type="tCFComponent" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="ModuleType" type="tModuleType" use="required"/>
+   </xs:complexType>
+   <xs:element name="ControllerFramework">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="Module" type="tModule" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+         <xs:attribute name="CPUAffinity" type="xs:unsignedShort" use="required">
+            <xs:annotation>
+               <xs:documentation>CPU-Affinitaets-Index (0: System Core, 1: Controller Core ...)</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="BusID" type="xs:string" use="required">
+            <xs:annotation>
+               <xs:documentation>Bus-ID fuer CF-Instanz (ECAT-CTRLBUS ...)</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="DiagOpt" type="xs:integer" default="0"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ControllerFrameworks">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="ControllerFramework"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CF">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="Version" minOccurs="0"/>
+            <xs:element ref="ControllerFrameworks"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

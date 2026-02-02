@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mit XMLSpy v2008 sp1 (http://www.altova.com) von KUKA Roboter GmbH (KUKA Roboter GmbH) bearbeitet -->
+<!--W3C Schema erstellt mit XMLSpy v2008 sp1 (http://www.altova.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="ListenOnCharDevs" type="xs:boolean"></xs:element>
+
+    <xs:element name="SpProxy">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="ListenOnCharDevs"/>
+         </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+</xs:schema>

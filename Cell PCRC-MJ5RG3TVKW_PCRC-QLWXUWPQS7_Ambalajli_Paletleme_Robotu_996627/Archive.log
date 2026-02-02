@@ -1,0 +1,497 @@
+29/01/2026 08:26:43.26 [Verbose] -------------------------------
+29/01/2026 08:26:43.26 [Information] Start create archive 'C:\Windows\TEMP\tmpED26.tmp' with configuration: 'All'.
+29/01/2026 08:26:43.26 [Verbose] Store files:
+29/01/2026 08:26:43.72 [Information] The Rdc data is successfully written to HD!
+29/01/2026 08:26:43.73 [Verbose] 
+29/01/2026 08:26:43.73 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\'.
+29/01/2026 08:26:43.73 [Verbose] 
+29/01/2026 08:26:43.73 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\cell.src'.
+29/01/2026 08:26:43.73 [Verbose] 
+29/01/2026 08:26:43.73 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\Mada'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Mada\$machine.dat'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Mada\$robcor.dat'.
+29/01/2026 08:26:43.73 [Verbose] 
+29/01/2026 08:26:43.73 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\Program'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Program\CollDetect_UserAction.dat'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Program\CollDetect_UserAction.src'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Program\masref_user.dat'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Program\masref_user.src'.
+29/01/2026 08:26:43.73 [Verbose] 
+29/01/2026 08:26:43.73 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\Program\Parca_Al'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Program\Parca_Al\ParcaAl.dat'.
+29/01/2026 08:26:43.73 [Verbose] Add file: 'KRC\R1\Program\Parca_Al\ParcaAl.src'.
+29/01/2026 08:26:43.73 [Verbose] 
+29/01/2026 08:26:43.74 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\Program\Parca_Birakma'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B1_Parca_Birakma.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B1_Parca_Birakma.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B2_Parca_Birakma.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B2_Parca_Birakma.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B3_Parca_Birakma.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B3_Parca_Birakma.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B4_Parca_Birakma.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Parca_Birakma\B4_Parca_Birakma.src'.
+29/01/2026 08:26:43.74 [Verbose] 
+29/01/2026 08:26:43.74 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\Program\Sub_Rutinler'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Alt_Programlar.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Alt_Programlar.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_1_Palet_Ort.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_1_Palet_Ort.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_2_Palet_Ort.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_2_Palet_Ort.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_3_Palet_Ort.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_3_Palet_Ort.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_4_Palet_Ort.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Bolge_4_Palet_Ort.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Global_Variables.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Global_Variables.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Go_Home.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Go_Home.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Service_Pos.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\Program\Sub_Rutinler\Service_Pos.src'.
+29/01/2026 08:26:43.74 [Verbose] 
+29/01/2026 08:26:43.74 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\System'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\$config.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\bas.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\collmonlib.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\collmonlib.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\Global_Points.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\ir_stopm.src'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\masref_main.dat'.
+29/01/2026 08:26:43.74 [Verbose] Add file: 'KRC\R1\System\masref_main.src'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\System\MqttConfig.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\System\MsgLib.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\System\MsgLib.src'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\System\sps.sub'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\p00.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\p00.src'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\Signals.dat'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\BrakeTest'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestAxes.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestAxes.src'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestBack.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestBack.src'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestPark.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestPark.src'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestReq.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestReq.src'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestStart.dat'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\R1\TP\BrakeTest\BrakeTestStart.src'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\Api'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\Config'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\Config\Grippers'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\Config\Instructions'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\Config\Items'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\Config\Scenarios'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\Config\Stations'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\R1\TP\PalletTech\User'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\STEU'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\STEU\$config.dat'.
+29/01/2026 08:26:43.75 [Verbose] 
+29/01/2026 08:26:43.75 [Verbose] Add files to archive from path 'C:\KRC\Roboter\KRC\STEU\Mada'.
+29/01/2026 08:26:43.75 [Verbose] Add file: 'KRC\STEU\Mada\$custom.dat'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'KRC\STEU\Mada\$machine.dat'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'KRC\STEU\Mada\$option.dat'.
+29/01/2026 08:26:43.76 [Verbose] 
+29/01/2026 08:26:43.76 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\KrlModSize.bin'.
+29/01/2026 08:26:43.76 [Verbose] 
+29/01/2026 08:26:43.76 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Cabinet'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Cabinet\NGSharedO.xml'.
+29/01/2026 08:26:43.76 [Verbose] 
+29/01/2026 08:26:43.76 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\AsyncDataToKrl.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\CabCtrl.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\connectionchain.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\CritParams.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\CS_SCID.SAF'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\CS_TUNID.SAF'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ecatms_config.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\FpExceptions.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\HNFINFO.SAF'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\IPPNIO.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KLIConfig.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KNet.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KONIConfig.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KrcConfig.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KrcDryRun.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KrcExtConfMsg.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KrcIoSignals.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\KRC_IO.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Logging_BrakeTest.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Logging_PowerManagement.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Logging_RoboTeam.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Logging_SpotControl.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Logging_System.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Logging_VwAscii.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Modules_OpcUaAdapter.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Modules_PNIODriver.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Modules_SysBusDriver.xml'.
+29/01/2026 08:26:43.76 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Modules_TimeSync.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Modules_VRC.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\pndev1.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PNIODriver.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PNIOSnmpData.dat'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PowerManagementConfig.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\SAFEDEV.SAF'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\SCTLCRC.IMG'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\SCTLCRC.XML'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\SCTLINFO.SAF'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\SCTLPARA.SAF'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\SysBusDriver.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\TimeSync.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\TimeSyncBase.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\TransferApp_IO.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\USERPDI.SAF'.
+29/01/2026 08:26:43.77 [Verbose] 
+29/01/2026 08:26:43.77 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\Mada'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\CFCore.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\CFCoreWaggonDriverConfig.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\CtrlGainTab.bin'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\DampTab.bin'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\EAWaggonDriverConfig.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\KRCAxes.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\LDP.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\MMAxisAdapter.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\MotionModes.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NextGenDriveTech.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\StiffTab.bin'.
+29/01/2026 08:26:43.77 [Verbose] 
+29/01/2026 08:26:43.77 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\Mada\MotionDrivers'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\MotionDrivers\MdlCtlDataDrv.ini'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\MotionDrivers\motiondrv.ini'.
+29/01/2026 08:26:43.77 [Verbose] 
+29/01/2026 08:26:43.77 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\Mada\NGAxis'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\A1.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\A2.xml'.
+29/01/2026 08:26:43.77 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\A3.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\A4.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\A5.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\A6.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA1.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA1AddFct.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA2.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA2AddFct.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA3.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA3AddFct.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA4.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA4AddFct.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA5.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA5AddFct.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA6.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\CtrlA6AddFct.xml'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Mada\NGAxis\Sensor1.xml'.
+29/01/2026 08:26:43.78 [Verbose] 
+29/01/2026 08:26:43.78 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\MotionDrivers'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\loadDataDevice.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrCncAdapter.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrConveyor.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrConveyor_6D.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrEmily.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrJointOffset.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrSignalMonitor.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrStandStill.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\mdrVwAscii.ini'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\MotionDrivers\motiondrv.ini'.
+29/01/2026 08:26:43.78 [Verbose] 
+29/01/2026 08:26:43.78 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\Motor'.
+29/01/2026 08:26:43.78 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Motor\M_SI-M1600-KM155-W0_KSP600-40_380V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Motor\M_SI-M3600-KM192-W0_KSP600-64_380V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Motor\M_SI-M4800-KM192-W0_KSP600-64_380V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Motor\M_TA-M0016-KM040-W1_KSP300-5_230V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Motor\M_TA-M0064-KM060-W1_KSP300-12_230V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Motor\M_TA-M0127-KM060-W1_KSP300-12_230V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\OpcUa'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\OpcUa\AccessConfigConfiguration.json'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\OpcUa\PubSubConfigurationFiles.json'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\OpcUa\AccessConfig'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\PalletTech'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\PersistCIB'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PersistCIB\Readme.txt'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\PersistPC'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PersistPC\EncoderMastering.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PersistPC\KrcRrtLog.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PersistPC\NGDecouple.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PersistPC\SimuMastering.xml'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\PersistPDS'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PersistPDS\Readme.txt'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\PersistRDC'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\PersistRDC\Readme.txt'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\ServoFile'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_KPP600-67L_380V_3200.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_KSP300_230V_06.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_SI-M1600-KM155-W0_KSP600-40_380V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_SI-M3600-KM192-W0_KSP600-64_380V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_SI-M4800-KM192-W0_KSP600-64_380V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_TA-M0016-KM040-W1_KSP300-5_230V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_TA-M0064-KM060-W1_KSP300-12_230V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\ServoFile\S_TA-M0127-KM060-W1_KSP300-12_230V_V1.xml'.
+29/01/2026 08:26:43.79 [Verbose] 
+29/01/2026 08:26:43.79 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\Supply'.
+29/01/2026 08:26:43.79 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Supply\KPP600-67L_380V_3200.xml'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\Supply\KSP300_230V_06.xml'.
+29/01/2026 08:26:43.80 [Verbose] 
+29/01/2026 08:26:43.80 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\User\Common\VxWin'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Config\User\Common\VxWin\knet.config'.
+29/01/2026 08:26:43.80 [Verbose] 
+29/01/2026 08:26:43.80 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Common\Mada\'.
+29/01/2026 08:26:43.80 [Verbose] 
+29/01/2026 08:26:43.80 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Common\Mada\MotionDrivers'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Mada\MotionDrivers\MdlCtlDataDrv.ini'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Mada\MotionDrivers\motiondrv.ini'.
+29/01/2026 08:26:43.80 [Verbose] 
+29/01/2026 08:26:43.80 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Template\'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\cellVorgabe.src'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\ExpertSubmit.sub'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\ExpertVorgabe.dat'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\ExpertVorgabe.src'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\FunctionVorgabe.src'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\submit.sub'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\vorgabe.dat'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Template\vorgabe.src'.
+29/01/2026 08:26:43.80 [Verbose] 
+29/01/2026 08:26:43.80 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Rdc\'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Rdc\996627.cal'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Rdc\996627.mam'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Rdc\KLIConfig.xml'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Rdc\RdcDirectoryContents.txt'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Rdc\RobotData.xml'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Rdc\RobotInfo.xml'.
+29/01/2026 08:26:43.80 [Verbose] Add file: 'C\KRC\Roboter\Rdc\Settings.xml'.
+29/01/2026 08:26:43.80 [Verbose] 
+29/01/2026 08:26:43.80 [Verbose] Add files to archive from path 'C:\KRC\User\'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\BackupManager.User.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\ConfigMon.ini'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\Cross3.User.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\GlobalPointFiles.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\InitialProjectSetup.User.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\klmdigitalio.WriteProtectedOutputs.cfg'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\KUKASchedulerService.User.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\Longtexts.en.bak'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\MaintenanceHandBook.User.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\Measurement.Tolerances.cfg'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\MeasurementPoints.xml'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\OperationModeAuthorization.xml'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\PMService.user.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\ProjectExternalFileList.xml'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\RobotPositionMonitorSettings.xml'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\SchedulerAction.BackupAction.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\SchedulerAction.ForceColdStartFallbackAction.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\SchedulerAction.ProjectLeaseTimeMonitorAction.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\Settings.xml'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\SetupWizardStates.xml'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\SmartHMI.User.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\WaitForUserList.xml'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\WorkVisualServiceHost.User.config'.
+29/01/2026 08:26:43.81 [Verbose] Add file: 'C\KRC\User\WorkVisualServiceHostSecurity.config'.
+29/01/2026 08:26:43.81 [Verbose] 
+29/01/2026 08:26:43.81 [Verbose] Add files to archive from path 'C:\KRC\User\Data'.
+29/01/2026 08:26:43.81 [Verbose] 
+29/01/2026 08:26:43.81 [Verbose] Add files to archive from path 'C:\KRC\User\ProjectRoot'.
+29/01/2026 08:26:43.81 [Verbose] 
+29/01/2026 08:26:43.81 [Verbose] Add files to archive from path 'C:\KRC\User\ProjectRoot\26111233990000120003388130'.
+29/01/2026 08:26:43.81 [Verbose] # Exclude file 'C:\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.asz' because of rule!
+29/01/2026 08:26:43.82 [Verbose] # Exclude file 'C:\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.log' because of rule!
+29/01/2026 08:26:43.82 [Verbose] # Exclude file 'C:\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.wvs' because of rule!
+29/01/2026 08:26:43.82 [Verbose] # Exclude file 'C:\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130_old.log' because of rule!
+29/01/2026 08:26:43.82 [Verbose] 
+29/01/2026 08:26:43.82 [Verbose] Add files to archive from path 'C:\KRC\User\ProjectRoot\@BaseProject'.
+29/01/2026 08:26:43.82 [Verbose] # Exclude file 'C:\KRC\User\ProjectRoot\@BaseProject\BaseProject.wvs' because of rule!
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\log\Mastery.log'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\CabCtrl.xml'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\ConfigXML.xml'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Ctrl_MDL_A1.xml'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Ctrl_MDL_A23456.xml'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Ctrl_MDL_DAT.xml'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Ctrl_VMV_std.xml'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\KRC.xml'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\NextGen.xml'.
+29/01/2026 08:26:43.82 [Verbose] 
+29/01/2026 08:26:43.82 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Common\Motor\'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Motor\Default.xml'.
+29/01/2026 08:26:43.82 [Verbose] 
+29/01/2026 08:26:43.82 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Common\Servofile\'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Servofile\Default.xml'.
+29/01/2026 08:26:43.82 [Verbose] 
+29/01/2026 08:26:43.82 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Common\Supply\'.
+29/01/2026 08:26:43.82 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Supply\DummySupply.xml'.
+29/01/2026 08:26:43.82 [Verbose] 
+29/01/2026 08:26:43.82 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Common\Schemes\'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ApplGateAgent.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\AsyncDataToKrl.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Axis.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\AxisData.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\bas_cm_api.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CabCtrlSystem.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CabCtrlUser.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CEvent.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CEventDef.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CF.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CFCore.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ChainData.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CommService.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ConfigXML.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ConnectionLib.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CoupleData.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\CritParams.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\DevIODriver.xsd'.
+29/01/2026 08:26:43.83 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Diagnose.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\DtDeviceOptions.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\DtShared.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EAWaggonDriverConfig.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EcatCreator.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EcatDiagCmd.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ecatms_swap.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EcatPcapLog.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EcatTsmLog.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EcatWrapperDummy.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ecat_DNM_Gateway.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ecat_PBM_Gateway.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ECAT_SYS_X44.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EKOData.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EncoderMastering.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EnetSwitch.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EtherCATAgentConfig.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EtherCATConfig.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\EtherCATWrapper.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\FpExceptions.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\HardwareStatusProvider.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\HardwareStatusProviderLogging.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Histogram.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\HnfDiagMon.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ippnio.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KagaBaseConfig.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KagaConfig.xsd'.
+29/01/2026 08:26:43.84 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Kcp3Drv.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KNet.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KRC.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KRCAxes.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KRCAxis.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KrcConfig.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KrcDryRun.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KrcExtConfMsg.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KrcSysConfig.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KRCVectormove.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KRC_IO.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\KRC_KCP3.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Logging.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\LoggingSpecial.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\MainBoardDrv.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\MM.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\MMAxisAdapter.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Modules.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\MotionModes.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Motor.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NextGen.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NextGenDriveTech.xsd'.
+29/01/2026 08:26:43.85 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGAxis.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGAxisTypes.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGCtrl.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGCtrlAdditionalFunctions.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGCtrlTypes.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGCtrlUser.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGSensor.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGSharedO.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGThread.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\NGVersion.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\OpcUaAdapter.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\OSBaseAgent.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\pndev.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\PNIODriver.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\PortConfig.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\PowerManagementConfig.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\RobRuntimeLog.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\ServoFile.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SpIoMultiplexer.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SpManager.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SpProxy.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SpServices.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SpServicesMsgAPI.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Supply.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SysBusDriver.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SysBusDriverBase.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\System.xsd'.
+29/01/2026 08:26:43.86 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SystemClock.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\SystemInfo.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\TimeSync.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\TimeSyncBase.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Trace.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Tracedef.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\TraceFeatures.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\TransferApp_IO.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Tsm.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Units.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\Version.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\VIOBus.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\VIODriver.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\WaggonDriverCommon.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\WaggonDriverConfig.xsd'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Common\Schemes\WaggonDriverInterfaces.xsd'.
+29/01/2026 08:26:43.87 [Verbose] 
+29/01/2026 08:26:43.87 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Office\'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Office\CF.xml'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Office\KagaConfig.xml'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Office\Modules.xml'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Office\Modules_HardwareStatusProvider.xml'.
+29/01/2026 08:26:43.87 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Office\Modules_LogPoller.xml'.
+29/01/2026 08:26:43.88 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Office\NGSharedO.xml'.
+29/01/2026 08:26:43.88 [Verbose] 
+29/01/2026 08:26:43.88 [Verbose] Add files to archive from path 'C:\KRC\Roboter\Config\System\Office\VxWin'.
+29/01/2026 08:26:43.88 [Verbose] Add file: 'C\KRC\Roboter\Config\System\Office\VxWin\VxWin.config'.
+29/01/2026 08:26:43.88 [Verbose] 
+29/01/2026 08:26:43.88 [Verbose] Store EventLogs:
+29/01/2026 08:26:43.88 [Verbose] Save EventLog 'KrcLog'
+29/01/2026 08:26:43.89 [Verbose] Add file: 'Log Files\KrcLog.evt'.
+29/01/2026 08:26:43.89 [Verbose] Save EventLog 'KrcLogI'
+29/01/2026 08:26:43.89 [Verbose] Add file: 'Log Files\KrcLogI.evt'.
+29/01/2026 08:26:43.89 [Verbose] Save EventLog 'KrcLogU'
+29/01/2026 08:26:43.92 [Verbose] Add file: 'Log Files\KrcLogU.evt'.
+29/01/2026 08:26:43.92 [Verbose] Save EventLog 'KrcLogS'
+29/01/2026 08:26:43.95 [Verbose] Add file: 'Log Files\KrcLogS.evt'.
+29/01/2026 08:26:43.95 [Verbose] Save EventLog 'KrcLogP'
+29/01/2026 08:26:43.96 [Verbose] Add file: 'Log Files\KrcLogP.evt'.
+29/01/2026 08:26:43.96 [Verbose] Save EventLog 'KrcLogB'
+29/01/2026 08:26:43.97 [Verbose] Add file: 'Log Files\KrcLogB.evt'.
+29/01/2026 08:26:43.97 [Verbose] Save EventLog 'KrcLogC'
+29/01/2026 08:26:44.00 [Verbose] Add file: 'Log Files\KrcLogC.evt'.
+29/01/2026 08:26:44.00 [Verbose] 
+29/01/2026 08:26:44.00 [Verbose] Store RegistryKeys:
+29/01/2026 08:26:44.00 [Verbose] Save RegistryKey 'HKEY_LOCAL_MACHINE\SOFTWARE\KUKA ROBOTER GMBH\KUKA BOF\OCX Control's\FileHandler'
+29/01/2026 08:26:44.02 [Verbose] Save RegistryKey 'HKEY_LOCAL_MACHINE\SOFTWARE\KUKA ROBOTER GMBH\WorkVisual'
+29/01/2026 08:26:44.02 [Verbose] Save RegistryKey 'HKEY_LOCAL_MACHINE\SOFTWARE\KUKA Roboter GmbH\Performance\'
+29/01/2026 08:26:44.03 [Verbose] 
+29/01/2026 08:26:44.03 [Verbose] Store projects: Aktive.
+29/01/2026 08:26:44.03 [Information] Save active project '26111233990000120003388130 V1.25.0' to C:\Windows\TEMP\mmwpb0ft.asz
+29/01/2026 08:26:45.88 [Verbose] 
+29/01/2026 08:26:45.88 [Verbose] Add files to archive from path 'C:\KRC\User\ProjectRoot\26111233990000120003388130\'.
+29/01/2026 08:26:45.88 [Verbose] # Exclude file 'C:\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.asz' because of rule!
+29/01/2026 08:26:45.88 [Verbose] Add file: 'C\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.log'.
+29/01/2026 08:26:45.88 [Verbose] # Exclude file 'C:\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.wvs' because of rule!
+29/01/2026 08:26:45.88 [Verbose] Add file: 'C\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130_old.log'.
+29/01/2026 08:26:45.88 [Verbose] Add file: 'C\KRC\User\ProjectRoot\26111233990000120003388130\26111233990000120003388130.asz'.
+29/01/2026 08:26:45.88 [Verbose] 
+29/01/2026 08:26:45.94 [Information] Successfully stored archive with configuration: 'All'.
+
+29/01/2026 08:26:45.94 [Verbose] Add file: 'Archive.log'.

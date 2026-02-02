@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--W3C Schema erstellt mit Notepad++ v4.8.5 -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="Version.xsd"/>
+	<xs:element name="KagaConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Version"/>
+				<xs:element ref="BusConfig" maxOccurs="1" minOccurs="0"/>
+				<xs:element ref="NAT" maxOccurs="3" minOccurs="0"/>
+				<xs:element ref="UserFilter" maxOccurs="10" minOccurs="0"/>
+				<xs:element ref="BridgeInterface" maxOccurs="1" minOccurs="0"/>
+				<xs:element ref="BandwidthLimits" maxOccurs="1" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BandwidthLimits">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="VirtualSendQueue" maxOccurs="5" minOccurs="0"/>
+				<xs:element ref="StackSendQueue" maxOccurs="5" minOccurs="0"/>
+				<xs:element ref="StackFIFO" maxOccurs="1" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="StackSendQueue">
+		<xs:complexType>
+			<xs:attribute name="Interface" type="xs:string" use="required"/>
+			<xs:attribute name="Bandwidth" type="xs:int" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="StackFIFO">
+		<xs:complexType>
+			<xs:attribute name="Interface" type="xs:string" use="required"/>
+			<xs:attribute name="NumElements" type="xs:int" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="VirtualSendQueue">
+		<xs:complexType>
+			<xs:attribute name="Interface" type="xs:string" use="required"/>
+			<xs:attribute name="Bandwidth" type="xs:int" use="required"/>
+			<xs:attribute name="Limit" type="xs:int" use="required"/>
+			<xs:attribute name="Timeout" type="xs:int" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BusConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PhysicalNetworkDevice" maxOccurs="1" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="isActive" type="xs:boolean" use="required"/>
+			<xs:attribute name="Id" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PhysicalNetworkDevice">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="IfConfig"/>
+				<xs:element ref="VirtualNetworkDevice" maxOccurs="10" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="HibernateSupport" type="xs:boolean" use="optional"/>
+			<xs:attribute name="Priority" type="xs:unsignedByte" use="required"/>
+			<xs:attribute name="LinkSettings" use="optional">
+			   <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="10Mbit_HalfDuplex"/>
+                  <xs:enumeration value="10Mbit_FullDuplex"/>
+                  <xs:enumeration value="100Mbit_HalfDuplex"/>
+                  <xs:enumeration value="100Mbit_FullDuplex"/>
+                  <xs:enumeration value="1Gbit_FullDuplex"/>
+                  <xs:enumeration value="Autonegotiation"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IfConfig">
+		<xs:complexType>
+			<xs:attribute name="Name" type="xs:string" use="required"/>
+			<xs:attribute name="Unit" type="xs:unsignedByte" use="required"/>
+			<xs:attribute name="IpConfigType" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="IpnetStatic"/>
+						<xs:enumeration value="IpnetDhcp"/>
+						<xs:enumeration value="noIp"/>
+						<xs:enumeration value="LwipStatic"/>
+						<xs:enumeration value="LwipAndIpnetStatic"/>
+                                    <xs:enumeration value="Auto"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Ip" type="xs:string" use="required"/>
+			<xs:attribute name="Netmask" type="xs:string" use="required"/>
+			<xs:attribute name="VLAN" type="xs:int" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="VirtualNetworkDevice">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="IfConfig"/>
+				<xs:element ref="Queue" maxOccurs="2" minOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Queue">
+		<xs:complexType>
+			<xs:sequence maxOccurs="5" minOccurs="1">
+				<xs:element ref="Filter"/>
+			</xs:sequence>
+			<xs:attribute name="Priority" type="xs:unsignedByte" use="required"/>
+			<xs:attribute name="Resources" type="xs:unsignedByte" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="NAT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="NATRule" type="xs:string" maxOccurs="40" minOccurs="0"/>
+				<xs:element name="RouteRule" type="xs:string" maxOccurs="20" minOccurs="0"/>
+            <xs:element ref="StandardGateway" maxOccurs="1" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="GlobalInterface" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Filter">
+		<xs:complexType>
+			<xs:attribute name="String" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="AcceptAll"/>
+						<xs:enumeration value="DenyAll"/>
+						<xs:enumeration value="Ip"/>
+						<xs:enumeration value="EtherCat"/>
+						<xs:enumeration value="KCP"/>
+						<xs:enumeration value="ExactIp"/>
+						<xs:enumeration value="Multicast"/>
+						<xs:enumeration value="EthernetIP"/>
+						<xs:enumeration value="UDP"/>
+						<xs:enumeration value="VLAN"/>
+						<xs:enumeration value="VLAN1"/>
+						<xs:enumeration value="VLAN2"/>
+						<xs:enumeration value="VLAN3"/>
+						<xs:enumeration value="VLAN4"/>
+						<xs:enumeration value="VLAN5"/>
+						<xs:enumeration value="VLAN6"/>
+						<xs:enumeration value="VLAN7"/>
+						<xs:enumeration value="VLAN8"/>
+						<xs:enumeration value="VLAN9"/>
+						<xs:enumeration value="VLAN10"/>
+						<xs:enumeration value="VLAN_IP"/>
+						<xs:enumeration value="Filter0"/>
+						<xs:enumeration value="Filter1"/>
+						<xs:enumeration value="Filter2"/>
+						<xs:enumeration value="Filter3"/>
+						<xs:enumeration value="Filter4"/>
+						<xs:enumeration value="Filter5"/>
+						<xs:enumeration value="Filter6"/>
+						<xs:enumeration value="Filter7"/>
+						<xs:enumeration value="Filter8"/>
+						<xs:enumeration value="Filter9"/>
+						<xs:enumeration value="ProfinetRT"/>
+						<xs:enumeration value="FWD_AUTOIP"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BridgeInterface">
+		<xs:complexType>
+			<xs:attribute name="Name" type="xs:string" use="required"/>
+			<xs:attribute name="Unit" type="xs:int" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="UserFilter">
+		<xs:complexType>
+			<xs:attribute name="Id" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="Filter[0-9]"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ipProto"/>
+						<xs:enumeration value="ip"/>
+						<xs:enumeration value="blkIp"/>
+						<xs:enumeration value="pkt"/>
+						<xs:enumeration value="blkPkt"/>
+						<xs:enumeration value="ecatvlan"/>
+						<xs:enumeration value="acceptIp"/>
+						<xs:enumeration value="denyVlan"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Attribute" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="StandardGateway">
+		<xs:complexType>
+			<xs:attribute name="Ip" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

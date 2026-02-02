@@ -1,0 +1,70 @@
+&ACCESS RVP1
+&REL 44
+&PARAM DISKPATH = KRC:\R1\Program\Sub_Rutinler
+DEF  Bolge_3_Palet_Ort ( )
+;FOLD INI;%{PE}
+  ;FOLD BASISTECH INI
+    GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS==TRUE DO IR_STOPM ( )
+    INTERRUPT ON 3 
+    BAS (#INITMOV,0 )
+  ;ENDFOLD (BASISTECH INI)
+  ;FOLD USER INI
+    ;Make your modifications here
+
+  ;ENDFOLD (USER INI)
+;ENDFOLD (INI)
+
+
+
+;;FOLD PTP B3_MASTER CONT Vel=100 % PDAT1 Tool[1]:Gripper Base[0] ;%{PE}
+;;FOLD Parameters ;%{h}
+;;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.old; Kuka.IsGlobalPoint=False; Kuka.PointName=B3_MASTER; Kuka.BlendingEnabled=True; Kuka.MoveDataPtpName=PDAT1; Kuka.VelocityPtp=100; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=PTP
+;;ENDFOLD
+;$BWDSTART = FALSE
+;PDAT_ACT = PPDAT1
+;FDAT_ACT = FB3_MASTER
+;BAS(#PTP_PARAMS, 100.0)
+;SET_CD_PARAMS (0)
+;PTP XB3_MASTER C_Dis
+;;ENDFOLD
+
+
+PaletMasterX=1840
+PaletMasterY=1240
+
+
+Base_Data[3]=Frame_Donustur(XB3_MASTER)
+BASE_DATA[3].x=BASE_DATA[3].x-(PaletMasterX/2)
+BASE_DATA[3].Y=BASE_DATA[3].Y+(PaletMasterY/2)
+
+      IF (ParcaUzunluk<=1500)THEN
+     
+         BASE_DATA[3].x=BASE_DATA[3].x+(PaletUzunluk/2)
+         BASE_DATA[3].Y=BASE_DATA[3].Y-(PaletGenislik/2)
+         
+      ENDIF
+      
+      IF (ParcaUzunluk>=1600) AND (ParcaUzunluk<=3000) THEN
+     
+         BASE_DATA[3].x=BASE_DATA[3].x+(PaletUzunluk/2)
+
+         BASE_DATA[3].Y=BASE_DATA[3].Y-(PaletGenislik/2)
+         
+      ENDIF
+
+END
+DEFFCT FRAME Frame_Donustur(e6GeciciPos:IN)
+   ;FOLD  Tanimlamalar
+      DECL E6POS e6GeciciPos
+      DECL FRAME ReturnFrame
+   ;ENDFOLD
+   ReturnFrame=$Nullframe
+   ReturnFrame.X=e6GeciciPos.X
+   ReturnFrame.Y=e6GeciciPos.Y
+   ReturnFrame.Z=e6GeciciPos.Z
+   ReturnFrame.A=e6GeciciPos.A
+   ReturnFrame.B=e6GeciciPos.B
+   ReturnFrame.C=e6GeciciPos.C
+   RETURN ReturnFrame
+ENDFCT
+
