@@ -1,0 +1,10 @@
+Audit the repository for Strict KRL Compliance and Logic Bugs.
+
+Goals:
+1. Strict ASCII Verification: confirm that NO Cyrillic functionality remains in identifiers. The logic should WARN on any non-ASCII character in code (but allow it in comments). Check both .src and .dat handlers.
+2. FOLD Logic: Verify that diagnostics (errors/warnings) are correctly reported INSIDE ;FOLD ... ;ENDFOLD blocks.
+3. Block Matching: Audit the new IF/ENDIF block highlighting logic for edge cases (e.g. nested blocks, mixed case).
+4. General Logic Check: Scan for common KRL bugs we might have missed (e.g. unclosed strings, invalid enums).
+
+Repo: SilvestrLiskin/kuka-krl-extension
+Branch: main (latest commit enforces strict ASCII)
