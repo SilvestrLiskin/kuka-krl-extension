@@ -1,0 +1,7 @@
+Analyze KUKA KRL Extension vs. Top Python Extensions for Feature Parity.
+Goals:
+1. Feature Gap Analysis: what do popular Python extensions (e.g. Pylance, Black) have that we don't? (e.g. "Auto Import", "Refactoring", "Type Inference").
+2. Suggest 3 high-impact features we should copy.
+3. Validate "Length Check (>24 chars)" logic: user claims they don't see the error. Verify REGEX_VAR_NAME_DECL and the diagnostic logic in `validateDatFile`. Suggest a robust fix if it's flaky.
+
+Repo: SilvestrLiskin/kuka-krl-extension

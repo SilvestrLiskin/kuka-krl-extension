@@ -22,7 +22,6 @@ interface ServerMessages {
   "action.declareAs": string;
   "action.removeGlobal": string;
   "action.addGlobal": string;
-  "action.addGlobal": string;
   "action.wrapWithFold": string;
   "action.fixTypo": string;
   "action.deleteInvalidChar": string;
@@ -92,7 +91,6 @@ const en: ServerMessages = {
 
   "action.declareAs": "Declare '{0}' as {1}",
   "action.removeGlobal": "Remove 'GLOBAL' keyword",
-  "action.addGlobal": "Add 'GLOBAL' keyword",
   "action.addGlobal": "Add 'GLOBAL' keyword",
   "action.wrapWithFold": "Wrap with ;FOLD ... ;ENDFOLD",
   "action.fixTypo": "Change to '{0}'",
@@ -166,7 +164,6 @@ const ru: ServerMessages = {
   "action.declareAs": "Объявить '{0}' как {1}",
   "action.removeGlobal": "Удалить ключевое слово 'GLOBAL'",
   "action.addGlobal": "Добавить ключевое слово 'GLOBAL'",
-  "action.addGlobal": "Добавить ключевое слово 'GLOBAL'",
   "action.wrapWithFold": "Обернуть в ;FOLD ... ;ENDFOLD",
   "action.fixTypo": "Заменить на '{0}'",
   "action.deleteInvalidChar": "Удалить недопустимый символ",
@@ -239,7 +236,6 @@ const tr: ServerMessages = {
 
   "action.declareAs": "'{0}' değişkenini {1} olarak tanımla",
   "action.removeGlobal": "'GLOBAL' anahtar kelimesini kaldır",
-  "action.addGlobal": "'GLOBAL' anahtar kelimesini ekle",
   "action.addGlobal": "'GLOBAL' anahtar kelimesini ekle",
   "action.wrapWithFold": ";FOLD ... ;ENDFOLD ile sar",
   "action.fixTypo": "'{0}' olarak değiştir",
