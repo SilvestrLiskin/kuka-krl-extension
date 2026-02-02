@@ -8,6 +8,10 @@
     "command.removeTrailingWhitespace": "Удалить пробелы в конце строк",
     "command.sortDeclarations": "Сортировать объявления",
     "command.insertFold": "Вставить FOLD-регион",
+    "command.refreshIOView": "Обновить панель I/O",
+    "command.cleanupUnusedVariables": "Удалить неиспользуемые переменные",
+    "command.showCalculator": "Калькулятор фреймов",
+    "command.renameSignal": "Переименовать сигнал (алиас)",
     "config.title": "KUKA KRL Extension",
     "config.autoFold.description": "Автоматически сворачивать все регионы при открытии KRL файла",
     "config.formatOnSave.description": "Автоматически форматировать документ при сохранении",
@@ -16,5 +20,8 @@
     "config.separateBeforeBlocks.description": "Добавлять пустую строку перед блоками управления (FOR, IF, WHILE, LOOP и т.д.)",
     "config.separateAfterBlocks.description": "Добавлять пустую строку после блоков управления (ENDFOR, ENDIF, ENDWHILE и т.д.)",
     "config.validateNonAscii.description": "Подсвечивать не-ASCII символы (кириллица, спецсимволы), которые могут вызвать ошибки в контроллере KUKA",
+    "config.errorLens.enabled": "Показывать сообщения об ошибках в конце строки (Error Lens)",
+    "config.indentFolds": "Делать отступ для содержимого внутри ;FOLD",
+    "config.alignAssignments": "Выравнивать знаки присваивания (=) по вертикали",
     "view.krlIO.welcome": "Сигналы ввода/вывода не найдены в рабочей области. Используйте $IN[n], $OUT[n] и т.д. в вашем KRL коде, чтобы увидеть их здесь."
 }

@@ -8,6 +8,10 @@
     "command.removeTrailingWhitespace": "Sondaki Boşlukları Kaldır",
     "command.sortDeclarations": "Bildirimleri Sırala",
     "command.insertFold": "FOLD Bölgesi Ekle",
+    "command.refreshIOView": "I/O Görünümünü Yenile",
+    "command.cleanupUnusedVariables": "Kullanılmayan Değişkenleri Temizle",
+    "command.showCalculator": "KRL Frame Hesaplayıcı",
+    "command.renameSignal": "Sinyali Yeniden Adlandır (Alias)",
     "config.title": "KUKA KRL Uzantısı",
     "config.autoFold.description": "KRL dosyası açıldığında tüm bölgeleri otomatik olarak katla",
     "config.formatOnSave.description": "Kaydetme sırasında belgeyi otomatik olarak biçimlendir",
@@ -16,5 +20,8 @@
     "config.separateBeforeBlocks.description": "Kontrol blokları (FOR, IF, WHILE, LOOP vb.) öncesine boş satır ekle",
     "config.separateAfterBlocks.description": "Kontrol blokları (ENDFOR, ENDIF, ENDWHILE vb.) sonrasına boş satır ekle",
     "config.validateNonAscii.description": "KUKA kontrolcüsünde hata oluşturabilecek ASCII olmayan karakterleri (Kiril, özel semboller) vurgula",
+    "config.errorLens.enabled": "Hata mesajlarını satır sonunda satır içi göster",
+    "config.indentFolds": ";FOLD bloklarının içindeki içeriği girintile",
+    "config.alignAssignments": "Ardışık satırlardaki atama operatörlerini (=) hizala",
     "view.krlIO.welcome": "Çalışma alanında I/O sinyali bulunamadı. Onları burada görmek için KRL kodunuzda $IN[n], $OUT[n] vb. kullanın."
 }

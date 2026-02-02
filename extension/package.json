@@ -487,19 +487,19 @@
       },
       {
         "command": "krl.cleanupUnusedVariables",
-        "title": "Clean Up Unused Variables",
+        "title": "%command.cleanupUnusedVariables%",
         "category": "KRL",
         "icon": "$(trash)"
       },
       {
         "command": "krl.showCalculator",
-        "title": "KRL Frame Calculator",
+        "title": "%command.showCalculator%",
         "category": "KRL",
         "icon": "$(calculator)"
       },
       {
         "command": "krl.renameSignal",
-        "title": "Rename Signal (Set Alias)",
+        "title": "%command.renameSignal%",
         "category": "KRL",
         "icon": "$(edit)"
       },
@@ -629,17 +629,17 @@
         "krl.errorLens.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Show diagnostic messages inline at the end of lines"
+          "description": "%config.errorLens.enabled%"
         },
         "krl.indentFolds": {
           "type": "boolean",
           "default": true,
-          "description": "Indent content inside ;FOLD blocks"
+          "description": "%config.indentFolds%"
         },
         "krl.alignAssignments": {
           "type": "boolean",
           "default": true,
-          "description": "Align assignment operators (=) in consecutive lines"
+          "description": "%config.alignAssignments%"
         }
       }
     }
