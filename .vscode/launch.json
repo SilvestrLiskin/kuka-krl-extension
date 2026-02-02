@@ -6,11 +6,11 @@
             "type": "extensionHost",
             "request": "launch",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
+                "--extensionDevelopmentPath=${workspaceFolder}/extension"
             ],
             "outFiles": [
-                "${workspaceFolder}/client/out/**/*.js",
-                "${workspaceFolder}/server/out/**/*.js"
+                "${workspaceFolder}/extension/client/out/**/*.js",
+                "${workspaceFolder}/extension/server/out/**/*.js"
             ],
             "preLaunchTask": "npm: watch"
         }

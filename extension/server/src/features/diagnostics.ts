@@ -46,7 +46,42 @@ const REGEX_FUNC_DEF = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i
 
 const REGEX_LABEL = /^\w+\s*:\s*$/i;
 const REGEX_BLOCK_END = /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i;
-const REGEX_EXIT_KEYWORDS = ["RETURN", "EXIT", "HALT"];
+
+// Pre-compiled regexes for optimization
+const REGEX_LABEL_DECL = /^\s*([a-zA-Z_]\w*)\s*:/gim;
+
+const EXIT_KEYWORDS = ["RETURN", "EXIT", "HALT"];
+const EXIT_KEYWORD_REGEXES = EXIT_KEYWORDS.map((kw) => ({
+  keyword: kw,
+  regex: new RegExp(`^${kw}\\b`, "i"),
+}));
+
+const BLOCK_PAIRS: Record<string, string> = {
+  IF: "ENDIF",
+  FOR: "ENDFOR",
+  WHILE: "ENDWHILE",
+  LOOP: "ENDLOOP",
+  REPEAT: "UNTIL",
+  SWITCH: "ENDSWITCH",
+  DEF: "END",
+  DEFFCT: "ENDFCT",
+  DEFDAT: "ENDDAT",
+};
+
+const CLOSE_TO_OPEN: Record<string, string> = {};
+for (const [open, close] of Object.entries(BLOCK_PAIRS)) {
+  CLOSE_TO_OPEN[close] = open;
+}
+
+const BLOCK_OPEN_REGEXES: Record<string, RegExp> = {};
+for (const kw of Object.keys(BLOCK_PAIRS)) {
+  BLOCK_OPEN_REGEXES[kw] = new RegExp(`\\b${kw}\\b`, "i");
+}
+
+const BLOCK_CLOSE_REGEXES: Record<string, RegExp> = {};
+for (const kw of Object.keys(CLOSE_TO_OPEN)) {
+  BLOCK_CLOSE_REGEXES[kw] = new RegExp(`\\b${kw}\\b`, "i");
+}
 
 
 /**
@@ -332,9 +367,9 @@ export class DiagnosticsProvider {
 
     // ETIKETLERI BUL (Labels) - GOTO hedefleri için
     // Örn: "MyLabel:" veya " MyLabel :"
-    const labelRegex = /^\s*([a-zA-Z_]\w*)\s*:/gim;
+    REGEX_LABEL_DECL.lastIndex = 0;
     let labelMatch;
-    while ((labelMatch = labelRegex.exec(text)) !== null) {
+    while ((labelMatch = REGEX_LABEL_DECL.exec(text)) !== null) {
       validatedNames.add(labelMatch[1].toUpperCase());
     }
 
@@ -577,25 +612,6 @@ export class DiagnosticsProvider {
 
     const blockStack: BlockInfo[] = [];
 
-    // Маппинг открывающих на закрывающие
-    const blockPairs: Record<string, string> = {
-      IF: "ENDIF",
-      FOR: "ENDFOR",
-      WHILE: "ENDWHILE",
-      LOOP: "ENDLOOP",
-      REPEAT: "UNTIL",
-      SWITCH: "ENDSWITCH",
-      DEF: "END",
-      DEFFCT: "ENDFCT",
-      DEFDAT: "ENDDAT",
-    };
-
-    // Обратный маппинг
-    const closeToOpen: Record<string, string> = {};
-    for (const [open, close] of Object.entries(blockPairs)) {
-      closeToOpen[close] = open;
-    }
-
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
@@ -603,8 +619,8 @@ export class DiagnosticsProvider {
       // const upperCode = codePart.toUpperCase(); // Reserved for future use
 
       // Проверка открывающих блоков
-      for (const openKeyword of Object.keys(blockPairs)) {
-        const regex = new RegExp(`\\b${openKeyword}\\b`, "i");
+      for (const openKeyword of Object.keys(BLOCK_PAIRS)) {
+        const regex = BLOCK_OPEN_REGEXES[openKeyword];
         const match = regex.exec(codePart);
         if (match) {
           // Пропустить "WAIT FOR" — это команда ожидания условия, а не цикл FOR
@@ -624,11 +640,11 @@ export class DiagnosticsProvider {
       }
 
       // Проверка закрывающих блоков
-      for (const closeKeyword of Object.keys(closeToOpen)) {
-        const regex = new RegExp(`\\b${closeKeyword}\\b`, "i");
+      for (const closeKeyword of Object.keys(CLOSE_TO_OPEN)) {
+        const regex = BLOCK_CLOSE_REGEXES[closeKeyword];
         const match = regex.exec(codePart);
         if (match) {
-          const expectedOpen = closeToOpen[closeKeyword];
+          const expectedOpen = CLOSE_TO_OPEN[closeKeyword];
           if (blockStack.length === 0) {
             diagnostics.push({
               severity: DiagnosticSeverity.Error,
@@ -651,7 +667,7 @@ export class DiagnosticsProvider {
 
     // Незакрытые блоки
     for (const block of blockStack) {
-      const expectedClose = blockPairs[block.type];
+      const expectedClose = BLOCK_PAIRS[block.type];
       diagnostics.push({
         severity: DiagnosticSeverity.Error,
         range: {
@@ -731,7 +747,6 @@ export class DiagnosticsProvider {
     const lines = text.split(/\r?\n/);
 
     // Не включаем GOTO в exit keywords, т.к. код после GOTO может быть достижим через метки
-    const exitKeywords = REGEX_EXIT_KEYWORDS;
     let skipUntilBlockEnd = false;
     let lastExitKeyword = "";
 
@@ -772,10 +787,10 @@ export class DiagnosticsProvider {
       }
 
       // Проверка exit-ключевых слов
-      for (const kw of exitKeywords) {
-        if (new RegExp(`^${kw}\\b`, "i").test(upperTrimmed)) {
+      for (const { keyword, regex } of EXIT_KEYWORD_REGEXES) {
+        if (regex.test(upperTrimmed)) {
           skipUntilBlockEnd = true;
-          lastExitKeyword = kw;
+          lastExitKeyword = keyword;
           break;
         }
       }

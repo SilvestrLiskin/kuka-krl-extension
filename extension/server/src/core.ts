@@ -50,13 +50,21 @@ const logFile = DEBUG_ENABLED
   ? path.join(os.tmpdir(), "krl-server-debug.log")
   : "";
 
-function log(msg: string) {
-  if (!DEBUG_ENABLED) return;
+let logStream: fs.WriteStream | null = null;
+if (DEBUG_ENABLED && logFile) {
   try {
-    fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${msg}\n`);
+    logStream = fs.createWriteStream(logFile, { flags: "a" });
+    logStream.on("error", () => {
+      // Log akışı hatalarını yoksay
+    });
   } catch {
-    // Log yazma hatası sessizce yok sayılır
+    // Akış oluşturma hatasını yoksay
   }
+}
+
+function log(msg: string) {
+  if (!DEBUG_ENABLED || !logStream) return;
+  logStream.write(`[${new Date().toISOString()}] ${msg}\n`);
 }
 
 // Sunucu başlatılıyor

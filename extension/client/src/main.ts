@@ -357,16 +357,23 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
+  let syntaxCheckTimeout: NodeJS.Timeout | undefined;
+
   context.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument((e) => {
       if (e.document.languageId === "krl") {
-        runSyntaxCheck(e.document);
-        if (lsClient.state === State.Running) {
-          lsClient.sendNotification("custom/validateFile", {
-            uri: e.document.uri.toString(),
-            text: e.document.getText(),
-          });
+        if (syntaxCheckTimeout) {
+          clearTimeout(syntaxCheckTimeout);
         }
+        syntaxCheckTimeout = setTimeout(() => {
+          runSyntaxCheck(e.document);
+          if (lsClient.state === State.Running) {
+            lsClient.sendNotification("custom/validateFile", {
+              uri: e.document.uri.toString(),
+              text: e.document.getText(),
+            });
+          }
+        }, 500);
       }
     }),
   );

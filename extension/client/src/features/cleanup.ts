@@ -95,14 +95,18 @@ export async function cleanupUnusedVariables() {
     return;
   }
 
-  if (!fs.existsSync(datPath)) {
+  try {
+    await fs.promises.access(datPath);
+  } catch {
     vscode.window.showWarningMessage("No corresponding .dat file found.");
     return;
   }
 
   // If .src is missing, we can still clean .dat but we can't check usages!
   // Wait, if .src is missing, then ALL variables in .dat are unused? No, could be GLOBAL.
-  if (!fs.existsSync(srcPath)) {
+  try {
+    await fs.promises.access(srcPath);
+  } catch {
     vscode.window.showWarningMessage(
       "No corresponding .src file found to check usages.",
     );
