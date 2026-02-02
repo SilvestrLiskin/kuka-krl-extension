@@ -25,10 +25,10 @@ const REGEX_DECL_SIGNAL_STRUC = /^(?:DECL|SIGNAL|STRUC)\b/i;
 const REGEX_VAR_NAME_DECL = /^(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?\w+\s+(\w+)/i;
 const REGEX_STARTS_WITH_DIGIT = /^\d/;
 
-const REGEX_VARIABLE = /\b([a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*)\b/g;
-const REGEX_LOCAL_DECL = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*(?:\s*\[[^\]]*\])?)*)/gim;
+const REGEX_VARIABLE = /\b([a-zA-Z_]\w*)\b/g;
+const REGEX_LOCAL_DECL = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
 const REGEX_ARRAY_BRACKETS = /\[.*?\]/g;
-const REGEX_VALID_VAR_NAME = /^[a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*$/;
+const REGEX_VALID_VAR_NAME = /^[a-zA-Z_]\w*$/;
 const REGEX_SKIP_DECL_STRUC_SIGNAL = /^\s*(?:GLOBAL\s+)?(?:DECL|STRUC|SIGNAL)\b/i;
 const REGEX_SKIP_DEF = /^\s*(?:GLOBAL\s+)?(?:DEF|DEFFCT)\b/i;
 const REGEX_STRING_CONTENT = /"[^"]*"/g;
@@ -171,15 +171,6 @@ export class DiagnosticsProvider {
               // BOM (Byte Order Mark) karakterini yoksay (U+FEFF = 65279)
               if (charCode === 0xfeff) continue;
 
-              // КИРИЛЛИЦА: Пропускаем, если это часть идентификатора
-              const isCyrillic = (charCode >= 0x0400 && charCode <= 0x04FF);
-              if (isCyrillic) {
-                // ПРОВЕРКА: является ли этот символ частью слова/идентификатора
-                const charBefore = j > 0 ? checkPart[j - 1] : "";
-                const charAfter = j < checkPart.length - 1 ? checkPart[j + 1] : "";
-                const isPartofWord = /[a-zA-Zа-яА-Я0-9_]/.test(charBefore) || /[a-zA-Zа-яА-Я0-9_]/.test(charAfter);
-                if (isPartofWord) continue;
-              }
 
               const char = checkPart[j];
               diagnostics.push({
@@ -1167,6 +1158,26 @@ export class DiagnosticsProvider {
       const line = lines[i];
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
+
+      // 0. Check Non-ASCII (Strict Mode: Warn on any non-ASCII in code)
+      const nonAsciiMatch = codePart.match(REGEX_NON_ASCII);
+      if (nonAsciiMatch) {
+        for (let j = 0; j < codePart.length; j++) {
+          const charCode = codePart.charCodeAt(j);
+          if (charCode > 127) {
+            if (charCode === 0xfeff) continue;
+            diagnostics.push({
+              severity: DiagnosticSeverity.Warning,
+              range: {
+                start: { line: i, character: j },
+                end: { line: i, character: j + 1 },
+              },
+              message: t("diag.nonAsciiChar", codePart[j]),
+              source: "krl-language-support",
+            });
+          }
+        }
+      }
 
       // 1. Проверка имен переменных (Length & Invalid Chars)
       const declMatch = declPattern.exec(codePart);

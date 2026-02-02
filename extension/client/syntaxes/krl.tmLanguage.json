@@ -140,7 +140,7 @@
         "function-call": {
             "patterns": [
                 {
-                    "match": "\\b([A-Za-zа-яА-Я_][A-Za-zа-яА-Я0-9_]*)\\s*(?=\\()",
+                    "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
                     "captures": {
                         "1": {
                             "name": "variable.function.krl"
@@ -153,12 +153,12 @@
             "patterns": [
                 {
                     "comment": "Names starting with digit",
-                    "match": "\\b\\d[A-Za-zа-яА-Я0-9_]*\\b",
+                    "match": "\\b\\d[A-Za-z0-9_]*\\b",
                     "name": "invalid.illegal.identifier.digit.krl"
                 },
                 {
                     "comment": "Names exceeding 24 characters",
-                    "match": "\\b[A-Za-zа-яА-Я_][A-Za-zа-яА-Я0-9_]{24,}\\b",
+                    "match": "\\b[A-Za-z_][A-Za-z0-9_]{24,}\\b",
                     "name": "invalid.illegal.identifier.toolong.krl"
                 }
             ]
