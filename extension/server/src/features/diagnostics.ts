@@ -678,6 +678,24 @@ export class DiagnosticsProvider {
             const lastBlock = blockStack[blockStack.length - 1];
             if (lastBlock.type === expectedOpen) {
               blockStack.pop();
+            } else {
+              const expectedClose = BLOCK_PAIRS[lastBlock.type];
+              diagnostics.push({
+                severity: DiagnosticSeverity.Error,
+                range: {
+                  start: { line: i, character: match.index },
+                  end: {
+                    line: i,
+                    character: match.index + closeKeyword.length,
+                  },
+                },
+                message: t(
+                  "diag.mismatchedBlock",
+                  closeKeyword,
+                  expectedClose,
+                ),
+                source: "krl-language-support",
+              });
             }
           }
         }

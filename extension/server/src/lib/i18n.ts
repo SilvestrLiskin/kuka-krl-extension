@@ -71,6 +71,7 @@ interface ServerMessages {
   "diag.invalidCharInName": string;
   "diag.msgKeyTooLong": string;
   "diag.msgOriginatorTooLong": string;
+  "diag.mismatchedBlock": string;
 }
 
 // English (default)
@@ -140,6 +141,7 @@ const en: ServerMessages = {
     "Message key length ({0}) exceeds KUKA limit (26 characters).",
   "diag.msgOriginatorTooLong":
     "Message originator length ({0}) exceeds KUKA limit (24 characters).",
+  "diag.mismatchedBlock": 'Unexpected "{0}" — expected "{1}".',
 };
 
 // Russian
@@ -210,6 +212,7 @@ const ru: ServerMessages = {
     "Длина ключа сообщения ({0}) превышает лимит KUKA (26 символов).",
   "diag.msgOriginatorTooLong":
     "Длина отправителя сообщения ({0}) превышает лимит KUKA (24 символа).",
+  "diag.mismatchedBlock": 'Неожиданный "{0}" — ожидался "{1}".',
 };
 
 // Turkish
@@ -278,6 +281,7 @@ const tr: ServerMessages = {
     "Mesaj anahtar uzunluğu ({0}) KUKA sınırını aşıyor (26 karakter).",
   "diag.msgOriginatorTooLong":
     "Mesaj gönderici uzunluğu ({0}) KUKA sınırını aşıyor (24 karakter).",
+  "diag.mismatchedBlock": 'Beklenmeyen "{0}" — "{1}" bekleniyordu.',
 };
 
 const locales: Record<Locale, ServerMessages> = { en, ru, tr };
