@@ -3,6 +3,7 @@ import {
   Connection,
   Diagnostic,
   DiagnosticSeverity,
+  DiagnosticTag,
 } from "vscode-languageserver/node";
 import { CODE_KEYWORDS } from "../lib/parser";
 import { VariableInfo } from "../types";
@@ -174,7 +175,9 @@ export class DiagnosticsProvider {
 
               const char = checkPart[j];
               diagnostics.push({
-                severity: DiagnosticSeverity.Warning,
+                severity: DiagnosticSeverity.Error,
+                tags: [DiagnosticTag.Deprecated],
+                code: "nonAscii",
                 range: {
                   start: { line: i, character: j },
                   end: { line: i, character: j + 1 },
@@ -449,6 +452,8 @@ export class DiagnosticsProvider {
 
         const newDiagnostic: Diagnostic = {
           severity: DiagnosticSeverity.Error,
+          code: bestMatch ? "variableTypo" : "variableNotDefined",
+          data: bestMatch ? { replacement: bestMatch } : undefined,
           message: message,
           range: {
             start: { line: lineIndex, character: match.index },
@@ -1185,7 +1190,9 @@ export class DiagnosticsProvider {
           if (charCode > 127) {
             if (charCode === 0xfeff) continue;
             diagnostics.push({
-              severity: DiagnosticSeverity.Warning,
+              severity: DiagnosticSeverity.Error,
+              tags: [DiagnosticTag.Deprecated],
+              code: "nonAscii",
               range: {
                 start: { line: i, character: j },
                 end: { line: i, character: j + 1 },

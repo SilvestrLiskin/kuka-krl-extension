@@ -16,6 +16,10 @@ import {
   extractVariableFromMessage,
 } from "../lib/i18n";
 
+interface TypoData {
+  replacement: string;
+}
+
 export class CodeActionsProvider {
   /**
    * Kod eylemleri sağlar (Quick Fixes).
@@ -88,6 +92,16 @@ export class CodeActionsProvider {
           ...this.createChangeTypeActions(doc, diagnostic, "INT", "REAL"),
         );
         actions.push(this.createWrapWithRoundAction(doc, diagnostic));
+      }
+
+      // Quick Fix for Typos (Did you mean...)
+      if (diagnostic.code === "variableTypo") {
+        actions.push(this.createFixTypoAction(doc, diagnostic));
+      }
+
+      // Quick Fix for Non-ASCII (Delete character)
+      if (diagnostic.code === "nonAscii") {
+        actions.push(this.createDeleteCharAction(doc, diagnostic));
       }
     }
 
