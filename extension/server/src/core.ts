@@ -349,8 +349,6 @@ documents.onDidChangeContent(async (change) => {
   }
 
   if (document.uri.endsWith(".dat")) {
-    diagnostics.validateDatFile(document);
-
     // Struct tanımlarını güncelle
     const structs = extractStrucVariables(document.getText());
     Object.assign(state.structDefinitions, structs);
@@ -406,7 +404,19 @@ documents.onDidChangeContent(async (change) => {
       }
     }
 
-    // Safety diagnostics для SRC файлов
+    // Generic Diagnostics for all file types
+    if (currentDoc.uri.toLowerCase().endsWith(".dat")) {
+      allDiagnostics.push(...diagnostics.validateDatFile(currentDoc));
+    }
+
+    if (
+      currentDoc.uri.toLowerCase().endsWith(".src") ||
+      currentDoc.uri.toLowerCase().endsWith(".dat")
+    ) {
+      allDiagnostics.push(...diagnostics.validateKrlConstraints(currentDoc));
+    }
+
+    // Safety diagnostics für SRC Dateien
     if (currentDoc.uri.toLowerCase().endsWith(".src")) {
       allDiagnostics.push(
         ...diagnostics.validateSafetySpeeds(currentDoc),
@@ -417,7 +427,6 @@ documents.onDidChangeContent(async (change) => {
         ...diagnostics.validateEmptyBlocks(currentDoc),
         ...diagnostics.validateDangerousStatements(currentDoc),
         ...diagnostics.validateTypeUsage(currentDoc, state.mergedVariables),
-        ...diagnostics.validateKrlConstraints(currentDoc),
       );
     }
 

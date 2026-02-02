@@ -21,7 +21,7 @@ const REGEX_DEFDAT_START = /^DEFDAT\s+(\w+)(?:\s+PUBLIC)?/i;
 const REGEX_PUBLIC = /PUBLIC/i;
 const REGEX_ENDDAT = /^ENDDAT\b/i;
 const REGEX_IS_DECL_LINE = /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+\w+/i;
-const REGEX_SIGNAL = /^SIGNAL\b/i;
+const REGEX_SIGNAL = /^\s*SIGNAL\b/i;
 const REGEX_STRUC = /^STRUC\b/i;
 const REGEX_GLOBAL = /\bGLOBAL\b/i;
 const REGEX_DECL_SIGNAL_STRUC = /^(?:DECL|SIGNAL|STRUC)\b/i;
@@ -221,13 +221,13 @@ export class DiagnosticsProvider {
           }
           if (REGEX_STARTS_WITH_DIGIT.test(name)) {
             diagnostics.push({
-                severity: DiagnosticSeverity.Error,
-                range: {
-                  start: { line: lineIndex, character: nameOffset },
-                  end: { line: lineIndex, character: nameOffset + name.length },
-                },
-                message: t("diag.nameStartsWithDigit", name),
-                source: "krl-language-support",
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: lineIndex, character: nameOffset },
+                end: { line: lineIndex, character: nameOffset + name.length },
+              },
+              message: t("diag.nameStartsWithDigit", name),
+              source: "krl-language-support",
             });
           }
         }
@@ -239,10 +239,10 @@ export class DiagnosticsProvider {
    * Проверяет .dat файл на соответствие правилам GLOBAL/PUBLIC.
    * Также ищет символы вне ASCII и незакрытые кавычки в строках.
    */
-  public async validateDatFile(
+  public validateDatFile(
     document: TextDocument,
     validateNonAscii: boolean = true,
-  ) {
+  ): Diagnostic[] {
     // SİSTEM DOSYALARINI ATLA (büyük/küçük harf duyarsız)
     const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
     if (
@@ -250,8 +250,7 @@ export class DiagnosticsProvider {
       lowerUri.includes("/system/") ||
       lowerUri.includes("/tp/")
     ) {
-      this.connection.sendDiagnostics({ uri: document.uri, diagnostics: [] });
-      return;
+      return [];
     }
 
     const diagnostics: Diagnostic[] = [];
@@ -395,9 +394,12 @@ export class DiagnosticsProvider {
         // KUKA 24-karakter değişken isim limitini kontrol et (Robust Check)
         // Use codePart (ignores comments) but preserves indentation
         this.checkVariableDeclaration(codePart, i, diagnostics);
+      } else {
+        // Blocks outside DEFDAT: Still check for Name Length and ASCII
+        this.checkVariableDeclaration(codePart, i, diagnostics);
       }
     }
-    this.connection.sendDiagnostics({ uri: document.uri, diagnostics });
+    return diagnostics;
   }
 
   /**
