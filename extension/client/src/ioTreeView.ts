@@ -222,6 +222,20 @@ export class IOTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> 
 
   getChildren(element?: vscode.TreeItem): Thenable<vscode.TreeItem[]> {
     if (!element) {
+      if (
+        this.inputs.size === 0 &&
+        this.outputs.size === 0 &&
+        this.analogInputs.size === 0 &&
+        this.analogOutputs.size === 0
+      ) {
+        return Promise.resolve([
+          new vscode.TreeItem(
+            "No KRL signals found in workspace",
+            vscode.TreeItemCollapsibleState.None,
+          ),
+        ]);
+      }
+
       // Корневые элементы - категории
       const categories: IOCategory[] = [];
 

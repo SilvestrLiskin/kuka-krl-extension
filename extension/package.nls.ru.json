@@ -15,5 +15,6 @@
     "config.indentWidth.description": "Количество пробелов для отступа (3 = стандарт KUKA Teach Pendant)",
     "config.separateBeforeBlocks.description": "Добавлять пустую строку перед блоками управления (FOR, IF, WHILE, LOOP и т.д.)",
     "config.separateAfterBlocks.description": "Добавлять пустую строку после блоков управления (ENDFOR, ENDIF, ENDWHILE и т.д.)",
-    "config.validateNonAscii.description": "Подсвечивать не-ASCII символы (кириллица, спецсимволы), которые могут вызвать ошибки в контроллере KUKA"
+    "config.validateNonAscii.description": "Подсвечивать не-ASCII символы (кириллица, спецсимволы), которые могут вызвать ошибки в контроллере KUKA",
+    "view.krlIO.welcome": "Сигналы ввода/вывода не найдены в рабочей области. Используйте $IN[n], $OUT[n] и т.д. в вашем KRL коде, чтобы увидеть их здесь."
 }

@@ -15,5 +15,6 @@
     "config.indentWidth.description": "Girinti için boşluk sayısı (3 = KUKA Teach Pendant standardı)",
     "config.separateBeforeBlocks.description": "Kontrol blokları (FOR, IF, WHILE, LOOP vb.) öncesine boş satır ekle",
     "config.separateAfterBlocks.description": "Kontrol blokları (ENDFOR, ENDIF, ENDWHILE vb.) sonrasına boş satır ekle",
-    "config.validateNonAscii.description": "KUKA kontrolcüsünde hata oluşturabilecek ASCII olmayan karakterleri (Kiril, özel semboller) vurgula"
+    "config.validateNonAscii.description": "KUKA kontrolcüsünde hata oluşturabilecek ASCII olmayan karakterleri (Kiril, özel semboller) vurgula",
+    "view.krlIO.welcome": "Çalışma alanında I/O sinyali bulunamadı. Onları burada görmek için KRL kodunuzda $IN[n], $OUT[n] vb. kullanın."
 }

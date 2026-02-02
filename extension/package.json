@@ -518,6 +518,12 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "krlIO",
+        "contents": "%view.krlIO.welcome%\n[Refresh](command:krl.refreshIOView)"
+      }
+    ],
     "menus": {
       "editor/title": [
         {

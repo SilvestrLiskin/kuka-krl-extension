@@ -38,6 +38,7 @@ import { CallHierarchyProvider } from "./features/callHierarchy";
 import { SymbolExtractor, extractStrucVariables } from "./lib/collector";
 import { getAllDatFiles, getAllSourceFiles } from "./lib/fileSystem";
 import { setLocale } from "./lib/i18n";
+import { findWorkspaceRoot } from "./lib/workspaceResolver";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
@@ -300,23 +301,11 @@ async function extractFunctionsFromWorkspace(
 documents.onDidChangeContent(async (change) => {
   const { document } = change;
 
-  // Örtülü Çalışma Alanı Çıkarımı
+  // Öртлилы Çalışma Alanı Çıkarımı (Async & Cached)
   if (!state.workspaceRoot) {
-    let currentDir = path.dirname(URI.parse(document.uri).fsPath);
-    // Kök bulmak için yukarı doğru ara
-    while (currentDir.length > 1) {
-      if (
-        fs.existsSync(path.join(currentDir, "KRC")) ||
-        fs.existsSync(path.join(currentDir, "R1")) ||
-        path.basename(currentDir).toUpperCase() === "KRC"
-      ) {
-        break;
-      }
-      const parent = path.dirname(currentDir);
-      if (parent === currentDir) break; // Köke ulaşıldı
-      currentDir = parent;
-    }
-    state.workspaceRoot = currentDir;
+    const docPath = URI.parse(document.uri).fsPath;
+    state.workspaceRoot = await findWorkspaceRoot(path.dirname(docPath));
+
     log(`[ÖrtülüKök] Çıkarılan kök: ${state.workspaceRoot}`);
     diagnostics.setWorkspaceRoot(state.workspaceRoot);
 
