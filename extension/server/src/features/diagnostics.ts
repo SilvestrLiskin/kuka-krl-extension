@@ -146,7 +146,8 @@ export class DiagnosticsProvider {
       const type = declMatch[1].toUpperCase();
       const rest = declMatch[2];
 
-      // Since regex consumes indentation (^\s*), the rest index relative to the match start (0)
+      // Skip procedure calls like BAS (#INITMOV, 0)
+      if (rest.trimStart().startsWith("(")) return;
       // is the correct index in lineText.
       const restIndex = declMatch[0].lastIndexOf(rest);
       const restStartOffset = restIndex;
