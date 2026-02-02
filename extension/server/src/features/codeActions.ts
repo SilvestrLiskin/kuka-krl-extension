@@ -347,4 +347,45 @@ export class CodeActionsProvider {
       },
     };
   }
+
+  /**
+   * Create action to fix typo based on 'Did you mean' suggestion
+   */
+  private createFixTypoAction(
+    doc: TextDocument,
+    diagnostic: Diagnostic,
+  ): CodeAction {
+    const data = diagnostic.data as TypoData;
+    return {
+      title: t("action.fixTypo", data.replacement),
+      kind: CodeActionKind.QuickFix,
+      diagnostics: [diagnostic],
+      isPreferred: true,
+      edit: {
+        changes: {
+          [doc.uri]: [TextEdit.replace(diagnostic.range, data.replacement)],
+        },
+      },
+    };
+  }
+
+  /**
+   * Create action to delete invalid character
+   */
+  private createDeleteCharAction(
+    doc: TextDocument,
+    diagnostic: Diagnostic,
+  ): CodeAction {
+    return {
+      title: t("action.deleteInvalidChar"),
+      kind: CodeActionKind.QuickFix,
+      diagnostics: [diagnostic],
+      isPreferred: true,
+      edit: {
+        changes: {
+          [doc.uri]: [TextEdit.del(diagnostic.range)],
+        },
+      },
+    };
+  }
 }

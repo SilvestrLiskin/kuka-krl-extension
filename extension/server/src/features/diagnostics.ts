@@ -6,6 +6,7 @@ import {
   DiagnosticTag,
 } from "vscode-languageserver/node";
 import { CODE_KEYWORDS } from "../lib/parser";
+import { splitVarsRespectingBracketsWithOffsets } from "../lib/collector";
 import { VariableInfo } from "../types";
 import { t } from "../lib/i18n";
 
@@ -125,6 +126,112 @@ export class DiagnosticsProvider {
    */
   public updateFunctionCache(functionNames: string[]) {
     functionNamesCache = new Set(functionNames.map((n) => n.toUpperCase()));
+  }
+
+  /**
+   * Helper to check variable declaration constraints (length, invalid chars)
+   */
+  private checkVariableDeclaration(
+    lineText: string,
+    lineIndex: number,
+    diagnostics: Diagnostic[]
+  ) {
+    // Regex matches the whole line structure (assuming it's a declaration)
+    const declRegex =
+      /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?(STRUC|ENUM|SIGNAL|\w+)\s+([^\r\n;]+)/i;
+    const declMatch = lineText.match(declRegex);
+
+    if (declMatch) {
+      const type = declMatch[1].toUpperCase();
+      const rest = declMatch[2];
+
+      // Since regex consumes indentation (^\s*), the rest index relative to the match start (0)
+      // is the correct index in lineText.
+      const restIndex = declMatch[0].lastIndexOf(rest);
+      const restStartOffset = restIndex;
+
+      if (type === "STRUC" || type === "ENUM") {
+        // STRUC/ENUM: Only check struct/enum name
+        const nameMatch = rest.match(/^([a-zA-Z0-9_$]+)/);
+        if (nameMatch) {
+          const name = nameMatch[1];
+          if (name.length > 24) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: lineIndex, character: restStartOffset },
+                end: { line: lineIndex, character: restStartOffset + name.length },
+              },
+              message: t("diag.nameTooLong", name, name.length),
+              source: "krl-language-support",
+            });
+          }
+        }
+      } else {
+        // DECL or SIGNAL: Check all variables
+        const vars = splitVarsRespectingBracketsWithOffsets(
+          rest,
+          restStartOffset,
+        );
+
+        for (const v of vars) {
+          let name = v.text;
+          const nameOffset = v.offset;
+
+          if (type === "SIGNAL") {
+            // SIGNAL Name $IN[1] -> take Name
+            const parts = name.split(/\s+/);
+            if (parts.length > 0) name = parts[0];
+          } else {
+            // DECL INT Name=Val -> take Name
+            const delimiters = ["=", "[", " "];
+            let endIndex = name.length;
+            for (const d of delimiters) {
+              const idx = name.indexOf(d);
+              if (idx !== -1 && idx < endIndex) endIndex = idx;
+            }
+            name = name.substring(0, endIndex);
+          }
+          name = name.trim();
+
+          if (name.length > 24) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: lineIndex, character: nameOffset },
+                end: { line: lineIndex, character: nameOffset + name.length },
+              },
+              message: t("diag.nameTooLong", name, name.length),
+              source: "krl-language-support",
+            });
+          }
+
+          const invalidCharMatch = name.match(/[^a-zA-Z0-9_$]/);
+          if (invalidCharMatch) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: lineIndex, character: nameOffset },
+                end: { line: lineIndex, character: nameOffset + name.length },
+              },
+              message: t("diag.invalidCharInName", invalidCharMatch[0]),
+              source: "krl-language-support",
+            });
+          }
+          if (REGEX_STARTS_WITH_DIGIT.test(name)) {
+            diagnostics.push({
+                severity: DiagnosticSeverity.Error,
+                range: {
+                  start: { line: lineIndex, character: nameOffset },
+                  end: { line: lineIndex, character: nameOffset + name.length },
+                },
+                message: t("diag.nameStartsWithDigit", name),
+                source: "krl-language-support",
+            });
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -284,41 +391,9 @@ export class DiagnosticsProvider {
           }
         }
 
-        // KUKA 24-karakter değişken isim limitini kontrol et
-        const declMatch = trimmedLine.match(REGEX_VAR_NAME_DECL);
-        if (declMatch) {
-          const varName = declMatch[1];
-          // 24-karakter limiti
-          if (varName.length > 24) {
-            diagnostics.push({
-              severity: DiagnosticSeverity.Error,
-              range: {
-                start: { line: i, character: trimmedLine.indexOf(varName) },
-                end: {
-                  line: i,
-                  character: trimmedLine.indexOf(varName) + varName.length,
-                },
-              },
-              message: t("diag.nameTooLong", varName, varName.length),
-              source: "krl-language-support",
-            });
-          }
-          // Rakamla başlayan isimler
-          if (REGEX_STARTS_WITH_DIGIT.test(varName)) {
-            diagnostics.push({
-              severity: DiagnosticSeverity.Error,
-              range: {
-                start: { line: i, character: trimmedLine.indexOf(varName) },
-                end: {
-                  line: i,
-                  character: trimmedLine.indexOf(varName) + varName.length,
-                },
-              },
-              message: t("diag.nameStartsWithDigit", varName),
-              source: "krl-language-support",
-            });
-          }
-        }
+        // KUKA 24-karakter değişken isim limitini kontrol et (Robust Check)
+        // Use codePart (ignores comments) but preserves indentation
+        this.checkVariableDeclaration(codePart, i, diagnostics);
       }
     }
     this.connection.sendDiagnostics({ uri: document.uri, diagnostics });
@@ -1166,11 +1241,6 @@ export class DiagnosticsProvider {
     const text = document.getText();
     const lines = text.split(/\r?\n/);
 
-    // Regex для деклараций: DECL TYPE NAME или SIGNAL NAME
-    // Группа 1: Имя переменной
-    const declPattern =
-      /^\s*(?:GLOBAL\s+)?(?:DECL\s+\w+|SIGNAL)\s+([a-zA-Z0-9_$@!-]+)/i;
-
     // Regex для присваивания сообщений
     // Группа 1: Поле (KEY или MODUL)
     // Группа 2: Значение (строка)
@@ -1204,40 +1274,8 @@ export class DiagnosticsProvider {
         }
       }
 
-      // 1. Проверка имен переменных (Length & Invalid Chars)
-      const declMatch = declPattern.exec(codePart);
-      if (declMatch) {
-        const varName = declMatch[1];
-        const matchIndex = codePart.indexOf(varName);
-
-        // Проверка длины (24 символа)
-        if (varName.length > 24) {
-          diagnostics.push({
-            severity: DiagnosticSeverity.Error,
-            range: {
-              start: { line: i, character: matchIndex },
-              end: { line: i, character: matchIndex + varName.length },
-            },
-            message: t("diag.nameTooLong", varName, varName.length),
-            source: "krl-language-support",
-          });
-        }
-
-        // Проверка недопустимых символов (-, @, !)
-        // KRL разрешает только A-Z, 0-9, _, $
-        const invalidCharMatch = varName.match(/[^a-zA-Z0-9_$]/);
-        if (invalidCharMatch) {
-          diagnostics.push({
-            severity: DiagnosticSeverity.Error,
-            range: {
-              start: { line: i, character: matchIndex },
-              end: { line: i, character: matchIndex + varName.length },
-            },
-            message: t("diag.invalidCharInName", invalidCharMatch[0]),
-            source: "krl-language-support",
-          });
-        }
-      }
+      // 1. Проверка имен переменных (Length & Invalid Chars) - Robust
+      this.checkVariableDeclaration(codePart, i, diagnostics);
 
       // 2. Проверка сообщений (KEY[] <= 26, MODUL[] <= 24)
       const msgMatch = msgPattern.exec(codePart);

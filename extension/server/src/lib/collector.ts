@@ -5,22 +5,62 @@ import { VariableInfo } from "../types";
  * Örnek: "a[10], b, c[5,3]" -> ["a[10]", "b", "c[5,3]"]
  */
 export const splitVarsRespectingBrackets = (input: string): string[] => {
-  const result: string[] = [];
+  return splitVarsRespectingBracketsWithOffsets(input).map((v) => v.text);
+};
+
+/**
+ * Parantezleri, süslü parantezleri ve tırnak işaretlerini dikkate alarak
+ * değişken bildirimlerini böler ve ofsetleri döndürür.
+ * @param input İşlenecek dize
+ * @param startOffset Dizenin dosya/satır içindeki başlangıç ofseti
+ */
+export const splitVarsRespectingBracketsWithOffsets = (
+  input: string,
+  startOffset: number = 0,
+): { text: string; offset: number }[] => {
+  const result: { text: string; offset: number }[] = [];
   let current = "";
-  let bracketDepth = 0;
+  let bracketDepth = 0; // [], {}
+  let inString = false;
+  let currentStart = 0;
 
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
-    if (char === "[") bracketDepth++;
-    if (char === "]") bracketDepth--;
-    if (char === "," && bracketDepth === 0) {
-      result.push(current.trim());
+
+    if (char === '"') {
+      inString = !inString;
+    }
+
+    if (!inString) {
+      if (char === "[" || char === "{") bracketDepth++;
+      if (char === "]" || char === "}") bracketDepth--;
+    }
+
+    if (char === "," && bracketDepth === 0 && !inString) {
+      if (current.trim()) {
+        const trimmed = current.trimStart();
+        const leadingSpaces = current.length - trimmed.length;
+        result.push({
+          text: current.trim(),
+          offset: startOffset + currentStart + leadingSpaces,
+        });
+      }
       current = "";
+      currentStart = i + 1;
     } else {
       current += char;
     }
   }
-  if (current) result.push(current.trim());
+
+  if (current.trim()) {
+    const trimmed = current.trimStart();
+    const leadingSpaces = current.length - trimmed.length;
+    result.push({
+      text: current.trim(),
+      offset: startOffset + currentStart + leadingSpaces,
+    });
+  }
+
   return result;
 };
 
