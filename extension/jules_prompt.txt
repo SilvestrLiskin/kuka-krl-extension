@@ -1,0 +1,22 @@
+I have uploaded the original Bearded Theme source files to `extension/bearded-theme-source/` on branch `fix/themes`.
+
+CRITICAL FIRST STEP:
+You MUST start by switching to the correct branch, as the files are NOT in main.
+Run:
+`git fetch origin fix/themes`
+`git checkout fix/themes`
+
+Your task is to fix the KRL themes in `extension/client/themes/`.
+Currently, these KRL themes have good syntax highlighting (`tokenColors`) but missing UI colors (`colors`), making the editor look default.
+
+For each JSON file in `extension/client/themes/`:
+1. Find the corresponding source theme in `extension/bearded-theme-source/`. The names are similar but might not be identical.
+   - Example: `KRL_Bearded_arc.json` -> `bearded-theme-arc.json`
+   - Example: `KRL_Bearded_arcEolstorm.json` -> `bearded-theme-arc-eolstorm.json`
+   - Strategy: Ignore "KRL_" and "Bearded_" prefixes, match the rest case-insensitively or by fuzzy match.
+2. Read the `colors` object from the source theme.
+3. Merge this `colors` object into the target KRL theme file.
+4. DO NOT overwrite `tokenColors` or `name` or `type`. Only update/add `colors`.
+5. If a source theme is not found, skip it.
+
+Please fix all matching theme files in a single batch.
