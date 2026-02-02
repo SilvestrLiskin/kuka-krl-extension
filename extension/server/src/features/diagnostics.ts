@@ -20,7 +20,7 @@ const REGEX_NON_ASCII = /[^\x00-\x7F]/g;
 const REGEX_DEFDAT_START = /^DEFDAT\s+(\w+)(?:\s+PUBLIC)?/i;
 const REGEX_PUBLIC = /PUBLIC/i;
 const REGEX_ENDDAT = /^ENDDAT\b/i;
-const REGEX_IS_DECL_LINE = /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+\w+/i;
+const REGEX_IS_DECL_LINE = /^(?:DECL\s+)?(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+(?:\$?[a-zA-Z0-9_]+)/i;
 const REGEX_SIGNAL = /^\s*SIGNAL\b/i;
 const REGEX_STRUC = /^STRUC\b/i;
 const REGEX_GLOBAL = /\bGLOBAL\b/i;
@@ -48,7 +48,7 @@ const REGEX_DEF_RESET = /^\s*(?:DEF|DEFFCT)\s+/i;
 const REGEX_FUNC_DEF = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
 
 const REGEX_LABEL = /^\w+\s*:\s*$/i;
-const REGEX_BLOCK_END = /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE)\b/i;
+const REGEX_BLOCK_END = /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE|ENDDAT|ENDSUB|ENDSPS)\b/i;
 
 // Pre-compiled regexes for optimization
 const REGEX_LABEL_DECL = /^\s*([a-zA-Z_]\w*)\s*:/gim;
@@ -1484,7 +1484,9 @@ export class DiagnosticsProvider {
     const diagnostics: Diagnostic[] = [];
 
     // Паттерны для "легальных" строк
-    const REGEX_ASSIGNMENT = /^\s*(?:\$|\w+)(?:\[[^\]]*\])?(?:\.\w+)*\s*=\s*/i;
+    const REGEX_HEADER_CTRL = /^\s*&/i;
+    // Allow system variables starting with $ on LHS of assignment
+    const REGEX_ASSIGNMENT = /^\s*(?:\$?[a-zA-Z0-9_]+)(?:\[[^\]]*\])?(?:\.\w+)*\s*=\s*/i;
     const REGEX_PROC_CALL = /^\s*(?:\$|\w+)\s*\(.*\)/i;
     const REGEX_WAIT = /^\s*WAIT\s+(?:FOR\s+|SEC\s+)/i;
     const REGEX_INTERRUPT = /^\s*INTERRUPT\s+(?:DECL|ON|OFF|ENABLE|DISABLE)/i;
@@ -1510,6 +1512,7 @@ export class DiagnosticsProvider {
 
       // Проверка по списку известных паттернов
       const isLegal =
+        REGEX_HEADER_CTRL.test(trimmedCode) ||
         REGEX_IS_DECL_LINE.test(trimmedCode) ||
         REGEX_SIGNAL.test(trimmedCode) ||
         REGEX_STRUC.test(trimmedCode) ||
