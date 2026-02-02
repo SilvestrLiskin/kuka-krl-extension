@@ -809,6 +809,7 @@ export class DiagnosticsProvider {
     }
 
     const blockStack: BlockInfo[] = [];
+    const internalKeywords = ["ELSE", "CASE", "DEFAULT"];
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -837,45 +838,100 @@ export class DiagnosticsProvider {
         }
       }
 
+      // Check for ELSE, CASE, DEFAULT (Context check)
+      for (const kw of internalKeywords) {
+        const regex = new RegExp(`\\b${kw}\\b`, "i");
+        const match = regex.exec(codePart);
+        if (match) {
+          let expectedParent = "";
+          if (kw === "ELSE") expectedParent = "IF";
+          if (kw === "CASE" || kw === "DEFAULT") expectedParent = "SWITCH";
+
+          if (
+            blockStack.length === 0 ||
+            blockStack[blockStack.length - 1].type !== expectedParent
+          ) {
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: i, character: match.index },
+                end: { line: i, character: match.index + kw.length },
+              },
+              message: t("diag.orphanBlock", kw, expectedParent),
+              source: "krl-language-support",
+            });
+          }
+        }
+      }
+
       // Проверка закрывающих блоков
       for (const closeKeyword of Object.keys(CLOSE_TO_OPEN)) {
         const regex = BLOCK_CLOSE_REGEXES[closeKeyword];
         const match = regex.exec(codePart);
         if (match) {
           const expectedOpen = CLOSE_TO_OPEN[closeKeyword];
-          if (blockStack.length === 0) {
-            diagnostics.push({
-              severity: DiagnosticSeverity.Error,
-              range: {
-                start: { line: i, character: match.index },
-                end: { line: i, character: match.index + closeKeyword.length },
-              },
-              message: t("diag.unmatchedBlock", closeKeyword, expectedOpen),
-              source: "krl-language-support",
-            });
-          } else {
-            const lastBlock = blockStack[blockStack.length - 1];
-            if (lastBlock.type === expectedOpen) {
-              blockStack.pop();
-            } else {
-              const expectedClose = BLOCK_PAIRS[lastBlock.type];
+
+          // Standard Match
+          if (
+            blockStack.length > 0 &&
+            blockStack[blockStack.length - 1].type === expectedOpen
+          ) {
+            blockStack.pop();
+            continue;
+          }
+
+          // Recovery Logic
+          let foundIndex = -1;
+          for (let k = blockStack.length - 1; k >= 0; k--) {
+            if (blockStack[k].type === expectedOpen) {
+              foundIndex = k;
+              break;
+            }
+          }
+
+          if (foundIndex !== -1) {
+            // Found matching open block deeper in stack.
+            // All blocks above it are unclosed.
+            while (blockStack.length > foundIndex + 1) {
+              const missedBlock = blockStack.pop()!;
+              const missedClose = BLOCK_PAIRS[missedBlock.type];
               diagnostics.push({
                 severity: DiagnosticSeverity.Error,
                 range: {
-                  start: { line: i, character: match.index },
+                  start: {
+                    line: missedBlock.line,
+                    character: missedBlock.character,
+                  },
                   end: {
-                    line: i,
-                    character: match.index + closeKeyword.length,
+                    line: missedBlock.line,
+                    character:
+                      missedBlock.character + missedBlock.type.length,
                   },
                 },
                 message: t(
-                  "diag.mismatchedBlock",
-                  closeKeyword,
-                  expectedClose,
+                  "diag.unmatchedBlock",
+                  missedBlock.type,
+                  missedClose,
                 ),
                 source: "krl-language-support",
               });
             }
+            // Now top is matched. Pop it.
+            blockStack.pop();
+          } else {
+            // Not found in stack - Spurious Close
+            diagnostics.push({
+              severity: DiagnosticSeverity.Error,
+              range: {
+                start: { line: i, character: match.index },
+                end: {
+                  line: i,
+                  character: match.index + closeKeyword.length,
+                },
+              },
+              message: t("diag.mismatchedBlock", closeKeyword, expectedOpen),
+              source: "krl-language-support",
+            });
           }
         }
       }
@@ -1412,6 +1468,85 @@ export class DiagnosticsProvider {
             source: "krl-language-support",
           });
         }
+      }
+    }
+
+    return diagnostics;
+  }
+
+  /**
+   * Проверяет общую структуру синтаксиса.
+   * Флагует строки, которые не соответствуют ни одному известному паттерну KRL.
+   */
+  public validateGeneralSyntax(document: TextDocument): Diagnostic[] {
+    const text = document.getText();
+    const lines = text.split(/\r?\n/);
+    const diagnostics: Diagnostic[] = [];
+
+    // Паттерны для "легальных" строк
+    const REGEX_ASSIGNMENT = /^\s*(?:\$|\w+)(?:\[[^\]]*\])?(?:\.\w+)*\s*=\s*/i;
+    const REGEX_PROC_CALL = /^\s*(?:\$|\w+)\s*\(.*\)/i;
+    const REGEX_WAIT = /^\s*WAIT\s+(?:FOR\s+|SEC\s+)/i;
+    const REGEX_INTERRUPT = /^\s*INTERRUPT\s+(?:DECL|ON|OFF|ENABLE|DISABLE)/i;
+    const REGEX_BRAKE = /^\s*BRAKE\b/i;
+    const REGEX_RESUME = /^\s*RESUME\b/i;
+    const REGEX_CONFIRM = /^\s*CONFIRM\b/i;
+    const REGEX_PULSE = /^\s*PULSE\b/i;
+    const REGEX_IF_INLINE = /^\s*IF\s+.*THEN\s+\w+/i;
+    const REGEX_FOLD_B = /^\s*;FOLD\b/i;
+    const REGEX_FOLD_E = /^\s*;ENDFOLD\b/i;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // Пропускаем пустые строки и комментарии
+      if (!trimmed || trimmed.startsWith(";")) continue;
+
+      const codePart = line.split(";")[0];
+      const trimmedCode = codePart.trim();
+
+      if (!trimmedCode) continue;
+
+      // Проверка по списку известных паттернов
+      const isLegal =
+        REGEX_IS_DECL_LINE.test(trimmedCode) ||
+        REGEX_SIGNAL.test(trimmedCode) ||
+        REGEX_STRUC.test(trimmedCode) ||
+        REGEX_MOVEMENT.test(trimmedCode) ||
+        REGEX_DEF_RESET.test(trimmedCode) ||
+        REGEX_BLOCK_END.test(trimmedCode) ||
+        REGEX_FUNC_DEF.test(trimmedCode) ||
+        REGEX_LABEL.test(trimmedCode) ||
+        REGEX_ASSIGNMENT.test(trimmedCode) ||
+        REGEX_PROC_CALL.test(trimmedCode) ||
+        REGEX_WAIT.test(trimmedCode) ||
+        REGEX_INTERRUPT.test(trimmedCode) ||
+        REGEX_BRAKE.test(trimmedCode) ||
+        REGEX_RESUME.test(trimmedCode) ||
+        REGEX_CONFIRM.test(trimmedCode) ||
+        REGEX_PULSE.test(trimmedCode) ||
+        REGEX_IF_INLINE.test(trimmedCode) ||
+        REGEX_FOLD_B.test(trimmedCode) ||
+        REGEX_FOLD_E.test(trimmedCode) ||
+        /^\s*(?:IF|FOR|WHILE|LOOP|SWITCH|REPEAT)\b/i.test(trimmedCode) ||
+        /^\s*DEFDAT\b/i.test(trimmedCode) ||
+        /^\s*ANOUT\b/i.test(trimmedCode) ||
+        /^\s*LIN_REL|PTP_REL/i.test(trimmedCode);
+
+      if (!isLegal) {
+        diagnostics.push({
+          severity: DiagnosticSeverity.Error,
+          range: {
+            start: { line: i, character: line.indexOf(trimmedCode) },
+            end: {
+              line: i,
+              character: line.indexOf(trimmedCode) + trimmedCode.length,
+            },
+          },
+          message: t("diag.syntaxError", trimmedCode),
+          source: "krl-language-support",
+        });
       }
     }
 

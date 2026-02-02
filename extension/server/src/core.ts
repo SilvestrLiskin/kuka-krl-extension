@@ -413,7 +413,10 @@ documents.onDidChangeContent(async (change) => {
       currentDoc.uri.toLowerCase().endsWith(".src") ||
       currentDoc.uri.toLowerCase().endsWith(".dat")
     ) {
-      allDiagnostics.push(...diagnostics.validateKrlConstraints(currentDoc));
+      allDiagnostics.push(
+        ...diagnostics.validateKrlConstraints(currentDoc),
+        ...diagnostics.validateGeneralSyntax(currentDoc),
+      );
     }
 
     // Safety diagnostics für SRC Dateien

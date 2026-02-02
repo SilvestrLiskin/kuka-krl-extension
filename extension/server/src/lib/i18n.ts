@@ -76,6 +76,8 @@ interface ServerMessages {
   "diag.msgKeyTooLong": string;
   "diag.msgOriginatorTooLong": string;
   "diag.mismatchedBlock": string;
+  "diag.orphanBlock": string;
+  "diag.syntaxError": string;
 }
 
 // English (default)
@@ -150,6 +152,8 @@ const en: ServerMessages = {
   "diag.msgOriginatorTooLong":
     "Message originator length ({0}) exceeds KUKA limit (24 characters).",
   "diag.mismatchedBlock": 'Unexpected "{0}" — expected "{1}".',
+  "diag.orphanBlock": 'Unexpected "{0}" outside of "{1}" block.',
+  "diag.syntaxError": 'Syntax error: unrecognized instruction or random text "{0}".',
 };
 
 // Russian
@@ -225,6 +229,8 @@ const ru: ServerMessages = {
   "diag.msgOriginatorTooLong":
     "Длина отправителя сообщения ({0}) превышает лимит KUKA (24 символа).",
   "diag.mismatchedBlock": 'Неожиданный "{0}" — ожидался "{1}".',
+  "diag.orphanBlock": 'Неожиданный "{0}" вне блока "{1}".',
+  "diag.syntaxError": 'Синтаксическая ошибка: нераспознанная инструкция или случайный текст "{0}".',
 };
 
 // Turkish
@@ -298,6 +304,8 @@ const tr: ServerMessages = {
   "diag.msgOriginatorTooLong":
     "Mesaj gönderici uzunluğu ({0}) KUKA sınırını aşıyor (24 karakter).",
   "diag.mismatchedBlock": 'Beklenmeyen "{0}" — "{1}" bekleniyordu.',
+  "diag.orphanBlock": '"{1}" bloğu dışında beklenmeyen "{0}".',
+  "diag.syntaxError": 'Sözdizimi hatası: tanınmayan talimat veya rastgele metin "{0}".',
 };
 
 const locales: Record<Locale, ServerMessages> = { en, ru, tr };
