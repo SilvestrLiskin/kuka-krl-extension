@@ -502,6 +502,12 @@
         "title": "Rename Signal (Set Alias)",
         "category": "KRL",
         "icon": "$(edit)"
+      },
+      {
+        "command": "krl.openSnippetGenerator",
+        "title": "KRL Snippet Generator",
+        "category": "KRL",
+        "icon": "$(beaker)"
       }
     ],
     "views": {
@@ -645,6 +651,7 @@
     "test": "node tests/extension.test.js"
   },
   "devDependencies": {
+    "@types/node": "^18.19.130",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
     "eslint": "^9.39.2",

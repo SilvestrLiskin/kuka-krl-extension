@@ -16,6 +16,7 @@ import { cleanupUnusedVariables } from "./features/cleanup";
 
 import { showCalculator } from "./features/calculator";
 import { initErrorLens } from "./features/errorLens";
+import { showSnippetGenerator } from "./features/snippetGenerator";
 
 // KRL tanılama koleksiyonu
 const krlDiagnostics = vscode.languages.createDiagnosticCollection("krl");
@@ -295,6 +296,13 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.showCalculator", () => {
       showCalculator(context);
+    }),
+  );
+
+  // Snippet Generator
+  context.subscriptions.push(
+    vscode.commands.registerCommand("krl.openSnippetGenerator", () => {
+      showSnippetGenerator(context);
     }),
   );
 

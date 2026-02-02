@@ -113,6 +113,32 @@ export class DocumentSymbolsProvider {
         continue;
       }
 
+      // ;FOLD
+      const foldMatch = line.match(/^\s*;FOLD\s+(.+)/i);
+      if (foldMatch) {
+        const name = foldMatch[1].trim();
+        // startPos might be -1 if name is empty, but regex requires at least one char
+        const startPos = line.indexOf(name);
+
+        const symbol: DocumentSymbol = {
+          name: name,
+          detail: "FOLD",
+          kind: SymbolKind.Namespace,
+          range: Range.create(
+            Position.create(i, 0),
+            Position.create(i, line.length),
+          ),
+          selectionRange: Range.create(
+            Position.create(i, startPos),
+            Position.create(i, startPos + name.length),
+          ),
+          children: [],
+        };
+
+        symbolStack.push({ symbol, endPattern: /^\s*;ENDFOLD/i });
+        continue;
+      }
+
       // Check for end patterns
       for (let j = symbolStack.length - 1; j >= 0; j--) {
         if (symbolStack[j].endPattern.test(line)) {

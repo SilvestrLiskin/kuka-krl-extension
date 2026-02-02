@@ -28,6 +28,12 @@ export class CommandsTreeProvider implements vscode.TreeDataProvider<CommandItem
   private getCommands(): CommandItem[] {
     return [
       new CommandItem(
+        "Snippet Generator",
+        "krl.openSnippetGenerator",
+        "beaker",
+        "Open Message Builder & Grid Generator",
+      ),
+      new CommandItem(
         "KRL Calculator",
         "krl.showCalculator",
         "calculator",
