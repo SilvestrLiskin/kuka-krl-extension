@@ -35,6 +35,7 @@ import { SignatureHelpProvider } from "./features/signatureHelp";
 import { CodeActionsProvider } from "./features/codeActions";
 import { CodeLensProvider } from "./features/codeLens";
 import { CallHierarchyProvider } from "./features/callHierarchy";
+import { HighlightProvider } from "./features/highlights";
 import { SymbolExtractor, extractStrucVariables } from "./lib/collector";
 import { getAllDatFiles, getAllSourceFiles } from "./lib/fileSystem";
 import { setLocale } from "./lib/i18n";
@@ -137,6 +138,7 @@ const signatureHelp = new SignatureHelpProvider();
 const codeActions = new CodeActionsProvider();
 const codeLens = new CodeLensProvider();
 const callHierarchy = new CallHierarchyProvider();
+const highlights = new HighlightProvider();
 const diagnostics = new DiagnosticsProvider(connection);
 
 // =======================
@@ -160,6 +162,7 @@ connection.onInitialize((params: InitializeParams): InitializeResult => {
       documentFormattingProvider: true,
       documentSymbolProvider: true,
       workspaceSymbolProvider: true,
+      documentHighlightProvider: true,
       renameProvider: {
         prepareProvider: true,
       },
@@ -542,6 +545,10 @@ connection.onCodeLens((params: CodeLensParams) => {
 
 connection.onCodeLensResolve((lens) => {
   return codeLens.onCodeLensResolve(lens);
+});
+
+connection.onDocumentHighlight((params) => {
+  return highlights.onDocumentHighlight(params, documents);
 });
 
 connection.languages.callHierarchy.onPrepare((params) => {

@@ -25,10 +25,10 @@ const REGEX_DECL_SIGNAL_STRUC = /^(?:DECL|SIGNAL|STRUC)\b/i;
 const REGEX_VAR_NAME_DECL = /^(?:GLOBAL\s+)?(?:DECL\s+)?(?:GLOBAL\s+)?\w+\s+(\w+)/i;
 const REGEX_STARTS_WITH_DIGIT = /^\d/;
 
-const REGEX_VARIABLE = /\b([a-zA-Z_]\w*)\b/g;
-const REGEX_LOCAL_DECL = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Z_]\w*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Z_]\w*(?:\s*\[[^\]]*\])?)*)/gim;
+const REGEX_VARIABLE = /\b([a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*)\b/g;
+const REGEX_LOCAL_DECL = /^\s*(?:GLOBAL\s+)?(?:DECL\s+)?\w+\s+([a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*(?:\s*\[[^\]]*\])?(?:\s*,\s*[a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*(?:\s*\[[^\]]*\])?)*)/gim;
 const REGEX_ARRAY_BRACKETS = /\[.*?\]/g;
-const REGEX_VALID_VAR_NAME = /^[a-zA-Z_]\w*$/;
+const REGEX_VALID_VAR_NAME = /^[a-zA-Zа-яА-Я_][a-zA-Zа-яА-Я0-9_]*$/;
 const REGEX_SKIP_DECL_STRUC_SIGNAL = /^\s*(?:GLOBAL\s+)?(?:DECL|STRUC|SIGNAL)\b/i;
 const REGEX_SKIP_DEF = /^\s*(?:GLOBAL\s+)?(?:DEF|DEFFCT)\b/i;
 const REGEX_STRING_CONTENT = /"[^"]*"/g;
@@ -170,6 +170,16 @@ export class DiagnosticsProvider {
             if (charCode > 127) {
               // BOM (Byte Order Mark) karakterini yoksay (U+FEFF = 65279)
               if (charCode === 0xfeff) continue;
+
+              // КИРИЛЛИЦА: Пропускаем, если это часть идентификатора
+              const isCyrillic = (charCode >= 0x0400 && charCode <= 0x04FF);
+              if (isCyrillic) {
+                // ПРОВЕРКА: является ли этот символ частью слова/идентификатора
+                const charBefore = j > 0 ? checkPart[j - 1] : "";
+                const charAfter = j < checkPart.length - 1 ? checkPart[j + 1] : "";
+                const isPartofWord = /[a-zA-Zа-яА-Я0-9_]/.test(charBefore) || /[a-zA-Zа-яА-Я0-9_]/.test(charAfter);
+                if (isPartofWord) continue;
+              }
 
               const char = checkPart[j];
               diagnostics.push({
@@ -428,9 +438,27 @@ export class DiagnosticsProvider {
         if (functionNamesCache.has(varName.toUpperCase())) continue;
 
         // Bilinmeyen sembol ise hata bildir
+        let message = t("diag.variableNotDefined", varName);
+
+        // Поиск похожего имени (Spellchecking)
+        let bestMatch = "";
+        let minDistance = 3; // Порог схожести
+
+        for (const name of validatedNames) {
+          const distance = levenshteinDistance(varName.toUpperCase(), name);
+          if (distance < minDistance) {
+            minDistance = distance;
+            bestMatch = name;
+          }
+        }
+
+        if (bestMatch) {
+          message += ` ${t("diag.didYouMean", bestMatch)}`;
+        }
+
         const newDiagnostic: Diagnostic = {
           severity: DiagnosticSeverity.Error,
-          message: t("diag.variableNotDefined", varName),
+          message: message,
           range: {
             start: { line: lineIndex, character: match.index },
             end: { line: lineIndex, character: match.index + varName.length },
@@ -1221,4 +1249,34 @@ export class DiagnosticsProvider {
 // Вспомогательная функция для поиска индекса (если нет в классе)
 function matchStartIndex(text: string, substring: string): number {
   return text.indexOf(substring);
+}
+
+/**
+ * Расстояние Левенштейна для поиска похожих имен.
+ */
+function levenshteinDistance(s1: string, s2: string): number {
+  const len1 = s1.length;
+  const len2 = s2.length;
+  const matrix: number[][] = [];
+
+  for (let i = 0; i <= len1; i++) {
+    matrix[i] = [i];
+  }
+
+  for (let j = 0; j <= len2; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= len1; i++) {
+    for (let j = 1; j <= len2; j++) {
+      const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,      // deletion
+        matrix[i][j - 1] + 1,      // insertion
+        matrix[i - 1][j - 1] + cost // substitution
+      );
+    }
+  }
+
+  return matrix[len1][len2];
 }

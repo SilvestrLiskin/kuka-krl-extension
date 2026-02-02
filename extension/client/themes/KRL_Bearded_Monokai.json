@@ -78,6 +78,22 @@
             }
         },
         {
+            "scope": "variable.function.krl",
+            "settings": {
+                "foreground": "#a9dc76",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "scope": [
+                "variable.other.readwrite.krl",
+                "variable.other.member.krl"
+            ],
+            "settings": {
+                "foreground": "#ffffff"
+            }
+        },
+        {
             "scope": "entity.name.function.krl",
             "settings": {
                 "foreground": "#ffd866"

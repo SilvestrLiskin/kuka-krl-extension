@@ -16,6 +16,7 @@ interface ServerMessages {
   "diag.unclosedString": string;
   "diag.nameTooLong": string;
   "diag.nameStartsWithDigit": string;
+  "diag.didYouMean": string;
 
   // Code Actions
   "action.declareAs": string;
@@ -83,6 +84,7 @@ const en: ServerMessages = {
   "diag.nameTooLong":
     'Name "{0}" exceeds KUKA 24-character limit ({1} characters).',
   "diag.nameStartsWithDigit": 'Name "{0}" cannot start with a digit.',
+  "diag.didYouMean": "Did you mean '{0}'?",
 
   "action.declareAs": "Declare '{0}' as {1}",
   "action.removeGlobal": "Remove 'GLOBAL' keyword",
@@ -151,6 +153,7 @@ const ru: ServerMessages = {
   "diag.nameTooLong":
     'Имя "{0}" превышает лимит KUKA в 24 символа ({1} символов).',
   "diag.nameStartsWithDigit": 'Имя "{0}" не может начинаться с цифры.',
+  "diag.didYouMean": "Возможно, вы имели в виду '{0}'?",
 
   "action.declareAs": "Объявить '{0}' как {1}",
   "action.removeGlobal": "Удалить ключевое слово 'GLOBAL'",
@@ -220,6 +223,7 @@ const tr: ServerMessages = {
   "diag.nameTooLong":
     '"{0}" adı KUKA 24 karakter sınırını aşıyor ({1} karakter).',
   "diag.nameStartsWithDigit": '"{0}" adı rakamla başlayamaz.',
+  "diag.didYouMean": "Bunu mu demek istediniz: '{0}'?",
 
   "action.declareAs": "'{0}' değişkenini {1} olarak tanımla",
   "action.removeGlobal": "'GLOBAL' anahtar kelimesini kaldır",

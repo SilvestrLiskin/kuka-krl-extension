@@ -559,6 +559,24 @@
     },
     {
       "scope": [
+        "variable.function.krl"
+      ],
+      "settings": {
+        "foreground": "#B78AFF",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "variable.other.readwrite.krl",
+        "variable.other.member.krl"
+      ],
+      "settings": {
+        "foreground": "#FFFFFF"
+      }
+    },
+    {
+      "scope": [
         "comment punctuation"
       ],
       "settings": {
