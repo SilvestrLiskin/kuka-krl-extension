@@ -396,6 +396,14 @@ documents.onDidChangeContent(async (change) => {
         state.mergedVariables,
       );
       allDiagnostics.push(...varDiags);
+
+      // Feature 1: Unused Variable Detection
+      const localVars = state.fileVariablesMap.get(docUri);
+      if (localVars) {
+        allDiagnostics.push(
+          ...diagnostics.validateUnusedVariables(currentDoc, localVars),
+        );
+      }
     }
 
     // Safety diagnostics для SRC файлов

@@ -27,13 +27,21 @@ export class CodeActionsProvider {
   public onCodeAction(
     params: CodeActionParams,
     documents: TextDocuments<TextDocument>,
-    _state: ServerState,
+    state: ServerState,
   ): CodeAction[] {
     const doc = documents.get(params.textDocument.uri);
     if (!doc) return [];
 
     const actions: CodeAction[] = [];
     const diagnostics = params.context.diagnostics;
+
+    // Refactor Actions
+    if (
+      !params.context.only ||
+      params.context.only.some((k) => k === CodeActionKind.RefactorExtract)
+    ) {
+      actions.push(...this.getExtractActions(doc, params.range, state));
+    }
 
     for (const diagnostic of diagnostics) {
       // Tanımsız değişken hatası için quick fix
@@ -103,10 +111,90 @@ export class CodeActionsProvider {
       if (diagnostic.code === "nonAscii") {
         actions.push(this.createDeleteCharAction(doc, diagnostic));
       }
+
+      // Quick Fix for Unused Variable
+      if (matchesDiagnosticPattern(diagnostic.message, "unusedVariable")) {
+        const data = diagnostic.data as { varName?: string } | undefined;
+        if (data?.varName) {
+          actions.push(
+            this.createRemoveUnusedVariableAction(doc, diagnostic, data.varName),
+          );
+        }
+      }
     }
 
     // Genel kod eylemleri (diagnostic'e bağlı değil)
     actions.push(...this.getGeneralActions(doc, params.range));
+
+    return actions;
+  }
+
+  private getExtractActions(
+    doc: TextDocument,
+    range: Range,
+    state: ServerState,
+  ): CodeAction[] {
+    const text = doc.getText(range);
+    if (!text || text.trim().length === 0 || !text.includes("\n")) return [];
+
+    const actions: CodeAction[] = [];
+    const localVars = state.fileVariablesMap.get(doc.uri) || [];
+    const usedVars = new Set<string>();
+
+    // Seçimdeki değişkenleri bul
+    const regex = /\b([a-zA-Z_]\w*)\b/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      usedVars.add(match[1].toUpperCase());
+    }
+
+    // Seçimden önce tanımlanan ve seçimde kullanılan değişkenleri bul
+    const params = localVars.filter((v) => {
+      if (!usedVars.has(v.name.toUpperCase())) return false;
+
+      // Eğer range varsa ve seçimden önce bitiyorsa
+      if (v.range) {
+        return (
+          v.range.end.line < range.start.line ||
+          (v.range.end.line === range.start.line &&
+            v.range.end.character <= range.start.character)
+        );
+      }
+      // Range yoksa (örn: PARAM), muhtemelen parametredir, ekle
+      return v.type === "PARAM";
+    });
+
+    // Parametreleri oluştur
+    const uniqueParams = Array.from(new Set(params));
+    const callArgs = uniqueParams.map((p) => p.name).join(", ");
+    // Güvenlik için tüm parametreleri referans (:OUT) olarak geçiriyoruz
+    const defArgs = uniqueParams.map((p) => `${p.name}:OUT`).join(", ");
+    const funcName = "newFunction";
+
+    // Yeni fonksiyon içeriğini oluştur
+    const decls = uniqueParams
+      .map((p) => {
+        if (p.type === "PARAM") {
+          return `  ; DECL ??? ${p.name} ; Parameter from outer function`;
+        }
+        return `  DECL ${p.type} ${p.name}`;
+      })
+      .join("\n");
+
+    const newFuncCode = `\n\nDEF ${funcName}(${defArgs})\n${decls}\n\n${text}\nEND\n`;
+
+    actions.push({
+      title: "Extract Function",
+      kind: CodeActionKind.RefactorExtract,
+      edit: {
+        changes: {
+          [doc.uri]: [
+            TextEdit.replace(range, `${funcName}(${callArgs})`),
+            TextEdit.insert(Position.create(doc.lineCount, 0), newFuncCode),
+          ],
+        },
+      },
+    });
 
     return actions;
   }
@@ -384,6 +472,57 @@ export class CodeActionsProvider {
       edit: {
         changes: {
           [doc.uri]: [TextEdit.del(diagnostic.range)],
+        },
+      },
+    };
+  }
+
+  /**
+   * Create action to remove unused variable
+   */
+  private createRemoveUnusedVariableAction(
+    doc: TextDocument,
+    diagnostic: Diagnostic,
+    varName: string,
+  ): CodeAction {
+    let deleteRange = diagnostic.range;
+    const text = doc.getText();
+    const offset = doc.offsetAt(deleteRange.start);
+    const endOffset = doc.offsetAt(deleteRange.end);
+
+    // Look ahead for whitespace + comma
+    const after = text.substring(endOffset);
+    const matchCommaAfter = after.match(/^\s*,/);
+
+    // Look behind for comma + whitespace
+    const before = text.substring(0, offset);
+    const matchCommaBefore = before.match(/,\s*$/);
+
+    if (matchCommaAfter) {
+      // Delete variable + comma + whitespace
+      // e.g. "a, b" -> remove "a" -> ", b" (bad)
+      // wait, "a, b". remove "a,". -> " b". OK.
+      deleteRange = Range.create(
+        deleteRange.start,
+        doc.positionAt(endOffset + matchCommaAfter[0].length),
+      );
+    } else if (matchCommaBefore) {
+      // Delete comma + whitespace + variable
+      // e.g. "a, b". remove "b". -> "a". OK.
+      deleteRange = Range.create(
+        doc.positionAt(offset - matchCommaBefore[0].length),
+        deleteRange.end,
+      );
+    }
+
+    return {
+      title: t("action.removeUnusedVariable", varName),
+      kind: CodeActionKind.QuickFix,
+      diagnostics: [diagnostic],
+      isPreferred: true,
+      edit: {
+        changes: {
+          [doc.uri]: [TextEdit.del(deleteRange)],
         },
       },
     };

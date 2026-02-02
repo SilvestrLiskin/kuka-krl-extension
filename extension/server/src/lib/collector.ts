@@ -1,4 +1,5 @@
 import { VariableInfo } from "../types";
+import { Range, Position } from "vscode-languageserver/node";
 
 /**
  * Parantezleri dikkate alarak değişken bildirimlerini böler.
@@ -132,7 +133,34 @@ export function extractStrucVariables(
 export class SymbolExtractor {
   private variables: Map<string, VariableInfo> = new Map(); // isim -> info
 
+  private computeLineOffsets(text: string): number[] {
+    const lines = [0];
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === "\n") {
+        lines.push(i + 1);
+      }
+    }
+    return lines;
+  }
+
+  private getPosition(offset: number, lineOffsets: number[]): Position {
+    let low = 0;
+    let high = lineOffsets.length - 1;
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      if (lineOffsets[mid] > offset) {
+        high = mid - 1;
+      } else {
+        low = mid + 1;
+      }
+    }
+    const line = low - 1;
+    return Position.create(line, offset - lineOffsets[line]);
+  }
+
   extractFromText(documentText: string): void {
+    const lineOffsets = this.computeLineOffsets(documentText);
+
     // DECL regex'i - CONST dahil
     const declRegex =
       /^\s*(?:(?:GLOBAL\s+)?(?:CONST\s+)?DECL\s+(?:GLOBAL\s+)?(?:CONST\s+)?(\w+)|(?:GLOBAL\s+)?(?:CONST\s+)?(INT|REAL|BOOL|CHAR|FRAME|POS|E6POS|E6AXIS|AXIS|LOAD|SIGNAL|STRING))\s+([^\r\n;]+)/gim;
@@ -142,10 +170,20 @@ export class SymbolExtractor {
       let type = match[1] || match[2];
       const varList = match[3];
 
-      const varParts = splitVarsRespectingBrackets(varList);
+      const matchStart = match.index;
+      const varListStartInMatch = match[0].lastIndexOf(varList);
+      const varListStartAbs = matchStart + varListStartInMatch;
 
-      for (const rawPart of varParts) {
-        let part = rawPart.trim();
+      // GLOBAL kontrolü
+      const isGlobal = /\bGLOBAL\b/i.test(match[0]);
+
+      const varParts = splitVarsRespectingBracketsWithOffsets(
+        varList,
+        varListStartAbs,
+      );
+
+      for (const partObj of varParts) {
+        let part = partObj.text.trim();
         // Yorumları temizle
         part = part.split(";")[0].trim();
         if (!part) continue;
@@ -176,10 +214,21 @@ export class SymbolExtractor {
 
         if (/^[a-zA-Z_]\w*$/.test(cleanName)) {
           if (!this.variables.has(cleanName.toUpperCase())) {
+            // Range hesaplama
+            // partObj.offset, name'in başlangıcıdır (leading space hariç)
+            // cleanName uzunluğu kadar range oluştur
+            const startPos = this.getPosition(partObj.offset, lineOffsets);
+            const endPos = this.getPosition(
+              partObj.offset + cleanName.length,
+              lineOffsets,
+            );
+
             this.variables.set(cleanName.toUpperCase(), {
               name: cleanName,
               type: type,
               value: value,
+              range: Range.create(startPos, endPos),
+              isGlobal: isGlobal,
             });
           }
         }
@@ -191,6 +240,11 @@ export class SymbolExtractor {
     while ((match = enumRegex.exec(documentText)) !== null) {
       const memberList = match[1];
       const members = memberList.split(",").map((m) => m.trim());
+
+      // ENUM üyeleri için pozisyon hesaplama biraz daha zor çünkü splitVars kullanmıyoruz
+      // Şimdilik sadece isimleri alıyoruz
+      // İyileştirme: splitVarsRespectingBracketsWithOffsets benzeri bir şey yapılabilir
+      
       for (const member of members) {
         if (
           /^[a-zA-Z_]\w*$/.test(member) &&
@@ -199,6 +253,7 @@ export class SymbolExtractor {
           this.variables.set(member.toUpperCase(), {
             name: member,
             type: "ENUM_MEMBER",
+            // ENUM üyeleri için range hesaplamasını atlıyoruz veya geliştirebiliriz
           });
         }
       }
@@ -215,6 +270,10 @@ export class SymbolExtractor {
         .map((p) => p.replace(/:[A-Z]+/i, "").trim()) // :IN, :OUT kaldır
         .filter((p) => /^[a-zA-Z_]\w*$/.test(p));
 
+      // Parametreler için de pozisyon hesaplaması eksik
+      // Ancak "Unused Variable" genellikle local değişkenler için (DECL)
+      // Parametreler kullanılmasa da kaldırılması zordur (API değişimi)
+      
       for (const p of params) {
         if (!this.variables.has(p.toUpperCase())) {
           this.variables.set(p.toUpperCase(), { name: p, type: "PARAM" });

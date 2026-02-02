@@ -2,11 +2,13 @@ import {
   DefinitionParams,
   Location,
   Position,
+  Range,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { TextDocuments } from "vscode-languageserver/node";
 import { ServerState, EnclosuresLines } from "../types";
 import { isSymbolDeclared, getWordAtPosition } from "../lib/parser";
+import * as krlData from "../data/krl-ref.json";
 
 export class SymbolResolver {
   /**
@@ -41,6 +43,19 @@ export class SymbolResolver {
       params.position.character,
     )?.word;
     if (!functionName) return;
+
+    // Feature 2: System Variables Definition
+    let sysVarName = functionName.toUpperCase();
+    if (!sysVarName.startsWith("$")) sysVarName = "$" + sysVarName;
+
+    const sysData =
+      (krlData.systemVariables as any)[sysVarName] ||
+      (krlData.systemVariables as any)[functionName.toUpperCase()];
+
+    if (sysData) {
+      // Return location at the top of the current file
+      return Location.create(params.textDocument.uri, Range.create(0, 0, 0, 0));
+    }
 
     // Önce fonksiyon olarak ara
     const resultFct = await isSymbolDeclared(

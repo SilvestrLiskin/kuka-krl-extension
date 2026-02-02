@@ -4,6 +4,7 @@ import {
   Diagnostic,
   DiagnosticSeverity,
   DiagnosticTag,
+  Range,
 } from "vscode-languageserver/node";
 import { CODE_KEYWORDS } from "../lib/parser";
 import { splitVarsRespectingBracketsWithOffsets } from "../lib/collector";
@@ -397,6 +398,101 @@ export class DiagnosticsProvider {
       }
     }
     this.connection.sendDiagnostics({ uri: document.uri, diagnostics });
+  }
+
+  /**
+   * Kullanılmayan değişkenleri tespit eder.
+   */
+  public validateUnusedVariables(
+    document: TextDocument,
+    declaredVariables: VariableInfo[],
+  ): Diagnostic[] {
+    const diagnostics: Diagnostic[] = [];
+    const uri = document.uri.toLowerCase();
+
+    // Sadece .src ve .sub dosyalarını kontrol et (global olmayan değişkenler için)
+    // .dat dosyalarındaki değişkenler genellikle .src dosyasında kullanılır, bu yüzden burada kontrol edilmez.
+    if (!uri.endsWith(".src") && !uri.endsWith(".sub")) {
+      return [];
+    }
+
+    const text = document.getText();
+
+    // Sadece range bilgisi olan (yerel/parsed) ve GLOBAL OLMAYAN değişkenleri kontrol et
+    const varsToCheck = declaredVariables.filter(
+      (v) => v.range !== undefined && !v.isGlobal,
+    );
+
+    if (varsToCheck.length === 0) return [];
+
+    // Kullanım sayılarını başlat
+    const usageCounts = new Map<string, number>();
+    const varMap = new Map<string, VariableInfo>();
+
+    for (const v of varsToCheck) {
+      usageCounts.set(v.name.toUpperCase(), 0);
+      varMap.set(v.name.toUpperCase(), v);
+    }
+
+    const lines = text.split(/\r?\n/);
+    const variableRegex = REGEX_VARIABLE;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Yorumları atla
+      const commentIdx = line.indexOf(";");
+      let codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
+
+      // String ve bilimsel gösterimi temizle
+      codePart = codePart.replace(REGEX_STRING_CONTENT, '""');
+      codePart = codePart.replace(REGEX_SCIENTIFIC_NOTATION, "0");
+      codePart = stripInvisibleChars(codePart);
+
+      let match;
+      variableRegex.lastIndex = 0;
+      while ((match = variableRegex.exec(codePart)) !== null) {
+        const varName = match[1].toUpperCase();
+
+        if (usageCounts.has(varName)) {
+          const info = varMap.get(varName);
+          if (info && info.range) {
+            // Bildirim yerini kontrol et
+            // Eğer eşleşme bildirim range'i içindeyse, bu bir kullanım değil bildirimdir.
+            if (
+              info.range.start.line === i &&
+              match.index >= info.range.start.character &&
+              match.index < info.range.end.character
+            ) {
+              // Bildirimin kendisi, yoksay
+            } else {
+              // Kullanım bulundu
+              usageCounts.set(varName, (usageCounts.get(varName) || 0) + 1);
+            }
+          }
+        }
+      }
+    }
+
+    // Hiç kullanılmayanları raporla
+    for (const [name, count] of usageCounts) {
+      if (count === 0) {
+        const info = varMap.get(name);
+        if (info && info.range) {
+          diagnostics.push({
+            severity: DiagnosticSeverity.Hint,
+            tags: [DiagnosticTag.Unnecessary],
+            range: info.range,
+            message: t("diag.unusedVariable", info.name),
+            source: "krl-language-support",
+            code: "unusedVariable",
+            data: { varName: info.name },
+          });
+        }
+      }
+    }
+
+    return diagnostics;
   }
 
   /**

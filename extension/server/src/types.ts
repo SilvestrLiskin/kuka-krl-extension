@@ -1,8 +1,12 @@
+import { Range } from "vscode-languageserver/node";
+
 // Değişken bilgisi arayüzü
 export interface VariableInfo {
   name: string;
   type: string;
   value?: string;
+  range?: Range;
+  isGlobal?: boolean;
 }
 
 // Struct haritası - struct adı => üye isimleri

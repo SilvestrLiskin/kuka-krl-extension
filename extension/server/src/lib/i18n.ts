@@ -17,6 +17,7 @@ interface ServerMessages {
   "diag.nameTooLong": string;
   "diag.nameStartsWithDigit": string;
   "diag.didYouMean": string;
+  "diag.unusedVariable": string;
 
   // Code Actions
   "action.declareAs": string;
@@ -25,6 +26,7 @@ interface ServerMessages {
   "action.wrapWithFold": string;
   "action.fixTypo": string;
   "action.deleteInvalidChar": string;
+  "action.removeUnusedVariable": string;
 
   // Hover info
   "hover.krlKeyword": string;
@@ -88,6 +90,7 @@ const en: ServerMessages = {
     'Name "{0}" exceeds KUKA 24-character limit ({1} characters).',
   "diag.nameStartsWithDigit": 'Name "{0}" cannot start with a digit.',
   "diag.didYouMean": "Did you mean '{0}'?",
+  "diag.unusedVariable": 'Variable "{0}" is declared but never used.',
 
   "action.declareAs": "Declare '{0}' as {1}",
   "action.removeGlobal": "Remove 'GLOBAL' keyword",
@@ -95,6 +98,7 @@ const en: ServerMessages = {
   "action.wrapWithFold": "Wrap with ;FOLD ... ;ENDFOLD",
   "action.fixTypo": "Change to '{0}'",
   "action.deleteInvalidChar": "Delete invalid character",
+  "action.removeUnusedVariable": "Remove unused variable '{0}'",
 
   "hover.krlKeyword": "— KRL keyword",
   "hover.systemVariable": "— System variable (KSS 8.7)",
@@ -160,6 +164,7 @@ const ru: ServerMessages = {
     'Имя "{0}" превышает лимит KUKA в 24 символа ({1} символов).',
   "diag.nameStartsWithDigit": 'Имя "{0}" не может начинаться с цифры.',
   "diag.didYouMean": "Возможно, вы имели в виду '{0}'?",
+  "diag.unusedVariable": 'Переменная "{0}" объявлена, но не используется.',
 
   "action.declareAs": "Объявить '{0}' как {1}",
   "action.removeGlobal": "Удалить ключевое слово 'GLOBAL'",
@@ -167,6 +172,7 @@ const ru: ServerMessages = {
   "action.wrapWithFold": "Обернуть в ;FOLD ... ;ENDFOLD",
   "action.fixTypo": "Заменить на '{0}'",
   "action.deleteInvalidChar": "Удалить недопустимый символ",
+  "action.removeUnusedVariable": "Удалить неиспользуемую переменную '{0}'",
 
   "hover.krlKeyword": "— Ключевое слово KRL",
   "hover.systemVariable": "— Системная переменная (KSS 8.7)",
@@ -233,6 +239,7 @@ const tr: ServerMessages = {
     '"{0}" adı KUKA 24 karakter sınırını aşıyor ({1} karakter).',
   "diag.nameStartsWithDigit": '"{0}" adı rakamla başlayamaz.',
   "diag.didYouMean": "Bunu mu demek istediniz: '{0}'?",
+  "diag.unusedVariable": '"{0}" değişkeni tanımlandı ama hiç kullanılmadı.',
 
   "action.declareAs": "'{0}' değişkenini {1} olarak tanımla",
   "action.removeGlobal": "'GLOBAL' anahtar kelimesini kaldır",
@@ -240,6 +247,7 @@ const tr: ServerMessages = {
   "action.wrapWithFold": ";FOLD ... ;ENDFOLD ile sar",
   "action.fixTypo": "'{0}' olarak değiştir",
   "action.deleteInvalidChar": "Geçersiz karakteri sil",
+  "action.removeUnusedVariable": "Kullanılmayan değişkeni kaldır '{0}'",
 
   "hover.krlKeyword": "— KRL anahtar kelimesi",
   "hover.systemVariable": "— Sistem değişkeni (KSS 8.7)",
@@ -342,7 +350,7 @@ export function t(
  */
 export function matchesDiagnosticPattern(
   message: string,
-  pattern: "variableNotDefined" | "globalPublicMismatch",
+  pattern: "variableNotDefined" | "globalPublicMismatch" | "unusedVariable",
 ): boolean {
   switch (pattern) {
     case "variableNotDefined":
@@ -356,6 +364,12 @@ export function matchesDiagnosticPattern(
       return (
         (message.includes("GLOBAL") && message.includes("PUBLIC")) ||
         (message.includes("GLOBAL") && message.includes("PUBLIC"))
+      );
+    case "unusedVariable":
+      return (
+        message.includes("never used") ||
+        message.includes("не используется") ||
+        message.includes("hiç kullanılmadı")
       );
     default:
       return false;
