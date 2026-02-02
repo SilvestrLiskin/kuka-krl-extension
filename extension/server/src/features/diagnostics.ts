@@ -1489,16 +1489,17 @@ export class DiagnosticsProvider {
     const REGEX_ASSIGNMENT = /^\s*(?:\$?[a-zA-Z0-9_]+)(?:\[[^\]]*\])?(?:\.\w+)*\s*=\s*/i;
     const REGEX_PROC_CALL = /^\s*(?:\$|\w+)\s*\(.*\)/i;
     const REGEX_WAIT = /^\s*WAIT\s+(?:FOR\s+|SEC\s+)/i;
-    const REGEX_INTERRUPT = /^\s*INTERRUPT\s+(?:DECL|ON|OFF|ENABLE|DISABLE)/i;
+    const REGEX_INTERRUPT = /^\s*(?:GLOBAL\s+)?INTERRUPT\s+(?:DECL|ON|OFF|ENABLE|DISABLE)/i;
     const REGEX_BRAKE = /^\s*BRAKE\b/i;
     const REGEX_RESUME = /^\s*RESUME\b/i;
     const REGEX_CONFIRM = /^\s*CONFIRM\b/i;
     const REGEX_PULSE = /^\s*PULSE\b/i;
     const REGEX_CONTINUE = /^\s*CONTINUE\b/i;
-    const REGEX_EXIT_CTRL = /^\s*(?:EXIT|HALT|RETURN)\b/i;
+    const REGEX_EXIT_CTRL = /^\s*(?:EXIT|HALT|RETURN|GOTO)\b/i;
     const REGEX_TRIGGER = /^\s*TRIGGER\b/i;
     const REGEX_COMM = /^\s*(?:CWRITE|CREAD|SWRITE|SREAD|CAST_TO|CAST_FROM)\b/i;
     const REGEX_ANIN = /^\s*(?:ANIN|DIGIN)\b/i;
+    const REGEX_ERR_HANDLE = /^\s*(?:ON_ERROR_PROCEED|ERR_CLEAR|ERR_RAISE)\b/i;
     const REGEX_IF_INLINE = /^\s*IF\s+.*THEN\s+\w+/i;
     const REGEX_FOLD_B = /^\s*;FOLD\b/i;
     const REGEX_FOLD_E = /^\s*;ENDFOLD\b/i;
@@ -1539,6 +1540,7 @@ export class DiagnosticsProvider {
         REGEX_TRIGGER.test(trimmedCode) ||
         REGEX_COMM.test(trimmedCode) ||
         REGEX_ANIN.test(trimmedCode) ||
+        REGEX_ERR_HANDLE.test(trimmedCode) ||
         REGEX_IF_INLINE.test(trimmedCode) ||
         REGEX_FOLD_B.test(trimmedCode) ||
         REGEX_FOLD_E.test(trimmedCode) ||
