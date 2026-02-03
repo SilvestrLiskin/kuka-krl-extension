@@ -5,6 +5,7 @@ import {
   InitializeParams,
   InitializeResult,
   TextDocumentSyncKind,
+  Diagnostic,
   DefinitionParams,
   CompletionParams,
   HoverParams,
@@ -312,133 +313,146 @@ async function extractFunctionsFromWorkspace(
 documents.onDidChangeContent(async (change) => {
   const { document } = change;
 
-  // Öртлилы Çalışma Alanı Çıkarımı (Async & Cached)
-  if (!state.workspaceRoot) {
-    const docPath = URI.parse(document.uri).fsPath;
-    state.workspaceRoot = await findWorkspaceRoot(path.dirname(docPath));
+  try {
+    // Öртлилы Çalışma Alanı Çıkarımı (Async & Cached)
+    if (!state.workspaceRoot) {
+      const docPath = URI.parse(document.uri).fsPath;
+      const root = await findWorkspaceRoot(path.dirname(docPath));
+      
+      // If we found a root, OR if we are just single file mode
+      state.workspaceRoot = root || path.dirname(docPath);
 
-    log(`[ÖrtülüKök] Çıkarılan kök: ${state.workspaceRoot}`);
-    diagnostics.setWorkspaceRoot(state.workspaceRoot);
+      log(`[ÖrtülüKök] Çıkarılan kök: ${state.workspaceRoot}`);
+      diagnostics.setWorkspaceRoot(state.workspaceRoot);
 
-    // onInitialized atlandığı için ilk tarama
-    const datFiles = await getAllDatFiles(state.workspaceRoot);
-    for (const filePath of datFiles) {
-      try {
-        const content = await fs.promises.readFile(filePath, "utf8");
-        const uri = URI.file(filePath).toString();
-        const extractor = new SymbolExtractor();
-        extractor.extractFromText(content);
-        state.fileVariablesMap.set(uri, extractor.getVariables());
+      // onInitialized atlandığı için ilk tarama
+      const datFiles = await getAllDatFiles(state.workspaceRoot);
+      for (const filePath of datFiles) {
+        try {
+          const content = await fs.promises.readFile(filePath, "utf8");
+          const uri = URI.file(filePath).toString();
+          const extractor = new SymbolExtractor();
+          extractor.extractFromText(content);
+          state.fileVariablesMap.set(uri, extractor.getVariables());
 
-        const structs = extractStrucVariables(content);
-        Object.assign(state.structDefinitions, structs);
-      } catch (err) {
-        log(`Dosya okuma hatası ${filePath}: ${err}`);
+          const structs = extractStrucVariables(content);
+          Object.assign(state.structDefinitions, structs);
+        } catch (err) {
+          log(`Dosya okuma hatası ${filePath}: ${err}`);
+        }
       }
+
+      // Fonksiyonları da yükle
+      await extractFunctionsFromWorkspace(state.workspaceRoot);
+      state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+
+      // Fonksiyon önbelleğini güncelle
+      diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
+
+      // Workspace полностью инициализирован (неявное определение)
+      workspaceInitialized = true;
     }
 
-    // Fonksiyonları da yükle
-    await extractFunctionsFromWorkspace(state.workspaceRoot);
+    if (document.uri.endsWith(".dat")) {
+      // Struct tanımlarını güncelle
+      const structs = extractStrucVariables(document.getText());
+      Object.assign(state.structDefinitions, structs);
+    }
+
+    // Değişkenleri güncelle
+    const extractor = new SymbolExtractor();
+    extractor.extractFromText(document.getText());
+    state.fileVariablesMap.set(document.uri, extractor.getVariables());
+
     state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+
+    // Fonksiyonları güncelle (mevcut dosyadan)
+    updateFunctionsFromDocument(document);
 
     // Fonksiyon önbelleğini güncelle
     diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
 
-    // Workspace полностью инициализирован (неявное определение)
-    workspaceInitialized = true;
-  }
+    // Запланировать валидацию с задержкой (предотвращает ложные ошибки)
+    // Сохраняем URI и версию документа для безопасного обращения в callback
+    const docUri = document.uri;
+    const docVersion = document.version;
 
-  if (document.uri.endsWith(".dat")) {
-    // Struct tanımlarını güncelle
-    const structs = extractStrucVariables(document.getText());
-    Object.assign(state.structDefinitions, structs);
-  }
+    scheduleValidation(docUri, () => {
+      try {
+        // Получаем актуальный документ из коллекции
+        const currentDoc = documents.get(docUri);
+        // Если документ закрыт или версия изменилась — пропускаем валидацию
+        if (!currentDoc || currentDoc.version !== docVersion) {
+          return;
+        }
 
-  // Değişkenleri güncelle
-  const extractor = new SymbolExtractor();
-  extractor.extractFromText(document.getText());
-  state.fileVariablesMap.set(document.uri, extractor.getVariables());
+        // Tüm teşhisleri topla ve tek seferde gönder
+        let allDiagnostics: Diagnostic[] = [];
 
-  state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+        // Обновляем mergedVariables перед валидацией (могут быть загружены новые переменные)
+        state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
 
-  // Fonksiyonları güncelle (mevcut dosyadan)
-  updateFunctionsFromDocument(document);
+        // Kullanım doğrulaması - только если workspace полностью загружен
+        // Это предотвращает ложные ошибки "переменная не определена" при открытии файлов
+        if (workspaceInitialized) {
+          const varDiags = diagnostics.validateVariablesUsage(
+            currentDoc,
+            state.mergedVariables,
+          );
+          allDiagnostics.push(...varDiags);
 
-  // Fonksiyon önbelleğini güncelle
-  diagnostics.updateFunctionCache(state.functionsDeclared.map((f) => f.name));
+          // Feature 1: Unused Variable Detection
+          const localVars = state.fileVariablesMap.get(docUri);
+          if (localVars) {
+            allDiagnostics.push(
+              ...diagnostics.validateUnusedVariables(currentDoc, localVars),
+            );
+          }
+        }
 
-  // Запланировать валидацию с задержкой (предотвращает ложные ошибки)
-  // Сохраняем URI и версию документа для безопасного обращения в callback
-  const docUri = document.uri;
-  const docVersion = document.version;
+        // Generic Diagnostics for all file types
+        if (currentDoc.uri.toLowerCase().endsWith(".dat")) {
+          allDiagnostics.push(...diagnostics.validateDatFile(currentDoc));
+        }
 
-  scheduleValidation(docUri, () => {
-    // Получаем актуальный документ из коллекции
-    const currentDoc = documents.get(docUri);
-    // Если документ закрыт или версия изменилась — пропускаем валидацию
-    if (!currentDoc || currentDoc.version !== docVersion) {
-      return;
-    }
+        if (
+          currentDoc.uri.toLowerCase().endsWith(".src") ||
+          currentDoc.uri.toLowerCase().endsWith(".dat")
+        ) {
+          allDiagnostics.push(
+            ...diagnostics.validateKrlConstraints(currentDoc),
+            ...diagnostics.validateGeneralSyntax(currentDoc),
+          );
+        }
 
-    // Tüm teşhisleri topla ve tek seferde gönder
-    let allDiagnostics: import("vscode-languageserver/node").Diagnostic[] = [];
+        // Safety diagnostics für SRC Dateien
+        if (currentDoc.uri.toLowerCase().endsWith(".src")) {
+          allDiagnostics.push(
+            ...diagnostics.validateSafetySpeeds(currentDoc),
+            ...diagnostics.validateToolBaseInit(currentDoc),
+            ...diagnostics.validateBlockBalance(currentDoc),
+            ...diagnostics.validateDuplicateNames(currentDoc),
+            ...diagnostics.validateDeadCode(currentDoc),
+            ...diagnostics.validateEmptyBlocks(currentDoc),
+            ...diagnostics.validateDangerousStatements(currentDoc),
+            ...diagnostics.validateTypeUsage(currentDoc, state.mergedVariables),
+          );
+        }
 
-    // Обновляем mergedVariables перед валидацией (могут быть загружены новые переменные)
-    state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
-
-    // Kullanım doğrulaması - только если workspace полностью загружен
-    // Это предотвращает ложные ошибки "переменная не определена" при открытии файлов
-    if (workspaceInitialized) {
-      const varDiags = diagnostics.validateVariablesUsage(
-        currentDoc,
-        state.mergedVariables,
-      );
-      allDiagnostics.push(...varDiags);
-
-      // Feature 1: Unused Variable Detection
-      const localVars = state.fileVariablesMap.get(docUri);
-      if (localVars) {
-        allDiagnostics.push(
-          ...diagnostics.validateUnusedVariables(currentDoc, localVars),
-        );
+        // Tüm teşhisleri tek seferde gönder
+        connection.sendDiagnostics({
+          uri: currentDoc.uri,
+          diagnostics: allDiagnostics,
+        });
+      } catch (e) {
+        log(`Validation error for ${docUri}: ${e}`);
+        connection.console.error(`Validation error: ${e}`);
       }
-    }
-
-    // Generic Diagnostics for all file types
-    if (currentDoc.uri.toLowerCase().endsWith(".dat")) {
-      allDiagnostics.push(...diagnostics.validateDatFile(currentDoc));
-    }
-
-    if (
-      currentDoc.uri.toLowerCase().endsWith(".src") ||
-      currentDoc.uri.toLowerCase().endsWith(".dat")
-    ) {
-      allDiagnostics.push(
-        ...diagnostics.validateKrlConstraints(currentDoc),
-        ...diagnostics.validateGeneralSyntax(currentDoc),
-      );
-    }
-
-    // Safety diagnostics für SRC Dateien
-    if (currentDoc.uri.toLowerCase().endsWith(".src")) {
-      allDiagnostics.push(
-        ...diagnostics.validateSafetySpeeds(currentDoc),
-        ...diagnostics.validateToolBaseInit(currentDoc),
-        ...diagnostics.validateBlockBalance(currentDoc),
-        ...diagnostics.validateDuplicateNames(currentDoc),
-        ...diagnostics.validateDeadCode(currentDoc),
-        ...diagnostics.validateEmptyBlocks(currentDoc),
-        ...diagnostics.validateDangerousStatements(currentDoc),
-        ...diagnostics.validateTypeUsage(currentDoc, state.mergedVariables),
-      );
-    }
-
-    // Tüm teşhisleri tek seferde gönder
-    connection.sendDiagnostics({
-      uri: currentDoc.uri,
-      diagnostics: allDiagnostics,
     });
-  });
+  } catch (e) {
+    log(`onDidChangeContent error: ${e}`);
+    connection.console.error(`onDidChangeContent error: ${e}`);
+  }
 });
 
 /**
@@ -482,6 +496,58 @@ function updateFunctionsFromDocument(document: TextDocument): void {
 // Özel İstekler
 // =====================
 
+connection.onNotification("custom/validateFile", (params: { uri: string, text: string }) => {
+  try {
+    const doc = TextDocument.create(params.uri, "krl", 1, params.text);
+    
+    // Trigger standard validation logic immediately
+    let allDiagnostics: Diagnostic[] = [];
+    
+    // Ensure variables are up to date
+    state.mergedVariables = mergeAllVariables(state.fileVariablesMap);
+
+    if (workspaceInitialized) {
+      allDiagnostics.push(...diagnostics.validateVariablesUsage(doc, state.mergedVariables));
+      const localVars = state.fileVariablesMap.get(params.uri);
+      if (localVars) {
+        allDiagnostics.push(...diagnostics.validateUnusedVariables(doc, localVars));
+      }
+    }
+
+    if (doc.uri.toLowerCase().endsWith(".dat")) {
+      allDiagnostics.push(...diagnostics.validateDatFile(doc));
+    }
+
+    if (doc.uri.toLowerCase().endsWith(".src") || doc.uri.toLowerCase().endsWith(".dat")) {
+      allDiagnostics.push(
+        ...diagnostics.validateKrlConstraints(doc),
+        ...diagnostics.validateGeneralSyntax(doc)
+      );
+    }
+
+    if (doc.uri.toLowerCase().endsWith(".src")) {
+      allDiagnostics.push(
+        ...diagnostics.validateSafetySpeeds(doc),
+        ...diagnostics.validateToolBaseInit(doc),
+        ...diagnostics.validateBlockBalance(doc),
+        ...diagnostics.validateDuplicateNames(doc),
+        ...diagnostics.validateDeadCode(doc),
+        ...diagnostics.validateEmptyBlocks(doc),
+        ...diagnostics.validateDangerousStatements(doc),
+        ...diagnostics.validateTypeUsage(doc, state.mergedVariables)
+      );
+    }
+
+    connection.sendDiagnostics({
+      uri: doc.uri,
+      diagnostics: allDiagnostics
+    });
+
+  } catch (e) {
+    log(`custom/validateFile error: ${e}`);
+  }
+});
+
 connection.onNotification("custom/validateWorkspace", async () => {
   if (!state.workspaceRoot) return;
 
@@ -495,11 +561,19 @@ connection.onNotification("custom/validateWorkspace", async () => {
 
       // Teşhis için TextDocument oluştur
       const doc = TextDocument.create(uri, "krl", 1, content);
+      let fileDiagnostics: Diagnostic[] = [];
 
       if (doc.uri.endsWith(".dat")) {
-        diagnostics.validateDatFile(doc);
+        fileDiagnostics.push(...diagnostics.validateDatFile(doc));
       }
-      diagnostics.validateVariablesUsage(doc, state.mergedVariables);
+      fileDiagnostics.push(...diagnostics.validateVariablesUsage(doc, state.mergedVariables));
+
+      // Actually send the diagnostics
+      connection.sendDiagnostics({
+        uri: uri,
+        diagnostics: fileDiagnostics
+      });
+      
     } catch (e) {
       log(`Doğrulama hatası ${filePath}: ${e}`);
     }

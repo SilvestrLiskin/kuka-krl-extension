@@ -1,0 +1,24 @@
+You are an expert VS Code Extension Developer and TypeScript/Node.js specialist.
+
+**Objective:**
+Investigate and FIX the issue where "Error Checking/Validation" is completely broken and showing nothing in the editor.
+
+**Context:**
+The user reports that the error highlighting (squiggles) and the Problems panel are empty, even when there are obvious errors in the KRL code. This suggests a breakage in the Language Server Protocol (LSP) diagnostics flow or the client-side `krlDiagnostics` collection.
+
+**Related Files:**
+1.  `extension/client/src/main.ts`: Client entry point. Sets up `krlDiagnostics` and handles `runSyntaxCheck`.
+2.  `extension/server/src/core.ts`: Server entry point. Likely where `validateTextDocument` or similar is called.
+3.  `extension/server/src/features/diagnostics.ts`: Contains the `DiagnosticsProvider` logic.
+
+**Instructions:**
+1.  **Analyze** `client/src/main.ts` to ensure `runSyntaxCheck` is actually called on document changes and that `krlDiagnostics` is properly pushed to `context.subscriptions`.
+2.  **Analyze** `server/src/core.ts` to ensure the server is correctly listening to `onDidChangeContent` (or similar) and triggering the validation logic in `diagnostics.ts`.
+3.  **Check** if there are any recent changes that might have disabled validation (e.g., a config flag defaulting to `false`, or an early return statement).
+4.  **Fix** any bugs found. Ensure that:
+    - Client-side diagnostics (simple regex checks) work.
+    - Server-side diagnostics (deep validation) work.
+5.  **Verify** that the communication between Client and Server is correct (Notification vs Request).
+
+**Action:**
+Edit the files directly to restore functionality.
