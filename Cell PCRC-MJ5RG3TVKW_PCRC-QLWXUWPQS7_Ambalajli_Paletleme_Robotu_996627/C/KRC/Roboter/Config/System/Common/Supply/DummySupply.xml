@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Supply xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../System/Common/Schemes/Supply.xsd">
-   <Version Label="">
-      <Info Version="KUKA V8.3" />
-      <Schema Version="1" />
-   </Version>
-   <Current MaxCurrent60s="25" MaxCurrent30s="36" MaxCurrent1s="150"/>
-   <Config ServoFile="ServoFile/Default.xml" SimuSupplyVoltage="48"/>
-</Supply>

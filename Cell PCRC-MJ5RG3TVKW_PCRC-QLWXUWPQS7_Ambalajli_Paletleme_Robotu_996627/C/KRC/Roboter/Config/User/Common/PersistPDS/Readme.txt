@@ -1,1 +1,0 @@
-This folder stores all PDC file content in Office- or OfficeLite-Mode that is stored on the EDS of the PDS in Cabinet-mode.

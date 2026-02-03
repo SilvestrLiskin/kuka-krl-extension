@@ -40,15 +40,22 @@ const REGEX_SCIENTIFIC_NOTATION = /\d+\.?\d*[eE][+-]?\d+/g;
 const REGEX_VEL_CP = /\$VEL\.CP\s*=\s*(\d+(?:\.\d+)?)/gi;
 const REGEX_VEL_PTP = /\$VEL_PTP\s*=\s*(\d+(?:\.\d+)?)/gi;
 
-const REGEX_TOOL_INIT = /\$TOOL\s*=|BAS\s*\(\s*#INITMOV/i;
-const REGEX_BASE_INIT = /\$BASE\s*=|BAS\s*\(\s*#INITMOV/i;
+const REGEX_TOOL_INIT = /\$TOOL\s*=|BAS\s*\(\s*(?:#INITMOV|#FRAMES|#PTP_PARAMS|#CP_PARAMS)/i;
+const REGEX_BASE_INIT = /\$BASE\s*=|BAS\s*\(\s*(?:#INITMOV|#FRAMES|#PTP_PARAMS|#CP_PARAMS)/i;
 const REGEX_MOVEMENT = /^\s*(?:PTP|LIN|CIRC|SPTP|SLIN|SCIRC)\s+/i;
 const REGEX_DEF_RESET = /^\s*(?:DEF|DEFFCT)\s+/i;
 
-const REGEX_FUNC_DEF = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\s*\(/i;
+const REGEX_FUNC_DEF = /^\s*(?:GLOBAL\s+)?(DEF|DEFFCT)\s+(?:\w+\s+)?(\w+)\b\s*\(/i;
 
 const REGEX_LABEL = /^\w+\s*:\s*$/i;
 const REGEX_BLOCK_END = /^(END|ENDIF|ENDFOR|ENDWHILE|ENDLOOP|ENDFCT|UNTIL|CASE|DEFAULT|ELSE|ENDDAT|ENDSUB|ENDSPS|ENDSWITCH)\b/i;
+
+// Keywords that indicate a variable declaration start (including types)
+const VALID_DECL_STARTS = new Set([
+  "DECL", "GLOBAL", "SIGNAL", "STRUC", "ENUM", "CONST",
+  "INT", "REAL", "BOOL", "CHAR", "STRING",
+  "FRAME", "POS", "E6POS", "AXIS", "E6AXIS", "LOAD"
+]);
 
 // Pre-compiled regexes for optimization
 const REGEX_LABEL_DECL = /^\s*([a-zA-Z_]\w*)\s*:/gim;
@@ -145,6 +152,20 @@ export class DiagnosticsProvider {
     if (declMatch) {
       const type = declMatch[1].toUpperCase();
       const rest = declMatch[2];
+
+      // Explicitly skip DEF/DEFFCT lines if they were matched as variable declarations
+      if (type === "DEF" || type === "DEFFCT" || type === "DEFDAT") {
+        return;
+      }
+
+      // Ensure the "type" is a valid declaration start keyword.
+      // This enforces that we only check lines that look like explicit declarations.
+      // It avoids false positives on assignments (e.g. "Result = ..."), function calls, and other instructions.
+      // Note: This might skip implicit user-struct declarations (e.g. "MyStruct s") if "MyStruct" is not in the list,
+      // but standard KRL requires DECL for user structs anyway.
+      if (!VALID_DECL_STARTS.has(type)) {
+        return;
+      }
 
       // Skip procedure calls like BAS (#INITMOV, 0)
       if (rest.trimStart().startsWith("(")) return;
@@ -394,10 +415,14 @@ export class DiagnosticsProvider {
 
         // KUKA 24-karakter değişken isim limitini kontrol et (Robust Check)
         // Use codePart (ignores comments) but preserves indentation
-        this.checkVariableDeclaration(codePart, i, diagnostics);
+        if (!REGEX_SKIP_DEF.test(trimmedLine)) {
+          this.checkVariableDeclaration(codePart, i, diagnostics);
+        }
       } else {
         // Blocks outside DEFDAT: Still check for Name Length and ASCII
-        this.checkVariableDeclaration(codePart, i, diagnostics);
+        if (!REGEX_SKIP_DEF.test(trimmedLine)) {
+          this.checkVariableDeclaration(codePart, i, diagnostics);
+        }
       }
     }
     return diagnostics;
@@ -664,6 +689,16 @@ export class DiagnosticsProvider {
    * Warning для $VEL.CP > 2 m/s и $VEL_PTP > 100%
    */
   public validateSafetySpeeds(document: TextDocument): Diagnostic[] {
+    // SİSTEM DOSYALARINI ATLA
+    const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
+    if (
+      lowerUri.includes("/mada/") ||
+      lowerUri.includes("/system/") ||
+      lowerUri.includes("/tp/")
+    ) {
+      return [];
+    }
+
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
     const lines = text.split(/\r?\n/);
@@ -722,6 +757,16 @@ export class DiagnosticsProvider {
    * Warning для PTP/LIN без предшествующей установки $TOOL/$BASE или BAS(#INITMOV)
    */
   public validateToolBaseInit(document: TextDocument): Diagnostic[] {
+    // SİSTEM DOSYALARINI ATLA
+    const lowerUri = document.uri.toLowerCase().replace(/\\/g, "/");
+    if (
+      lowerUri.includes("/mada/") ||
+      lowerUri.includes("/system/") ||
+      lowerUri.includes("/tp/")
+    ) {
+      return [];
+    }
+
     const diagnostics: Diagnostic[] = [];
     const text = document.getText();
     const lines = text.split(/\r?\n/);
@@ -813,6 +858,9 @@ export class DiagnosticsProvider {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      // Skip header lines
+      if (line.trim().startsWith("&")) continue;
+
       const commentIdx = line.indexOf(";");
       const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
       // const upperCode = codePart.toUpperCase(); // Reserved for future use
@@ -1111,6 +1159,9 @@ export class DiagnosticsProvider {
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
+        // Skip header lines
+        if (line.trim().startsWith("&")) continue;
+
         const commentIdx = line.indexOf(";");
         const codePart = commentIdx >= 0 ? line.substring(0, commentIdx) : line;
 

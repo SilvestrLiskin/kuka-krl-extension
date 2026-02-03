@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<MotionModes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../System/Common/Schemes/MotionModes.xsd">
-  <Version Label="">
-    <Info Version="KUKA V8.7" />
-    <Schema Version="1" />
-  </Version>
-  <Device TrafoName="#KR470PA_2 S C4 FLR" />
-</MotionModes>

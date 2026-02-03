@@ -17,6 +17,7 @@ import { cleanupUnusedVariables } from "./features/cleanup";
 import { showCalculator } from "./features/calculator";
 import { initErrorLens } from "./features/errorLens";
 import { showSnippetGenerator } from "./features/snippetGenerator";
+import { generateReport } from "./features/reportGenerator";
 
 // KRL tanılama koleksiyonu
 const krlDiagnostics = vscode.languages.createDiagnosticCollection("krl");
@@ -306,6 +307,13 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
+  // Report Generator
+  context.subscriptions.push(
+    vscode.commands.registerCommand("krl.generateReport", () => {
+      generateReport();
+    }),
+  );
+
   // FOLD bölgesi ekle komutu
   context.subscriptions.push(
     vscode.commands.registerCommand("krl.insertFold", async () => {
@@ -426,6 +434,9 @@ export function activate(context: vscode.ExtensionContext) {
         runSyntaxCheck(doc);
       }
     });
+
+    // Validate workspace immediately on startup
+    lsClient.sendNotification("custom/validateWorkspace");
   });
 
   context.subscriptions.push(krlDiagnostics);
@@ -451,6 +462,9 @@ function runSyntaxCheck(document: vscode.TextDocument): void {
     const text = line.text.split(";")[0].trim();
 
     if (!text) continue;
+
+    // Skip KUKA system lines (&ACCESS, &COMMENT, etc.)
+    if (text.startsWith("&")) continue;
 
     // GLOBAL kullanımını kontrol et
     if (/\bGLOBAL\b/i.test(text)) {

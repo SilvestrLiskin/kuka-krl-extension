@@ -1,1 +1,0 @@
-This folder stores all RDC file content in Office- or OfficeLite-Mode that is stored on the EDS of the RDC in Cabinet-mode.

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<PowerManagement xsi:noNamespaceSchemaLocation="../../System/Common/Schemes/PowerManagementConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   <AccuTestCycleTime>60</AccuTestCycleTime>
-   <NumUcpwrLogMsgs>20</NumUcpwrLogMsgs>
-</PowerManagement>

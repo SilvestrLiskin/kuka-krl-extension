@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?><ModuleList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Schemes/Modules.xsd">
-   <Version Label="">
-      <Info Version="KUKA.Platform V3"/>
-      <Schema Version="1"/>
-   </Version>
-   <Module Affinity="0" Config="None" DisplayName="LogPoller" Name="LogPoller.o" Prio="186" Stacksize="65536" isActive="true" runFaulty="false"/>
-</ModuleList>

@@ -508,6 +508,12 @@
         "title": "KRL Snippet Generator",
         "category": "KRL",
         "icon": "$(beaker)"
+      },
+      {
+        "command": "krl.generateReport",
+        "title": "Generate Analysis Report",
+        "category": "KRL",
+        "icon": "$(report)"
       }
     ],
     "views": {
@@ -619,6 +625,11 @@
         {
           "command": "krl.refreshIOView",
           "when": "view == krlIO",
+          "group": "navigation"
+        },
+        {
+          "command": "krl.generateReport",
+          "when": "view == krlCommands",
           "group": "navigation"
         },
         {

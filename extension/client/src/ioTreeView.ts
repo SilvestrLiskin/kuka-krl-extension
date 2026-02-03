@@ -188,7 +188,6 @@ export class IOTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> 
             if (!this.analogOutputs.has(index))
               this.analogOutputs.set(index, []);
             this.analogOutputs.get(index)!.push(location);
-            this.analogOutputs.get(index)!.push(location);
             this.lineTexts.set(`${fileUri.fsPath}:${i}`, line);
           }
 
