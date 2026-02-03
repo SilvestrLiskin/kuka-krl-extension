@@ -71,35 +71,6 @@
     </td>
   </tr>
 </table>
-<br>
-
-## 💻 Code Preview
-
-```krl
-&ACCESS RVP
-&REL 1
-DEF Palletizing()
-  ;FOLD INI
-  BAS (#INITMOV, 0)
-  ;ENDFOLD
-
-  ; Check Current Tool
-  IF ($ACT_TOOL < 0) THEN
-    MsgNotify("No tool selected!", "Error")
-    HALT
-  ENDIF
-
-  ; Move to Home
-  PTP HOME Vel=100% DEFAULT
-
-  ; Calculate Approach Position
-  TargetPos = XP1
-  TargetPos.Z = TargetPos.Z + 200.0
-
-  ; Linear Movement
-  LIN TargetPos C_DIS
-END
-```
 
 ---
 
