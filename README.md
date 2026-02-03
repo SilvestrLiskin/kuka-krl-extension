@@ -103,15 +103,10 @@ Customize your experience in `settings.json`.
 | `krl.indentFolds` | `true` | Indent code inside generic `;FOLD` blocks. |
 | `krl.alignAssignments` | `true` | Vertically align `=` signs for readability. |
 
-        <li><code>krl.formatOnSave</code> | <code>false</code> | Auto-format KRL files when saving.</li>
-        <li><code>krl.removeTrailingWhitespaceOnFormat</code> | <code>true</code> | Trim whitespace when formatting.</li>
-        <li><code>krl.separateBeforeBlocks</code> | <code>false</code> | Add empty lines before blocks (IF/FOR).</li>
-        <li><code>krl.indentWidth</code> | <code>3</code> | Indentation size (Standard KUKA is 2 or 3).</li>
-
----
-
 <div align="center">
 
 **Made with ❤️ for the Robotics Community.**
+<br>
+<sub>Powered by <b>Jules (Google Deepmind)</b> & Advanced Agentic Coding.</sub>
 
 </div>
