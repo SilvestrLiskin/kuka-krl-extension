@@ -1,0 +1,41 @@
+You are an expert UI/UX Designer and VS Code Extension Developer specializing in Color Theory.
+
+**Objective:**
+Perform a "Premium" Color Correction and Formatting Overhaul on ALL 67+ theme files located in `extension/client/themes/`.
+
+**Context:**
+This is a KUKA Robot Language (KRL) extension. We have over 60 themes ported from various sources (Bearded Theme, etc.), but their highlighting for KRL specific syntax is generic or lackluster. We need a "Premium" look where colors are vibrant, contrast is perfect, and the code looks professional and "alive".
+
+**Input:**
+- Scope Definitions: `extension/client/syntaxes/krl.tmLanguage.json` (Use this to understand what scopes are available).
+- Theme Files: `extension/client/themes/*.json`.
+
+**Instructions for EVERY Theme File:**
+1.  **Analyze the Theme:** Read the specific JSON theme file to understand its base color palette (background, foreground, existing token colors).
+2.  **Generate a Palette:** Create a mapping of KRL elements to colors that MATCH the theme’s aesthetic but pop with "Premium" quality.
+    - *Example:* If the theme is "Monokai" (Yellow/Pink/Green), ensure KRL Keywords are Pink, Strings are Yellow, etc.
+    - *Example:* If the theme is "Oceanic" (Blue/Teal), ensure distinctive shades that don't wash out.
+3.  **Apply Formatting Rules (Mandatory):**
+    - **Comment**: `fontStyle: "italic"` (Color: Dimmed/Subtle but readable).
+    - **Control Keywords** (`IF`, `WHILE`, `LOOP`, `WAIT`, `HALT`): `fontStyle: "bold"` (Color: Strong/Vibrant).
+    - **Storage/Types** (`DECL`, `INT`, `REAL`, `GLOBAL`): `fontStyle: "italic"` (Color: Distinctive).
+    - **System Variables** (`$POS_ACT`, `$IN`): `fontStyle: ""` (Color: Critical/Warning-like or Distinctive from normal variables).
+    - **Fold Markers** (`;FOLD`, `;ENDFOLD`): `fontStyle: "bold"` (Color: High visibility/distinct).
+4.  **Scope Mapping (Ensure these are covered):**
+    - `comment.line.fold.krl` (FOLD/ENDFOLD)
+    - `comment.line` (General comments)
+    - `keyword.control.krl` (Control flow)
+    - `keyword.function.movement.krl` (PTP, LIN, CIRC - Critical movement commands, make them POP)
+    - `storage.type.krl` (Declarations)
+    - `variable.language.system.krl` ($Variables)
+    - `constant.numeric.krl` (Numbers)
+    - `string.quoted.double.krl` (Strings)
+    - `variable.function.krl` (User Functions)
+    - `constant.language.enum.krl` (Enums starting with #)
+5.  **Output Requirement:**
+    - You must modify ALL 67 files.
+    - Do NOT output 67 code blocks in the chat. Use your file editing tools to apply changes directly to the files.
+    - "Premium" means: High Contrast, Saturation where appropriate, and correct use of Italics/Bold to create visual hierarchy.
+
+**Execution:**
+Start by analyzing the `tmLanguage` file, then systematically update every `.json` file in `extension/client/themes/`. Ensure JSON validity is maintained.

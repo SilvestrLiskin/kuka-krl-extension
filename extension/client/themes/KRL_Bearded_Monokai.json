@@ -23,39 +23,10 @@
     "tokenColors": [
         {
             "scope": [
-                "meta.fold.krl",
-                "comment.line.fold.krl",
                 "comment"
             ],
             "settings": {
                 "foreground": "#665f6d",
-                "fontStyle": "italic"
-            }
-        },
-        {
-            "scope": "keyword.function.movement.krl",
-            "settings": {
-                "foreground": "#78dce8",
-                "fontStyle": "bold"
-            }
-        },
-        {
-            "scope": "keyword.control.krl",
-            "settings": {
-                "foreground": "#ab9df2"
-            }
-        },
-        {
-            "scope": "storage.type.krl",
-            "settings": {
-                "foreground": "#ffd866",
-                "fontStyle": "italic"
-            }
-        },
-        {
-            "scope": "support.variable.system.krl",
-            "settings": {
-                "foreground": "#ff6188",
                 "fontStyle": "italic"
             }
         },
@@ -72,32 +43,140 @@
             }
         },
         {
-            "scope": "variable.language.data.krl",
+            "name": "KRL Comments",
+            "scope": [
+                "comment.line"
+            ],
             "settings": {
-                "foreground": "#78e8c6"
+                "foreground": "#665f6d",
+                "fontStyle": "italic"
             }
         },
         {
-            "scope": "variable.function.krl",
+            "name": "KRL Comments",
+            "scope": [
+                "comment.line",
+                "comment.line.semicolon.krl",
+                "comment.line.ampersand.krl",
+                "comment.line.bug.krl",
+                "comment.line.fixme.krl",
+                "comment.line.hack.krl",
+                "comment.line.note.krl",
+                "comment.line.todo.krl"
+            ],
             "settings": {
-                "foreground": "#a9dc76",
+                "foreground": "#665f6d",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "KRL Fold Markers (High Visibility)",
+            "scope": [
+                "comment.line.fold.krl",
+                "meta.fold.krl",
+                "keyword.control.fold.krl"
+            ],
+            "settings": {
+                "foreground": "#ffd866",
                 "fontStyle": "bold"
             }
         },
         {
+            "name": "KRL Control Keywords",
             "scope": [
-                "variable.other.readwrite.krl",
-                "variable.other.member.krl"
+                "keyword.control.krl"
             ],
             "settings": {
-                "foreground": "#ffffff"
+                "foreground": "#ab9df2",
+                "fontStyle": "bold"
             }
         },
         {
-            "scope": "entity.name.function.krl",
+            "name": "KRL Movement Commands (POP)",
+            "scope": [
+                "keyword.function.movement.krl"
+            ],
             "settings": {
-                "foreground": "#ffd866"
+                "foreground": "#78dce8",
+                "fontStyle": "bold"
             }
+        },
+        {
+            "name": "KRL Storage/Types",
+            "scope": [
+                "storage.type.krl",
+                "storage.type.interrupt.krl",
+                "storage.type.trigger.krl"
+            ],
+            "settings": {
+                "foreground": "#ffd866",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "KRL System Variables",
+            "scope": [
+                "variable.language.system.krl"
+            ],
+            "settings": {
+                "foreground": "#ff6188",
+                "fontStyle": ""
+            }
+        },
+        {
+            "name": "KRL Numbers",
+            "scope": [
+                "constant.numeric.krl",
+                "constant.numeric.hex.krl",
+                "constant.numeric.binary.krl"
+            ],
+            "settings": {
+                "foreground": "#fc9867"
+            }
+        },
+        {
+            "name": "KRL Strings",
+            "scope": [
+                "string.quoted.double.krl"
+            ],
+            "settings": {
+                "foreground": "#a9dc76"
+            }
+        },
+        {
+            "name": "KRL User Functions",
+            "scope": [
+                "variable.function.krl"
+            ],
+            "settings": {
+                "foreground": "#a9dc76"
+            }
+        },
+        {
+            "name": "KRL Enums",
+            "scope": [
+                "constant.language.enum.krl",
+                "variable.other.enummember.krl"
+            ],
+            "settings": {}
+        },
+        {
+            "name": "KRL Built-in Functions",
+            "scope": [
+                "support.function.builtin.krl"
+            ],
+            "settings": {}
+        },
+        {
+            "name": "KRL Operators",
+            "scope": [
+                "keyword.operator.krl",
+                "keyword.operator.comparison.krl",
+                "keyword.operator.arithmetic.krl",
+                "keyword.operator.bitwise.krl",
+                "keyword.operator.logical.krl"
+            ],
+            "settings": {}
         }
     ]
 }

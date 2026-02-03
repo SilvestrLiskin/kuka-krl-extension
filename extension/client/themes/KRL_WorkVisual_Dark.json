@@ -47,91 +47,10 @@
     },
     "tokenColors": [
         {
-            "scope": [
-                "meta.fold.krl",
-                "comment.line.fold.krl"
-            ],
-            "settings": {
-                "foreground": "#56b6c2",
-                "fontStyle": "bold"
-            }
-        },
-        {
             "scope": "comment",
             "settings": {
                 "foreground": "#5c6370",
                 "fontStyle": "italic"
-            }
-        },
-        {
-            "scope": "keyword.function.movement.krl",
-            "settings": {
-                "foreground": "#61afef",
-                "fontStyle": "bold"
-            }
-        },
-        {
-            "scope": "keyword.control.krl",
-            "settings": {
-                "foreground": "#c678dd"
-            }
-        },
-        {
-            "scope": [
-                "storage.type.krl",
-                "storage.type.interrupt.krl",
-                "storage.type.trigger.krl"
-            ],
-            "settings": {
-                "foreground": "#e06c75",
-                "fontStyle": "italic"
-            }
-        },
-        {
-            "scope": [
-                "support.variable.system.krl",
-                "variable.language.system.krl"
-            ],
-            "settings": {
-                "foreground": "#d19a66",
-                "fontStyle": "italic"
-            }
-        },
-        {
-            "scope": "variable.language.axis.krl",
-            "settings": {
-                "foreground": "#e5c07b"
-            }
-        },
-        {
-            "scope": "variable.language.data.krl",
-            "settings": {
-                "foreground": "#e06c75"
-            }
-        },
-        {
-            "scope": [
-                "entity.name.function.krl",
-                "support.function.builtin.krl"
-            ],
-            "settings": {
-                "foreground": "#61afef"
-            }
-        },
-        {
-            "scope": "variable.function.krl",
-            "settings": {
-                "foreground": "#61afef",
-                "fontStyle": "bold"
-            }
-        },
-        {
-            "scope": [
-                "variable.other.readwrite.krl",
-                "variable.other.member.krl"
-            ],
-            "settings": {
-                "foreground": "#ffffff"
             }
         },
         {
@@ -148,25 +67,156 @@
         },
         {
             "scope": [
-                "constant.numeric",
-                "constant.language.boolean.krl"
+                "constant.numeric"
             ],
             "settings": {
                 "foreground": "#d19a66"
             }
         },
         {
+            "scope": "keyword.operator",
+            "settings": {
+                "foreground": "#56b6c2"
+            }
+        },
+        {
+            "name": "KRL Comments",
+            "scope": [
+                "comment.line"
+            ],
+            "settings": {
+                "foreground": "#5c6370",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "KRL Comments",
+            "scope": [
+                "comment.line",
+                "comment.line.semicolon.krl",
+                "comment.line.ampersand.krl",
+                "comment.line.bug.krl",
+                "comment.line.fixme.krl",
+                "comment.line.hack.krl",
+                "comment.line.note.krl",
+                "comment.line.todo.krl"
+            ],
+            "settings": {
+                "foreground": "#5c6370",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "KRL Fold Markers (High Visibility)",
+            "scope": [
+                "comment.line.fold.krl",
+                "meta.fold.krl",
+                "keyword.control.fold.krl"
+            ],
+            "settings": {
+                "foreground": "#e06c75",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "KRL Control Keywords",
+            "scope": [
+                "keyword.control.krl"
+            ],
+            "settings": {
+                "foreground": "#c678dd",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "KRL Movement Commands (POP)",
+            "scope": [
+                "keyword.function.movement.krl"
+            ],
+            "settings": {
+                "foreground": "#61afef",
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "name": "KRL Storage/Types",
+            "scope": [
+                "storage.type.krl",
+                "storage.type.interrupt.krl",
+                "storage.type.trigger.krl"
+            ],
+            "settings": {
+                "foreground": "#e06c75",
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "name": "KRL System Variables",
+            "scope": [
+                "variable.language.system.krl"
+            ],
+            "settings": {
+                "foreground": "#d19a66",
+                "fontStyle": ""
+            }
+        },
+        {
+            "name": "KRL Numbers",
+            "scope": [
+                "constant.numeric.krl",
+                "constant.numeric.hex.krl",
+                "constant.numeric.binary.krl"
+            ],
+            "settings": {
+                "foreground": "#d19a66"
+            }
+        },
+        {
+            "name": "KRL Strings",
+            "scope": [
+                "string.quoted.double.krl"
+            ],
+            "settings": {
+                "foreground": "#98c379"
+            }
+        },
+        {
+            "name": "KRL User Functions",
+            "scope": [
+                "variable.function.krl"
+            ],
+            "settings": {
+                "foreground": "#61afef"
+            }
+        },
+        {
+            "name": "KRL Enums",
             "scope": [
                 "constant.language.enum.krl",
-                "variable.other.enummember.krl",
-                "constant.language.approximation.krl"
+                "variable.other.enummember.krl"
             ],
             "settings": {
                 "foreground": "#56b6c2"
             }
         },
         {
-            "scope": "keyword.operator",
+            "name": "KRL Built-in Functions",
+            "scope": [
+                "support.function.builtin.krl"
+            ],
+            "settings": {
+                "foreground": "#61afef"
+            }
+        },
+        {
+            "name": "KRL Operators",
+            "scope": [
+                "keyword.operator.krl",
+                "keyword.operator.comparison.krl",
+                "keyword.operator.arithmetic.krl",
+                "keyword.operator.bitwise.krl",
+                "keyword.operator.logical.krl"
+            ],
             "settings": {
                 "foreground": "#56b6c2"
             }
