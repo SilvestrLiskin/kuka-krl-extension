@@ -1,0 +1,24 @@
+You are an expert UI/UX Designer.
+
+**Objective:**
+Refine the visual style of `FOLD` and `ENDFOLD` markers in ALL 67+ theme files in `extension/client/themes/`.
+
+**Constraint:**
+The user feels the current FOLD markers are "too bold" and "too noticeable".
+
+**Instructions:**
+1.  Iterate through every `.json` theme file.
+2.  Find the token coloring rule for `comment.line.fold.krl` (and/or `keyword.control.fold.krl`, `meta.fold.krl`).
+3.  **REMOVE** `fontStyle: "bold"`.
+4.  **SET** `fontStyle: ""` (or `"italic"` if it fits the theme, but definitely NOT bold).
+5.  **ADJUST COLOR**:
+    - The color should be *slightly* different from the standard Comment color (`comment.line`).
+    - It should be "Subtle" yet "Distinct".
+    - It must **harmonize** with the specific theme's palette (don't use a fixed color for all; derive it from the theme).
+6.  **Apply** this change to all 67 files.
+
+**Goal:**
+FOLD markers should visually recede, acting like subtle markers rather than shouting headers.
+
+**Execution:**
+Edit the files directly.

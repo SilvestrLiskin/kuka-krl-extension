@@ -495,15 +495,15 @@
             }
         },
         {
-            "name": "KRL Fold Markers (High Visibility)",
+            "name": "KRL Fold Markers (Subtle)",
             "scope": [
                 "comment.line.fold.krl",
                 "meta.fold.krl",
                 "keyword.control.fold.krl"
             ],
             "settings": {
-                "foreground": "#b48806",
-                "fontStyle": "bold"
+                "foreground": "#737852",
+                "fontStyle": "italic"
             }
         },
         {
